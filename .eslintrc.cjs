@@ -12,8 +12,8 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+      'off',
+      { allowConstantExport: true, },
     ],
     "no-unused-vars": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
@@ -21,6 +21,7 @@ module.exports = {
     "no-empty-pattern": "warn",
     "react-hooks/exhaustive-deps": "off",
     "@typescript-eslint/ban-types": "warn",
-    "@stylistic/indent": ["error", 2]
+    "@stylistic/indent": ["error", 2],
+    
   },
 }

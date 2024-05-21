@@ -1,3 +1,4 @@
+import DemoComponentPage from '@/pages/DemoComponentPage'
 import HomePage from '@/pages/HomePage'
 import { Routes, Route } from 'react-router-dom'
 
@@ -5,6 +6,7 @@ const RouteList = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/demo" element={<DemoComponentPage />} />
       {/* <Route path="/movie" element={<Discover mediaType="movie" />} />
       <Route path="/tv" element={<Discover mediaType="tv" />} />
       <Route path="/anime" element={<Discover mediaType="anime" />} />

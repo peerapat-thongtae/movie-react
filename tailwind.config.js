@@ -3,9 +3,10 @@ import colors from 'tailwindcss/colors'
 import plugin from 'tailwindcss/plugin'
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'class', // enable dark mode
   safelist: [
     {
       pattern: /grid-cols-(4|5|6|7)/,
@@ -14,11 +15,18 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
+        'primary-light': '#F7F8FC',
+        'secondary-light': '#edeeef',
+        'ternary-light': '#f6f7f8',
+
+        'primary-dark': '#111',
+        'secondary-dark': '#141414',
+        'ternary-dark': '#222121',
         'cyan': colors.cyan,
         'fuchsia': colors.fuchsia,
         'lime': colors.lime,
@@ -130,4 +138,3 @@ export default {
     }),
   ],
 }
-
