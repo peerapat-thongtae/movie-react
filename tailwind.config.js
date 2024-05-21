@@ -19,6 +19,16 @@ export default {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      animation: {
+        marquee: 'marquee 4s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '50%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+      },
       colors: {
         'primary-light': '#F7F8FC',
         'secondary-light': '#edeeef',
