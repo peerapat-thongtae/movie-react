@@ -5,6 +5,6 @@ import '@/assets/css/loading.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-    <App />
+  <App />,
   // </React.StrictMode>,
 )
