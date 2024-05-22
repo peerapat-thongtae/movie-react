@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { listenForOutsideClick } from '@/utils/click-outside'
 import { useTheme } from '@/contexts/theme-context'
 import { FiMoon, FiSun } from 'react-icons/fi'
-import Button from '@/components/common/Button'
+import { useAuth0 } from '@auth0/auth0-react'
+import { Button } from '@mantine/core'
+import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
@@ -11,9 +13,15 @@ const Navbar = () => {
   const navigate = useNavigate()
   const { darkTheme, toggleTheme } = useTheme()
 
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
+
   const navbarRef = useRef(null)
   const [listening, setListening] = useState(false)
   const toggleNavbar = () => setShowNav(!showNav)
+
+  const login = () => {
+    loginWithRedirect()
+  }
 
   useEffect(listenForOutsideClick(
     listening,
@@ -56,10 +64,21 @@ const Navbar = () => {
         </div>
         <div className="lg:flex gap-4 items-center hidden">
           <div className="">
-            <Button
-              label="Log in"
-              type=""
-            />
+            {!isAuthenticated
+              ? (
+                <Button
+                  onClick={() => login()}
+                  variant="outline"
+                  color={darkTheme ? 'yellow' : 'black'}
+                  loading={isLoading}
+                >
+                  Log in
+                </Button>
+              )
+              : (
+                <AvatarMenu />
+              )}
+
           </div>
           <div
             onClick={() => toggleTheme()}
@@ -104,6 +123,11 @@ const MenuItems = (props: MenuItemProps) => {
     {
       path: '/tv',
       title: 'TV Show',
+      onlyMobile: false,
+    },
+    {
+      path: '/anime',
+      title: 'Anime',
       onlyMobile: false,
     },
     {
