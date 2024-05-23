@@ -1,5 +1,4 @@
 import SocialButton from '@/components/common/SocialButton'
-import MediaCard from '@/components/media/MediaCard'
 
 const DemoComponentPage = () => {
   return (
@@ -18,8 +17,10 @@ const DemoComponentPage = () => {
         <label>MediaCard</label>
         {/* <Loading /> */}
         <div className="grid grid-cols-2 gap-4">
+          {/* <MediaCard imagePath="https://www.themoviedb.org/t/p/w1280/pKaA8VvfkNfEMUPMiiuL5qSPQYy.jpg" title="test" />
           <MediaCard imagePath="https://www.themoviedb.org/t/p/w1280/pKaA8VvfkNfEMUPMiiuL5qSPQYy.jpg" title="test" />
           <MediaCard imagePath="https://www.themoviedb.org/t/p/w1280/pKaA8VvfkNfEMUPMiiuL5qSPQYy.jpg" title="test" />
+          <MediaCard imagePath="https://www.themoviedb.org/t/p/w1280/pKaA8VvfkNfEMUPMiiuL5qSPQYy.jpg" title="test" /> */}
         </div>
       </div>
     </div>

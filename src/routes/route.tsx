@@ -1,7 +1,26 @@
 import DemoComponentPage from '@/pages/DemoComponentPage'
 import HomePage from '@/pages/HomePage'
 import MediaHomePage from '@/pages/MediaHomePage'
-import { Routes, Route } from 'react-router-dom'
+import { useLayoutEffect, useState } from 'react'
+import { Routes, Route, BrowserRouter, Router } from 'react-router-dom'
+
+const CustomRouter = ({ history, ...props }: any) => {
+  const [state, setState] = useState({
+    action: history.action,
+    location: history.location,
+  })
+
+  useLayoutEffect(() => history.listen(setState), [history])
+
+  return (
+    <Router
+      {...props}
+      location={state.location}
+      navigationType={state.action}
+      navigator={history}
+    />
+  )
+}
 
 const RouteList = () => {
   return (

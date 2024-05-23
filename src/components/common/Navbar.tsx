@@ -63,6 +63,19 @@ const Navbar = () => {
           <MenuItems setShowNav={setShowNav} />
         </div>
         <div className="lg:flex gap-4 items-center hidden">
+          <div
+            onClick={() => toggleTheme()}
+            aria-label="Theme Switcher"
+            className="ml-0 dark:bg-primary-dark dark:bg-opacity-5 bg-ternary-dark p-3 shadow-sm rounded-xl cursor-pointer"
+          >
+            {darkTheme
+              ? (
+                <FiMoon className="text-gray-200 hover:text-gray-400 text-xl h-4" />
+              )
+              : (
+                <FiSun className="text-gray-500 hover:text-ternary-dark text-xl h-4" />
+              )}
+          </div>
           <div className="">
             {!isAuthenticated
               ? (
@@ -80,19 +93,7 @@ const Navbar = () => {
               )}
 
           </div>
-          <div
-            onClick={() => toggleTheme()}
-            aria-label="Theme Switcher"
-            className="ml-0 dark:bg-primary-dark dark:bg-opacity-5 bg-ternary-dark p-3 shadow-sm rounded-xl cursor-pointer"
-          >
-            {darkTheme
-              ? (
-                <FiMoon className="text-gray-200 hover:text-gray-400 text-xl h-4" />
-              )
-              : (
-                <FiSun className="text-gray-500 hover:text-ternary-dark text-xl h-4" />
-              )}
-          </div>
+
         </div>
       </div>
     </div>
@@ -103,12 +104,14 @@ interface IMenuItem {
   title: string
   path: string
   onlyMobile?: boolean
+  onClick?: () => void
 }
 
 interface MenuItemProps {
   setShowNav: React.Dispatch<React.SetStateAction<boolean>>
 }
 const MenuItems = (props: MenuItemProps) => {
+  const { isAuthenticated, loginWithRedirect: login, logout } = useAuth0()
   const menus: IMenuItem[] = [
     {
       path: '/',
@@ -136,9 +139,12 @@ const MenuItems = (props: MenuItemProps) => {
       onlyMobile: false,
     },
     {
-      path: '/login',
-      title: 'Login',
+      path: '',
+      title: isAuthenticated ? 'Logout' : 'Login',
       onlyMobile: true,
+      onClick: () => {
+        isAuthenticated ? login() : logout()
+      },
     },
   ]
 
@@ -165,7 +171,7 @@ const MenuItems = (props: MenuItemProps) => {
           (
             <li key={index} className={`${menu.onlyMobile && 'sm:hidden'}`}>
               <span
-                onClick={() => onClickTitle(menu.path)}
+                onClick={() => !menu.path ? (menu.onClick && menu.onClick()) : onClickTitle(menu.path)}
                 className={`font-bold block py-2 px-3 text-white rounded md:bg-transparent cursor-pointer dark:hover:text-yellow-500 hover:text-yellow-500 dark:text-primary-dark ${isActivePath(menu.path) && 'text-yellow-500 dark:text-yellow-500'}`}
               >
                 {menu.title}

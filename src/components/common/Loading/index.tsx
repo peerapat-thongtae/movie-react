@@ -9,7 +9,7 @@ const Loading = (props: LoadingProps) => {
         <div className="pacmancontainer">
           <div className="pacman" />
           <div className="pacman pac2" />
-          <h2 className="animate font-bold text-2xl">
+          <h2 className="animate font-bold text-2xl dark:text-black text-white">
             {props?.textLoading || 'Loading...' }
           </h2>
         </div>

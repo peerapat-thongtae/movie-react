@@ -5,7 +5,7 @@ function listenForOutsideClick(listening: any, setListening: any, menuRef: any, 
     setListening(true);
     [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (evt) => {
-        if (menuRef.current.contains(evt.target)) return
+        if (menuRef.current?.contains(evt.target)) return
         setIsOpen(false)
       })
     })

@@ -1,8 +1,9 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useRef, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useClickAway } from 'react-use'
+import NotFoundImage from '@/assets/images/avatar-placeholder.jpeg'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const AvatarMenu = () => {
   const [show, setShow] = useState(false)
@@ -10,7 +11,7 @@ const AvatarMenu = () => {
 
   const menuRef = useRef(null)
   const profileBarRef = useRef<HTMLInputElement>(null)
-  useClickAway(profileBarRef, (event) => {
+  useClickAway(menuRef, (event) => {
     // Case : click profile menu bar
     if (profileBarRef.current && profileBarRef.current.contains(event?.target as Node)) {
       return
@@ -29,9 +30,13 @@ const AvatarMenu = () => {
           <div ref={profileBarRef} onClick={() => setShow(!show)} className="flex items-center gap-4 cursor-pointer">
             <LazyLoadImage
               src={user?.picture || '/assets/images/image-not-found.png'}
-              className="w-8 h-8 rounded-full cursor-pointer"
+              className="w-8 h-8 rounded-full"
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null // prevents looping
+                currentTarget.src = NotFoundImage
+              }}
             />
-            <div className="font-medium dark:text-black text-white">
+            <div className="font-medium dark:text-black text-white hidden md:block">
               <div className="text-sm">{user?.given_name}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{user?.family_name}</div>
             </div>
@@ -51,7 +56,7 @@ const AvatarMenu = () => {
                 </li>
               </ul>
               <div className="py-1">
-                <a onClick={() => logout()} className="cursor-pointer block px-4 py-2 text-sm dark:text-gray-700 dark:hover:bg-gray-100 hover:bg-gray-600 text-gray-200 hover:text-white">Log out</a>
+                <a onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} className="cursor-pointer block px-4 py-2 text-sm dark:text-gray-700 dark:hover:bg-gray-100 hover:bg-gray-600 text-gray-200 hover:text-white">Log out</a>
               </div>
             </div>
           </div>
