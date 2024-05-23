@@ -3,7 +3,7 @@ import { useConfigTMDB } from '@/hooks/useConfig'
 import { getAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
 import { DiscoverMediaRequest, MediaType } from '@/types/media.type'
-import { discoverMedia$, mediaInfo$ } from '@/utils/observable'
+import { discoverMedia$, mediaInfo$, searchMedia$ } from '@/utils/observable'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -83,6 +83,18 @@ export const useMediaDetail = (id: string, mediaType: string) => {
   const query = useQuery(['media_detail', id, mediaType], () => lastValueFrom(getDetail()))
 
   return query
+}
+
+export const useSearch = (searchString: string, searchType: MediaType) => {
+  const [page, setPage] = useState<number>(1)
+
+  const fetch = () => {
+    return searchMedia$(searchType, searchString, page)
+  }
+
+  const query = useQuery(['search', searchType, searchString, page], async () => lastValueFrom(fetch()))
+
+  return { ...query, page, setPage }
 }
 
 export const useTMDBParam = () => {

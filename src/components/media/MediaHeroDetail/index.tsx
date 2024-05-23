@@ -23,9 +23,10 @@ const MediaHeroDetail = ({ media }: IProps) => {
   const [isOpenTrailer, setIsOpenTrailer] = useState(false)
   // Error image
 
-  const ModalTrailer = () => {
-    return (
-      <>
+  return (
+    <>
+      {/* Banner */}
+      <div className="relative">
         <ModalVideo
           channel="youtube"
           youtube={{ mute: 0, autoplay: 1 }}
@@ -33,23 +34,14 @@ const MediaHeroDetail = ({ media }: IProps) => {
           videoId={media.trailers?.[0]?.key}
           onClose={() => setIsOpenTrailer(false)}
         />
-      </>
-    )
-  }
-
-  return (
-    <>
-      {/* Banner */}
-      <ModalTrailer />
-      <div className="relative">
         <Image
           src={`https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.backdrop_path}`}
           alt={media.name}
-          className="w-full md:h-[800px] object-cover bg-center"
+          className="w-full md:h-[800px] object-cover bg-center pointer"
           effect="zoomIn"
         />
         <div className="absolute z-[1] top-0 flex justify-center h-full w-full items-center">
-          <FaPlayCircle className="cursor-pointer hover:text-yellow-500" onClick={() => setIsOpenTrailer(true)} size={50} />
+          <FaPlayCircle className="cursor-pointer hover:text-yellow-500" onClick={() => setIsOpenTrailer(!isOpenTrailer)} size={50} />
         </div>
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t dark:from-background from-main dark:via-background/90 via-main/20 dark:via-20% via-50% dark:to-background/10 to-main/5 to-70%" />
       </div>
