@@ -12,6 +12,7 @@ import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-quer
 import { useEffect, useState } from 'react'
 import { setToken } from '@/stores/slice'
 import { useDispatch } from 'react-redux'
+import 'react-modal-video/scss/modal-video.scss'
 
 function App() {
   const { darkTheme } = useTheme()
@@ -21,7 +22,7 @@ function App() {
 
   const dehydrateState = dehydrate(queryClient, { shouldDehydrateQuery: () => true })
   useAccountStateAll()
-  useConfigTMDB()
+  const { getConfiguration } = useConfigTMDB()
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -30,25 +31,27 @@ function App() {
       }).catch(() => dispatch(setToken('')))
     }
   }, [isAuthenticated, isLoading])
+
+  useEffect(() => {
+    getConfiguration()
+  }, [])
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={dehydrateState}>
           {/* <LoadingOverlay visible={isLoading} opacity={1} overlayProps={{ backgroundOpacity: 0.3, className: `${darkTheme ? 'bg-primary-light' : 'bg-primary-dark'}` }} zIndex={1000} loaderProps={{ children: <Loading /> }} /> */}
-          { !isLoading
-          && (
-            <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
-              <div className="w-full antialiased">
-                <Navbar />
-              </div>
-              <div className="grow text-white">
-                <div className="my-32">
-                  <ToastContainer />
-                  <RouteList />
-                </div>
+          <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
+            <div className="w-full antialiased">
+              <Navbar />
+            </div>
+            <div className="grow text-white">
+              <div className="">
+                {/* my-32 */}
+                <ToastContainer />
+                <RouteList />
               </div>
             </div>
-          )}
+          </div>
         </Hydrate>
       </QueryClientProvider>
     </BrowserRouter>

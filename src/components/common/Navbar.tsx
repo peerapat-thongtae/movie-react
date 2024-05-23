@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { listenForOutsideClick } from '@/utils/click-outside'
 import { useTheme } from '@/contexts/theme-context'
@@ -6,11 +6,13 @@ import { FiMoon, FiSun } from 'react-icons/fi'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Button } from '@mantine/core'
 import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
+import { first, isNaN, last } from 'lodash'
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const { darkTheme, toggleTheme } = useTheme()
 
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
@@ -46,8 +48,20 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const isNavBlur = useMemo(() => {
+    if (isScrolled) {
+      return ''
+    }
+    const splitPath = location.pathname.split('/').filter(val => val)
+    if (['movie', 'tv', 'anime'].includes(first(splitPath) || '') && !isNaN((Number(last(splitPath))))) {
+      return 'backdrop-blur-sm bg-black/50'
+    }
+
+    return ''
+  }, [location, isScrolled])
   return (
-    <div ref={navbarRef} className={`fixed top-0 z-50  w-full items-center justify-between px-4 py-4 transition-all lg:px-10 lg:py-2 text-white ${isScrolled && 'bg-[#141414] dark:bg-primary-light'} dark:hover:bg-secondary-light hover:bg-[#141414]`}>
+    <div ref={navbarRef} className={`fixed top-0 z-50  w-full items-center justify-between px-4 py-4 transition-all ${isNavBlur} lg:px-10 lg:py-2 text-white ${isScrolled && 'bg-[#141414] dark:bg-primary-light'} dark:hover:bg-secondary-light hover:bg-[#141414]`}>
       <div className="w-full flex flex-wrap items-center justify-between p-4">
         <div onClick={() => navigate('/')} className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
           <img src="/movizius.svg" className="h-8" alt="Movizius" />

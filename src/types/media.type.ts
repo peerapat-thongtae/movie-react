@@ -2,7 +2,13 @@ import { Country, DiscoverMovieRequest, DiscoverTvRequest, Genre, Job, Language,
 
 export type MediaType = 'movie' | 'tv' | 'anime'
 
-export type Media = (MovieResponse & TvResult) & { media_type: MediaType | string, release_date_th: Date | string }
+export type Media = (MovieResponse & TvResult) & {
+  media_type: MediaType | string
+  release_date_th: Date | string
+  directors: any[]
+  writers: any[]
+  trailers: any[]
+}
 
 export type ConfigTMDB = {
   genreMovies: Array<Genre>
@@ -22,3 +28,5 @@ export type ConfigTMDB = {
 }
 
 export type DiscoverMediaRequest = DiscoverMovieRequest & DiscoverTvRequest
+
+export type ImageType = 'poster' | 'backdrop'

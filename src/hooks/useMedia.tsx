@@ -3,7 +3,7 @@ import { useConfigTMDB } from '@/hooks/useConfig'
 import { getAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
 import { DiscoverMediaRequest, MediaType } from '@/types/media.type'
-import { discoverMedia$ } from '@/utils/observable'
+import { discoverMedia$, mediaInfo$ } from '@/utils/observable'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -71,8 +71,22 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string) => {
   return { data: accountState, isLoading: isLoading, addRated, addToWatchlist }
 }
 
+export const useMediaDetail = (id: string, mediaType: string) => {
+  const getDetail = () => {
+    return mediaInfo$(mediaType, id).pipe(
+      catchError(() => {
+        return of(null)
+      }),
+    )
+  }
+
+  const query = useQuery(['media_detail', id, mediaType], () => lastValueFrom(getDetail()))
+
+  return query
+}
+
 export const useTMDBParam = () => {
-  const config = useConfigTMDB()
+  const { config } = useConfigTMDB()
   const withoutJp = config.languages.filter(val => val.iso_639_1 !== 'ja')
 
   const tvShowParams = useMemo(() => {
@@ -93,12 +107,18 @@ export const useTMDBParam = () => {
 }
 
 export const useDiscoverMedia = (mediaType: string, initialSearchParam?: DiscoverMediaRequest) => {
-  const defaultPage = 1
+  const defaultPage: number = 1
   const { tvShowParams, tvAnimeParams } = useTMDBParam()
-  const [page, setPage] = useState<number>(defaultPage || 1)
   const [searchParam, setSearch] = useState<DiscoverMediaRequest>({
     ...initialSearchParam,
+    page: initialSearchParam?.page || defaultPage,
   })
+
+  const { page } = searchParam
+
+  const setPage = (page: number) => {
+    setSearch({ ...searchParam, page })
+  }
 
   const setSearchParam = (param: DiscoverMediaRequest) => {
     setSearch({ ...param })
@@ -131,7 +151,7 @@ export const useDiscoverMedia = (mediaType: string, initialSearchParam?: Discove
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [page, searchParam])
+  }, [searchParam])
 
   const query = useQuery(['discovers', mediaType, page, setPage], async () => {
     return lastValueFrom(handleDiscover())

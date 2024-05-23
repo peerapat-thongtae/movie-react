@@ -14,6 +14,7 @@ import NotFoundImage from '@/assets/images/image-not-found.png'
 import Image from '@/components/common/Image'
 import { useIMDBRating } from '@/hooks/useMedia'
 import { useNavigate } from 'react-router-dom'
+import { useConfigTMDB } from '@/hooks/useConfig'
 
 interface MediaCardProps {
   item: Media
@@ -51,6 +52,8 @@ const MediaCard = (props: MediaCardProps) => {
     }
   }, [])
 
+  const { getImagePath } = useConfigTMDB()
+
   const goToDetail = () => {
     navigate(`/${mediaType}/${item.id}`)
   }
@@ -85,7 +88,7 @@ const MediaCard = (props: MediaCardProps) => {
             className="w-full object-cover rounded-t-lg h-full"
           /> */}
           <Image
-            src={imagePath ? `https://www.themoviedb.org/t/p/w1280/${imagePath}` : NotFoundImage}
+            src={imagePath ? getImagePath(imagePath, 'poster') : NotFoundImage}
             alt={item.name || ''}
             className="w-full object-cover rounded-t-lg h-full"
             effect="zoomIn"

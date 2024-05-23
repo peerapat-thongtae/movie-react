@@ -3,13 +3,12 @@ import Loading from '@/components/common/Loading'
 import MediaCard from '@/components/media/MediaCard'
 import { MediaType } from '@/types/media.type'
 import { Group, Pagination } from '@mantine/core'
-import React from 'react'
 
 interface IMediaGridProps {
   items: []
   page: number
   isLoading: boolean
-  setPage: React.Dispatch<React.SetStateAction<number>>
+  setPage: (_page: number) => void
   totalResults: number
   totalPages: number
   mediaType: MediaType

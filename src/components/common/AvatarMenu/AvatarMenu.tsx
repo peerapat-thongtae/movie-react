@@ -27,10 +27,10 @@ const AvatarMenu = () => {
       {user
       && (
         <>
-          <div ref={profileBarRef} onClick={() => setShow(!show)} className="flex items-center gap-4 cursor-pointer">
+          <div ref={profileBarRef} onClick={() => setShow(!show)} className="flex items-center gap-4 cursor-pointer hover:border-[0.5px] rounded-lg px-4 py-0.5">
             <LazyLoadImage
               src={user?.picture || '/assets/images/image-not-found.png'}
-              className="w-8 h-8 rounded-full"
+              className="w-6 h-6 rounded-full"
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null // prevents looping
                 currentTarget.src = NotFoundImage
@@ -38,7 +38,7 @@ const AvatarMenu = () => {
             />
             <div className="font-medium dark:text-black text-white hidden md:block">
               <div className="text-sm">{user?.given_name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{user?.family_name}</div>
+              <div className="text-xs text-gray-200 dark:text-gray-400">{user?.family_name}</div>
             </div>
             <div>
               {show ? <IoIosArrowUp /> : <IoIosArrowDown />}

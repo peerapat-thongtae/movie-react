@@ -1,7 +1,7 @@
 import tmdbService from '@/services/tmdb-service'
 import { getConfigTMDB, setConfigState } from '@/stores/slice'
-import { ConfigTMDB } from '@/types/media.type'
-import { useEffect, useState } from 'react'
+import { ConfigTMDB, ImageType } from '@/types/media.type'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { forkJoin } from 'rxjs'
 export const useConfigTMDB = () => {
@@ -25,7 +25,7 @@ export const useConfigTMDB = () => {
           countries: resp.countries,
           jobs: resp.jobs,
           languages: resp.languages,
-          images: resp.config.images,
+          images: { ...resp.config.images },
         }
         setConfig(configObj)
         dispatch(setConfigState(configObj))
@@ -33,11 +33,10 @@ export const useConfigTMDB = () => {
     })
   }
 
-  useEffect(() => {
-    if (!config) {
-      getConfiguration()
-    }
-  }, [])
+  const getImagePath = (imagePath: string, type: ImageType) => {
+    const posterSize = type === 'poster' ? 'w780' : 'w1280'
+    return `${config.images.base_url}/${posterSize}${imagePath}`
+  }
 
-  return config
+  return { config, getConfiguration, getImagePath }
 }
