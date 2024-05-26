@@ -1,3 +1,4 @@
+import Loading from '@/components/common/Loading'
 import Hero from '@/components/media/Hero'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import { useDiscoverMedia } from '@/hooks/useMedia'
@@ -51,6 +52,8 @@ const HomePage = () => {
           </Carousel>
         )
       }
+      {(isLoadingPopularMovies || isLoadingPopularTV)
+      && <div className="h-screen"><Loading /></div>}
     </div>
   )
 }
