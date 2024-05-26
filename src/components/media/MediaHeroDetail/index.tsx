@@ -5,7 +5,7 @@ import Image from '@/components/common/Image'
 import dayjs from 'dayjs'
 import ModalVideo from 'react-modal-video'
 import { FaBookmark, FaPlayCircle, FaSpinner } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
 import { cn } from '@/utils/tailwind.helper'
 import { IoMdEye } from 'react-icons/io'
@@ -25,10 +25,6 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   const writer = media.writers?.[0]?.name || '-'
   const [isOpenTrailer, setIsOpenTrailer] = useState(false)
   const { data: accountState, addToWatchlist, addRated, isLoading: isLoadingAccountState } = useMediaAccountStateById(mediaType, media.id || '')
-
-  useEffect(() => {
-    console.log('acc', accountState)
-  }, [accountState])
 
   // Error image
 

@@ -1,5 +1,5 @@
 import { cn } from '@/utils/tailwind.helper'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import NotFoundImage from '@/assets/images/image-not-found.png'
@@ -15,6 +15,7 @@ interface ImageProps {
   height?: string | number
   effect?: 'zoomIn'
   type?: ImageType
+  reEffect?: boolean
   loadIcon?: boolean
 }
 
@@ -26,6 +27,7 @@ const Image: React.FC<ImageProps> = ({
   height,
   effect,
   type,
+  reEffect,
   loadIcon,
 }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
@@ -39,6 +41,13 @@ const Image: React.FC<ImageProps> = ({
     e.currentTarget.onerror = null
     e.currentTarget.src = imageType === 'poster' ? NotFoundImage : NoImageBackdrop
   }
+
+  useEffect(() => {
+    if (isImageLoaded && reEffect) {
+      setIsImageLoaded(false)
+      setTimeout(onLoad, 500)
+    }
+  }, [src])
 
   return (
     src
@@ -64,6 +73,7 @@ const Image: React.FC<ImageProps> = ({
           )}
           onLoad={onLoad}
           onError={onErrorImage}
+          onChange={() => console.log('change')}
         />
       </>
     )

@@ -13,7 +13,6 @@ const Hero2 = ({ media }: { media: Media }) => {
       return media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]?.note ? getLogoPath(providerName) : ''
     }
     else {
-      console.log('vvv', media.watch_providers.results?.TH?.flatrate?.[0]?.provider_name)
       return getLogoPath(media.watch_providers.results?.TH?.flatrate?.[0]?.provider_name || '') || ''
     }
   }, [media])

@@ -110,9 +110,6 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
         dispatch(setAccountStateById({ ...resp.data, mediaType }))
         setIsLoading(false)
       },
-      error: (err) => {
-        console.log('error', err)
-      },
     })
   }
 

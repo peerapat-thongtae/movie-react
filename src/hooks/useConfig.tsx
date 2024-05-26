@@ -38,7 +38,6 @@ export const useConfigTMDB = () => {
           watchProviders,
         }
 
-        console.log('tasdadsac', watchProviders.map(val => val.provider_name))
         setConfig(configObj)
         dispatch(setConfigState(configObj))
       },
@@ -53,7 +52,6 @@ export const useConfigTMDB = () => {
   const getLogoPath = (providerName: string) => {
     const findProviderLogo: WatchProvider | undefined = config.watchProviders.find(val => val.provider_name === providerName)
 
-    console.log(providerName, config.watchProviders, findProviderLogo)
     return providerName ? `${config.images.base_url}/w92${findProviderLogo?.logo_path}` : ''
   }
 

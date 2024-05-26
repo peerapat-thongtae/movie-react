@@ -92,6 +92,7 @@ const MediaCard = (props: MediaCardProps) => {
             alt={item.name || ''}
             className="w-full object-cover rounded-t-lg h-full"
             effect="zoomIn"
+            reEffect
           />
         </div>
         <div

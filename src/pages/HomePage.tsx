@@ -36,7 +36,7 @@ const HomePage = () => {
     else {
       return []
     }
-  }, [popularMovies, popularTV])
+  }, [isLoadingPopularMovies, isLoadingPopularTV])
   usePageLeave(() => {
     setAutoPlay(false)
   }, [])

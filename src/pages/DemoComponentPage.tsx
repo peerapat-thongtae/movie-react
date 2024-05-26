@@ -8,7 +8,6 @@ const DemoComponent = ({ width, height, videoKey, muted }: any) => {
   const isMuted = muted || false
 
   const onLoad = () => {
-    console.log('fuu', loaded)
     setTimeout(() => {
       setLoaded(true)
     }, 500)

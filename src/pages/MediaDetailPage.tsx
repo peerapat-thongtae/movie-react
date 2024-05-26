@@ -120,7 +120,6 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
     estimateSize: () => 320,
     overscan: 5,
     scrollMargin: parentRef.current?.offsetTop ?? 0,
-    onChange: val => console.log(val),
   })
 
   return (

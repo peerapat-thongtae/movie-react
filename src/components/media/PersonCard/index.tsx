@@ -21,6 +21,7 @@ const PersonCard = (props: PersonProps) => {
           alt={person.name}
           effect="zoomIn"
           className="h-[350px] w-[250px] rounded-lg"
+          reEffect
         />
       </div>
       <div className="">
