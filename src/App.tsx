@@ -12,7 +12,6 @@ import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-quer
 import { useEffect, useState } from 'react'
 import { setToken } from '@/stores/slice'
 import { useDispatch } from 'react-redux'
-import 'react-modal-video/scss/modal-video.scss'
 
 function App() {
   const { darkTheme } = useTheme()

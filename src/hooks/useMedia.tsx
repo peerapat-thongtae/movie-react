@@ -1,24 +1,25 @@
 import { useAPI } from '@/hooks/api/useAPI'
 import { useConfigTMDB } from '@/hooks/useConfig'
-import { getAccountStateById, setAccountStates } from '@/stores/slice'
+import tmdbService from '@/services/tmdb-service'
+import { getAccountStateById, setAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
-import { DiscoverMediaRequest, MediaType } from '@/types/media.type'
+import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
 import { discoverMedia$, mediaInfo$, searchMedia$ } from '@/utils/observable'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
-import { catchError, forkJoin, from, lastValueFrom, map, of } from 'rxjs'
+import { toast } from 'react-toastify'
+import { catchError, delay, forkJoin, from, lastValueFrom, map, of } from 'rxjs'
 
 export const useAccountStateAll = () => {
-  const { getAccountStates, token } = useAPI()
+  const { getAccountStates } = useAPI()
   const dispatch = useDispatch()
 
   const [data, setDatas] = useState<any[]>([])
   const { isLoading, isAuthenticated } = useAuth0()
 
   const fetchAccountStates = () => {
-    console.log('token', token)
     forkJoin({ movies: getAccountStates('movie'), tv: getAccountStates('tv') }).subscribe({
       next: (resp) => {
         const { movies, tv } = resp
@@ -48,27 +49,83 @@ export const useAccountStateAll = () => {
   return { data, fetch: fetchAccountStates, clearAccountStates }
 }
 
-export const useMediaAccountStateById = (mediaType: MediaType, id: string) => {
+export const useMediaAccountStateById = (mediaType: MediaType, id: string | number) => {
   const { addToWatchlist: addStateApi } = useAPI()
-  const accountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
+  const dispatch = useDispatch()
+  const defaultAccountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
+  const [accountState, setAccountState] = useState(defaultAccountState)
   const [isLoading, setIsLoading] = useState(false)
 
-  const addRated = async (rate: number) => {
+  const addRated = async () => {
     setIsLoading(true)
-    const api = addStateApi(mediaType, id, rate ? 'watched' : '')
-    from(api).subscribe()
+    const api = addStateApi(mediaType, id, !accountState?.watched ? 'watched' : '')
+    from(api).subscribe({
+      next: (resp) => {
+        setAccountState(resp.data)
+        setIsLoading(false)
+      },
+    })
   }
 
   const addToWatchlist = async (status: boolean) => {
     setIsLoading(true)
     from(addStateApi(mediaType, id, status ? 'watchlist' : '')).pipe(
-      // delay(2000),
-    ).subscribe(() => {
-      setIsLoading(false)
+    ).subscribe({
+      next: (resp) => {
+        setAccountState(resp.data)
+        setIsLoading(false)
+        toast('Success')
+      },
+      error: () => {
+        toast('')
+      },
     })
   }
 
+  useEffect(() => {
+    if (accountState) {
+      dispatch(setAccountStateById(accountState))
+    }
+  }, [accountState])
+
   return { data: accountState, isLoading: isLoading, addRated, addToWatchlist }
+}
+
+export const useTVEpisodeAccountState = (id: string | number, seasonNumber: number, episodeNumber: number, mediaType: MediaType) => {
+  const { updateTVEpisodes } = useAPI()
+  const dispatch = useDispatch()
+  const accountState = useSelector((state: IRootState) => {
+    const tvState = getAccountStateById(state, mediaType, id)
+    return tvState?.episode_watched.find((val) => {
+      return val.episode_number === episodeNumber && val.season_number === seasonNumber
+    }) || null
+  })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const addWatched = async () => {
+    setIsLoading(true)
+    const api = updateTVEpisodes({ id: id, episode_watched: [{ season_number: seasonNumber, episode_number: episodeNumber }] })
+    from(api).pipe(delay(2000)).subscribe({
+      next: (resp) => {
+        dispatch(setAccountStateById({ ...resp.data, mediaType }))
+        setIsLoading(false)
+      },
+      error: (err) => {
+        console.log('error', err)
+      },
+    })
+  }
+
+  return { data: accountState, isLoading: isLoading, addWatched }
+}
+
+export const usePopularMedia = (mediaType: MediaType) => {
+  const fetch = () => {
+    const func = mediaType === 'movie' ? tmdbService.moviePopular() : tmdbService.moviePopular()
+    return lastValueFrom(from(func))
+  }
+
+  return useQuery(['popular', mediaType], fetch)
 }
 
 export const useMediaDetail = (id: string, mediaType: string) => {
@@ -80,12 +137,41 @@ export const useMediaDetail = (id: string, mediaType: string) => {
     )
   }
 
-  const query = useQuery(['media_detail', id, mediaType], () => lastValueFrom(getDetail()))
+  const query = useQuery<Media | undefined>(['media_detail', id, mediaType], () => lastValueFrom(getDetail()))
 
   return query
 }
 
-export const useSearch = (searchString: string, searchType: MediaType) => {
+export const useTVSeasonDetail = (mediaType: MediaType, mediaId: number | string, seasonNumber: number) => {
+  const { data: tvState } = useMediaAccountStateById(mediaType, mediaId)
+  const fetch = () => {
+    return lastValueFrom(from(tmdbService.seasonInfo({ id: mediaId, season_number: +seasonNumber })).pipe(
+      map((resp) => {
+        const episodes = resp.episodes
+          ? resp.episodes.map((val) => {
+            const findWatched = tvState?.episode_watched?.find((state) => {
+              return state.season_number === seasonNumber && state.episode_number === val.episode_number
+            })
+            return {
+              ...val,
+              account_status: findWatched ? 'watched' : '',
+            }
+          })
+          : []
+
+        return {
+          ...resp,
+          episodes,
+        }
+      }),
+    ))
+  }
+
+  const query = useQuery(['tv_season', mediaId, seasonNumber], fetch)
+  return query
+}
+
+export const useSearch = (searchString: string, searchType: SearchType) => {
   const [page, setPage] = useState<number>(1)
 
   const fetch = () => {
@@ -116,6 +202,19 @@ export const useTMDBParam = () => {
   }, [config])
 
   return { tvAnimeParams, tvShowParams }
+}
+
+export const useCredits = (mediaType: MediaType, mediaId: string | number) => {
+  const fetch = () => {
+    const creditFn = mediaType === 'movie' ? tmdbService.movieCredits({ id: mediaId }) : tmdbService.tvCredits({ id: mediaId })
+    return lastValueFrom(
+      from(creditFn).pipe(
+      ),
+    )
+  }
+
+  const query = useQuery(['credit', mediaId, mediaType], fetch)
+  return query
 }
 
 export const useDiscoverMedia = (mediaType: string, initialSearchParam?: DiscoverMediaRequest) => {
@@ -169,7 +268,6 @@ export const useDiscoverMedia = (mediaType: string, initialSearchParam?: Discove
     return lastValueFrom(handleDiscover())
   })
 
-  console.log(query.isFetchedAfterMount)
   return { ...query, page, setPage, searchParam, setSearchParam }
 }
 

@@ -1,5 +1,5 @@
 import tmdbService from '@/services/tmdb-service'
-import { DiscoverMediaRequest, MediaType } from '@/types/media.type'
+import { DiscoverMediaRequest, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
 import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs'
 
@@ -53,7 +53,8 @@ export const mediaInfo$ = (media_type: string, id: any) => {
           directors: getDirectors(resp?.credits?.crew).length > 0 ? getDirectors(resp?.credits?.crew) : resp.created_by,
           writers: getWriters(resp?.credits?.crew),
           trailers: getTrailers(resp?.videos),
-          release_date_th: releaseDateTH(resp.release_dates) || resp.release_date,
+          release_date_th: resp.release_date,
+          watch_providers: resp?.['watch/providers'],
           // release_date:
         }
       }),
@@ -71,7 +72,7 @@ export const mediaInfo$ = (media_type: string, id: any) => {
     )
   }
   else {
-    return from(tmdb.movieInfo({ id: id || '', append_to_response: 'account_states,external_ids,casts,crew,recommendations,similar,belongs_to_collection,watch-providers,videos,release_dates' })).pipe(
+    return from(tmdb.movieInfo({ id: id || '', append_to_response: 'account_states,external_ids,casts,crew,recommendations,similar,belongs_to_collection,watch-providers,videos,release_dates,watch/providers' })).pipe(
       map((resp: any) => {
         return {
           ...resp,
@@ -114,15 +115,27 @@ export const discoverMedia$ = (mediaType: string, searchParam: DiscoverMediaRequ
   }
 }
 
-export const searchMedia$ = (mediaType: MediaType, searchParam: string, page: number): Observable<any> => {
+export const searchMedia$ = (searchType: SearchType, searchParam: string, page: number): Observable<any> => {
   const tmdb = tmdbService
 
-  const searchFn = mediaType === 'movie' ? tmdb.searchMovie({ query: searchParam, page }) : tmdb.searchTv({ query: searchParam, page })
-  return from(searchFn).pipe(
+  const searchFn = () => {
+    if (searchType === 'movie') {
+      return tmdb.searchMovie({ query: searchParam, page })
+    }
+    else if (searchType === 'tv') {
+      return tmdb.searchTv({ query: searchParam, page })
+    }
+    else if (searchType === 'person') {
+      return tmdb.searchPerson({ query: searchParam, page })
+    }
+    else {
+      return tmdb.searchMulti({ query: searchParam, page })
+    }
+  }
+  return from(searchFn()).pipe(
     switchMap((resp) => {
-      console.log('resp', resp)
       return of(resp.results || []).pipe(
-        switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
+        switchMap(results => forkJoin(results.map(val => mediaInfo$(val.media_type || searchType, val.id)))),
         map(val => ({ ...resp, results: val })),
       )
     }),

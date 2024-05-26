@@ -53,8 +53,9 @@ const Navbar = () => {
     if (isScrolled) {
       return ''
     }
+
     const splitPath = location.pathname.split('/').filter(val => val)
-    if (['movie', 'tv', 'anime'].includes(first(splitPath) || '') && !isNaN((Number(last(splitPath))))) {
+    if (location.pathname === '/' || (['movie', 'tv', 'anime'].includes(first(splitPath) || '') && !isNaN((Number(last(splitPath)))))) {
       return 'backdrop-blur-sm bg-black/50'
     }
 

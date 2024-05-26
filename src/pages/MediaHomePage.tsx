@@ -1,4 +1,4 @@
-import MediaPagination from '@/components/media/MediaPagination'
+import MediaGrid from '@/components/media/MediaGrid'
 import { useDiscoverMedia } from '@/hooks/useMedia'
 import { MediaType } from '@/types/media.type'
 
@@ -10,9 +10,10 @@ const MediaHomePage = (props: MediaHomePageProps) => {
 
   return (
     <div className="px-8 my-32">
-      <MediaPagination
+
+      <MediaGrid
         mediaType={props.mediaType}
-        size=""
+        size="FULL"
         isLoading={isLoading}
         items={medias?.results}
         totalResults={medias?.total_results}

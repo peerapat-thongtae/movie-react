@@ -5,6 +5,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import NotFoundImage from '@/assets/images/image-not-found.png'
 import { ImageType } from '@/types/media.type'
 import NoImageBackdrop from '@/assets/images/no-image-backdrop.png'
+import { LuLoader } from 'react-icons/lu'
 
 interface ImageProps {
   src: string
@@ -14,6 +15,7 @@ interface ImageProps {
   height?: string | number
   effect?: 'zoomIn'
   type?: ImageType
+  loadIcon?: boolean
 }
 
 const Image: React.FC<ImageProps> = ({
@@ -24,9 +26,11 @@ const Image: React.FC<ImageProps> = ({
   height,
   effect,
   type,
+  loadIcon,
 }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const imageType = type || 'poster'
+  loadIcon = loadIcon || false
   const onLoad = () => {
     setIsImageLoaded(true)
   }
@@ -40,21 +44,28 @@ const Image: React.FC<ImageProps> = ({
     src
 
     && (
-      <LazyLoadImage
-        src={src}
-        alt={alt}
-        height={height}
-        width={width}
-        className={cn(
-          'transition-all duration-300 ease-in',
-          className,
-          !isImageLoaded
-            ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
-            : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
+      <>
+        { !isImageLoaded && loadIcon && (
+          <div className=" flex items-center justify-center w-full h-full">
+            <LuLoader size={50} className="animate-spin text-yellow-500" />
+          </div>
         )}
-        onLoad={onLoad}
-        onError={onErrorImage}
-      />
+        <LazyLoadImage
+          src={src}
+          alt={alt}
+          height={height}
+          width={width}
+          className={cn(
+            'transition-all duration-300 ease-in max-w-full',
+            className,
+            !isImageLoaded
+              ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
+              : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
+          )}
+          onLoad={onLoad}
+          onError={onErrorImage}
+        />
+      </>
     )
 
   )

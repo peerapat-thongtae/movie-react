@@ -4,8 +4,11 @@ import { Media, MediaType } from '@/types/media.type'
 import Image from '@/components/common/Image'
 import dayjs from 'dayjs'
 import ModalVideo from 'react-modal-video'
-import { FaPlayCircle } from 'react-icons/fa'
-import { useState } from 'react'
+import { FaBookmark, FaPlayCircle, FaSpinner } from 'react-icons/fa'
+import { useEffect, useState } from 'react'
+import { useMediaAccountStateById } from '@/hooks/useMedia'
+import { cn } from '@/utils/tailwind.helper'
+import { IoMdEye } from 'react-icons/io'
 
 // Local interface
 interface IProps {
@@ -13,7 +16,7 @@ interface IProps {
   mediaType: MediaType
 }
 
-const MediaHeroDetail = ({ media }: IProps) => {
+const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   // Variables
   const title = media.title || media.name
   const releaseDate = dayjs(media.release_date_th || media.release_date || media.first_air_date).format('DD/MM/YYYY') || ''
@@ -21,6 +24,12 @@ const MediaHeroDetail = ({ media }: IProps) => {
   const director = media.directors?.[0]?.name || '-'
   const writer = media.writers?.[0]?.name || '-'
   const [isOpenTrailer, setIsOpenTrailer] = useState(false)
+  const { data: accountState, addToWatchlist, addRated, isLoading: isLoadingAccountState } = useMediaAccountStateById(mediaType, media.id || '')
+
+  useEffect(() => {
+    console.log('acc', accountState)
+  }, [accountState])
+
   // Error image
 
   return (
@@ -37,35 +46,61 @@ const MediaHeroDetail = ({ media }: IProps) => {
         <Image
           src={`https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.backdrop_path}`}
           alt={media.name}
-          className="w-full md:h-[800px] object-cover bg-center pointer"
+          className="w-full md:min-h-[800px] md:h-[800px] object-cover bg-center pointer"
           effect="zoomIn"
         />
+        {/* <div className="md:min-h-[800px] md:h-[800px]">
+          <DemoComponent muted={false} width="100%" height="800px" videoKey={media.trailers?.[0]?.key} />
+        </div> */}
         <div className="absolute z-[1] top-0 flex justify-center h-full w-full items-center">
           <FaPlayCircle className="cursor-pointer hover:text-yellow-500" onClick={() => setIsOpenTrailer(!isOpenTrailer)} size={50} />
         </div>
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t dark:from-background from-main dark:via-background/90 via-main/20 dark:via-20% via-50% dark:to-background/10 to-main/5 to-70%" />
       </div>
 
+      {/* Detail */}
       <div
         className={`relative flex justify-center ${media.backdrop_path ? 'md:-mt-52 -mt-28' : 'mt-32'} z-10`}
       >
-
         <div className="mx-48 pb-24">
           <div className="flex justify-between">
             <span className="text-4xl text-left font-extrabold truncate ">{title}</span>
             <span className="text-4xl text-left font-extrabold truncate ">{releaseDate}</span>
           </div>
           <hr className="my-8" />
-          <div className="flex gap-8">
+          <div className="flex w-[64rem] max-w-[64rem] gap-8">
             <div className="">
-              <div className="h-full w-full">
+              <div className="w-full">
                 {/* <PosterImage image_path={media?.poster_path} /> */}
                 <Image
                   src={media?.poster_path ? `https://www.themoviedb.org/t/p/w1280/${media.poster_path}` : ''}
                   alt={media?.title || ''}
                   effect="zoomIn"
-                  className="h-auto w-[400px]"
+                  className="min-h-[400px] h-auto w-[400px] rounded-lg"
                 />
+              </div>
+              {/* Section Account State */}
+              <div className="flex justify-around my-4">
+                {!isLoadingAccountState
+                && (
+                  <>
+                    <div onClick={() => addToWatchlist(!accountState?.watchlist)} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
+                      <FaBookmark size="24" className={cn(accountState?.watchlist && 'text-yellow-500')} />
+                      <span className="text-xs">Watchlist</span>
+                    </div>
+                    <div onClick={() => addRated()} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
+                      <IoMdEye size="24" className={cn(accountState?.watched && 'text-yellow-500')} />
+                      <span className="text-xs">Watched</span>
+                    </div>
+                  </>
+                )}
+
+                {isLoadingAccountState && (
+                  <div className="flex justify-center my-4 gap-2">
+                    <FaSpinner size="24" className="text-yellow-500 animate-spin" />
+                    <span>Loading...</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="w-full">

@@ -1,4 +1,3 @@
-import { BsArrowRight } from 'react-icons/bs'
 import { FaMagnifyingGlassArrowRight } from 'react-icons/fa6'
 
 const Input = () => {

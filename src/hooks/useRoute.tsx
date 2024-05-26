@@ -17,9 +17,7 @@ export const useRoute = (keepState: any = {}) => {
 
   const defaultState = location.state.state
   useEffect(() => {
-    console.log('location', location)
     // return () => {
-    //   console.log('to', to, from)
     // }
   }, [])
 

@@ -1,7 +1,7 @@
 import { Tabs } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import { useSearch } from '@/hooks/useMedia'
-import MediaPagination from '@/components/media/MediaPagination'
+import MediaGrid from '@/components/media/MediaGrid'
 import { useSearchParams } from 'react-router-dom'
 
 const SearchMediaPage = () => {
@@ -27,6 +27,12 @@ const SearchMediaPage = () => {
                 {/* <span className="">{ !dataQueryTV.isLoading ? dataQueryTV?.medias?.total_results?.toLocaleString() : <ImSpinner className="animate-spin" color="yellow" size={20} />}</span> */}
               </div>
             </Tabs.Tab>
+            <Tabs.Tab value="person">
+              <div className="flex justify-between px-4">
+                <div>Person</div>
+                {/* <span className="">{ !dataQueryTV.isLoading ? dataQueryTV?.medias?.total_results?.toLocaleString() : <ImSpinner className="animate-spin" color="yellow" size={20} />}</span> */}
+              </div>
+            </Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="movies">
@@ -35,6 +41,10 @@ const SearchMediaPage = () => {
 
           <Tabs.Panel value="tv">
             <TabData mediaType="tv" searchString={searchString} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="person">
+            <TabData mediaType="person" searchString={searchString} />
           </Tabs.Panel>
         </Tabs>
       </div>
@@ -53,15 +63,14 @@ const TabData = (props: any) => {
   }, [searchString])
   useEffect(() => {
     if (dataQuery.isFetched) {
-      console.log('fff', dataQuery.isFetched)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [dataQuery.page, dataQuery.isFetched])
 
   return (
     <div className="px-4 min-w-[70vw]">
-      <MediaPagination
-        mediaType="movie"
+      <MediaGrid
+        mediaType={mediaType}
         size="MEDIUM"
         items={dataQuery?.data?.results}
         page={dataQuery.page}

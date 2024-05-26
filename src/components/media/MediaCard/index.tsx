@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import { FaStar } from 'react-icons/fa6'
 import ButtonMediaAccount from '../ButtonMediaAccount/v2'
 import { useMemo } from 'react'
 // import PosterImage from '../common/PosterImage'
@@ -15,6 +14,7 @@ import Image from '@/components/common/Image'
 import { useIMDBRating } from '@/hooks/useMedia'
 import { useNavigate } from 'react-router-dom'
 import { useConfigTMDB } from '@/hooks/useConfig'
+import { IoMdEye } from 'react-icons/io'
 
 interface MediaCardProps {
   item: Media
@@ -115,7 +115,7 @@ const MediaCard = (props: MediaCardProps) => {
                     <span>
                       { ratingObj.vote_average ? ratingObj.vote_average?.toFixed(1) : '' }
                     </span>
-                    <span><FaStar color="yellow" /></span>
+                    <span><IoMdEye color="yellow" /></span>
                   </div>
                   <span>
                     { ratingObj.vote_count?.toLocaleString() }

@@ -1,10 +1,13 @@
+import { cn } from '@/utils/tailwind.helper'
+
 interface LoadingProps {
   textLoading?: string
+  className?: string
 }
 
 const Loading = (props: LoadingProps) => {
   return (
-    <div className="overlay-content align-center w-full">
+    <div className={cn(`overlay-content align-center w-full`, props.className)}>
       <div className="wrapper">
         <div className="pacmancontainer">
           <div className="pacman" />

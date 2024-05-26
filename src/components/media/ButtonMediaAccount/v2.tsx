@@ -1,11 +1,12 @@
 // import useMediaAccountState from '@/shared/hooks/useMediaAccountState'
 import Popper from '@mui/material/Popper'
 import { ClickAwayListener } from '@mui/material'
-import { FaCheck, FaSpinner, FaStar } from 'react-icons/fa'
-import { useMemo, useState } from 'react'
-import { MdBookmarkAdd, MdStarRate } from 'react-icons/md'
+import { FaSpinner, FaStar } from 'react-icons/fa'
+import { useState } from 'react'
+import { MdBookmarkAdd } from 'react-icons/md'
 import { TbProgressCheck } from 'react-icons/tb'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
+import { IoMdEye } from 'react-icons/io'
 
 const ButtonMediaAccount = (props: any) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
@@ -16,32 +17,33 @@ const ButtonMediaAccount = (props: any) => {
   const mediaType = props.mediaType || media.media_type || 'movie'
   // const disabledAccountState = props.disabledAccountState
   const { data: accountState, isLoading, addToWatchlist, addRated } = useMediaAccountStateById(mediaType, media.id)
-  const mediaStatus = useMemo(() => {
-    if (accountState) {
-      if (mediaType === 'movie') {
-        if (accountState.watchlist === true) {
-          return 'watchlist'
-        }
-        if (accountState.watched === true) {
-          return 'watched'
-        }
-        return ''
-      }
-      else {
-        if (media.number_of_episodes === accountState.episode_watched.length) {
-          return 'watched'
-        }
-        else if (accountState.episode_watched.length > 0) {
-          return 'watching'
-        }
-        else {
-          return 'watchlist'
-        }
-      }
-    }
+  // const mediaStatus = useMemo(() => {
+  //   if (accountState) {
+  //     if (mediaType === 'movie') {
+  //       if (accountState.watchlist === true) {
+  //         return 'watchlist'
+  //       }
+  //       if (accountState.watched === true) {
+  //         return 'watched'
+  //       }
+  //       return ''
+  //     }
+  //     else {
+  //       if (media.number_of_episodes === accountState.episode_watched.length) {
+  //         return 'watched'
+  //       }
+  //       else if (accountState.episode_watched.length > 0) {
+  //         return 'watching'
+  //       }
+  //       else {
+  //         return 'watchlist'
+  //       }
+  //     }
+  //   }
 
-    return ''
-  }, [accountState])
+  //   return ''
+  // }, [accountState])
+  const mediaStatus = accountState?.account_status || ''
 
   const iconState = () => {
     const color = mediaStatus
@@ -60,7 +62,7 @@ const ButtonMediaAccount = (props: any) => {
       return <FaStar size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
     else {
-      return <FaCheck size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
+      return <IoMdEye size={20} className={`${isLoading && 'animate-spin'} stroke-blaFADDck stroke-[20px]`} color={color} />
     }
   }
 
@@ -77,7 +79,7 @@ const ButtonMediaAccount = (props: any) => {
 
   const clickWatched = () => {
     setAnchorEl(null)
-    addRated(10)
+    addRated()
   }
   return (
     <>
@@ -116,9 +118,9 @@ const ButtonMediaAccount = (props: any) => {
                 onClick={clickWatched}
               >
                 <div className="flex items-center gap-1">
-                  <MdStarRate size={20} className={`${mediaStatus === 'watched' ? 'text-yellow-500' : 'text-black'}`} />
+                  <IoMdEye size={20} className={`${mediaStatus === 'watched' ? 'text-yellow-500' : 'text-black'}`} />
                   <span>
-                    Rating
+                    Watched
                   </span>
                 </div>
               </div>
