@@ -19,6 +19,7 @@ const initialState: StateInterface = {
     jobs: [],
     languages: [],
     images: {},
+    watchProviders: [],
   },
   token: '',
   stateRoute: {},

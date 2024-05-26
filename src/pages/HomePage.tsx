@@ -2,21 +2,21 @@ import Loading from '@/components/common/Loading'
 import Hero from '@/components/media/Hero'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import { useDiscoverMedia } from '@/hooks/useMedia'
+import { DiscoverMediaRequest } from '@/types/media.type'
 import dayjs from 'dayjs'
 import { shuffle } from 'lodash'
-import { DiscoverMovieRequest, DiscoverTvRequest } from 'moviedb-promise'
 import { useMemo, useState } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { usePageLeave } from 'react-use'
 
 const HomePage = () => {
   const { config } = useConfigTMDB()
-  const upcomingMovieRequest: DiscoverMovieRequest = {
+  const upcomingMovieRequest: DiscoverMediaRequest = {
     'release_date.gte': dayjs().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'),
     'release_date.lte': dayjs().add(3, 'week').startOf('week').format('YYYY-MM-DD'),
     'region': 'TH',
   }
-  const upcomingTVRequest: DiscoverTvRequest = {
+  const upcomingTVRequest: DiscoverMediaRequest = {
     'air_date.gte': dayjs().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'),
     'air_date.lte': dayjs().add(3, 'week').startOf('week').format('YYYY-MM-DD'),
     'sort_by': 'popularity.desc',
