@@ -14,7 +14,7 @@ import { setToken } from '@/stores/slice'
 import { useDispatch } from 'react-redux'
 
 import { useWindowScroll } from '@mantine/hooks'
-import { Affix, Button, Text, Transition } from '@mantine/core'
+import { Affix, Button, Transition } from '@mantine/core'
 import { FaArrowUp } from 'react-icons/fa'
 
 function AffixComponent() {

@@ -14,7 +14,6 @@ import Image from '@/components/common/Image'
 import { useIMDBRating } from '@/hooks/useMedia'
 import { useNavigate } from 'react-router-dom'
 import { useConfigTMDB } from '@/hooks/useConfig'
-import { IoMdEye } from 'react-icons/io'
 
 interface MediaCardProps {
   item: Media
