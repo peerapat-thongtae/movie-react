@@ -23,11 +23,11 @@ interface MediaCardProps {
 const MediaCard = (props: MediaCardProps) => {
   const navigate = useNavigate()
   const item = props.item
-  const disabledImdb = import.meta.env.MODE !== 'development'
+  // const disabledImdb = import.meta.env.MODE !== 'development'
   const mediaType = props.mediaType || item.media_type || ''
   const imagePath = item.poster_path
 
-  const { data: imdbData, isLoading: isLoadingImdb } = useIMDBRating(item.imdb_id, disabledImdb)
+  const { data: imdbData, isLoading: isLoadingImdb } = useIMDBRating(item.imdb_id)
 
   const ratingObj = useMemo(() => {
     return {
