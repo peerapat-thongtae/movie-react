@@ -2,7 +2,7 @@
 import Popper from '@mui/material/Popper'
 import { ClickAwayListener } from '@mui/material'
 import { FaSpinner, FaStar } from 'react-icons/fa'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MdBookmarkAdd } from 'react-icons/md'
 import { TbProgressCheck } from 'react-icons/tb'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
@@ -43,7 +43,9 @@ const ButtonMediaAccount = (props: any) => {
 
   //   return ''
   // }, [accountState])
-  const mediaStatus = accountState?.account_status || ''
+  const mediaStatus = useMemo(() => {
+    return accountState?.account_status || ''
+  }, [media])
 
   const iconState = () => {
     const color = mediaStatus
@@ -62,7 +64,7 @@ const ButtonMediaAccount = (props: any) => {
       return <FaStar size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
     else {
-      return <IoMdEye size={20} className={`${isLoading && 'animate-spin'} stroke-blaFADDck stroke-[20px]`} color={color} />
+      return <IoMdEye size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
   }
 

@@ -2,6 +2,7 @@ import DemoComponentPage from '@/pages/DemoComponentPage'
 import HomePage from '@/pages/HomePage'
 import MediaDetailPage from '@/pages/MediaDetailPage'
 import MediaHomePage from '@/pages/MediaHomePage'
+import PersonDetailPage from '@/pages/PersonDetailPage'
 import SearchMediaPage from '@/pages/SearchPage'
 import { Routes, Route } from 'react-router-dom'
 
@@ -17,6 +18,7 @@ const RouteList = () => {
       <Route path="/anime/:id" element={<MediaDetailPage mediaType="anime" />} />
       <Route path="/demo" element={<DemoComponentPage />} />
       <Route path="/search" element={<SearchMediaPage />} />
+      <Route path="/person/:id" element={<PersonDetailPage />} />
       {/* <Route path="/movie" element={<Discover mediaType="movie" />} />
       <Route path="/tv" element={<Discover mediaType="tv" />} />
       <Route path="/anime" element={<Discover mediaType="anime" />} />

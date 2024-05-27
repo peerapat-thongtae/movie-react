@@ -3,17 +3,26 @@ import { useConfigTMDB } from '@/hooks/useConfig'
 import { Media } from '@/types/media.type'
 import { DateHelper } from '@/utils/date.helper'
 import { useMemo } from 'react'
+import { GoDotFill } from 'react-icons/go'
 
 const Hero2 = ({ media }: { media: Media }) => {
   const { getImagePath, getLogoPath } = useConfigTMDB()
 
-  const logoProvider = useMemo(() => {
+  const provider = useMemo(() => {
     if (media.media_type === 'movie') {
-      const providerName = media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]?.note || ''
-      return media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]?.note ? getLogoPath(providerName) : ''
+      // const providerName = media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]?.note || ''
+      const findProvider = media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]
+      if (findProvider) {
+        return {
+          ...findProvider,
+          provider_name: findProvider.note,
+        }
+      }
+
+      return null
     }
     else {
-      return getLogoPath(media.watch_providers.results?.TH?.flatrate?.[0]?.provider_name || '') || ''
+      return media.watch_providers.results?.TH?.flatrate?.[0]
     }
   }, [media])
 
@@ -26,7 +35,7 @@ const Hero2 = ({ media }: { media: Media }) => {
             <Image
               src={getImagePath(media.backdrop_path || '', 'backdrop')}
               alt={title}
-              className="w-full  h-full"
+              className="w-full h-full object-cover object-right-top"
               effect="zoomIn"
             />
 
@@ -35,22 +44,53 @@ const Hero2 = ({ media }: { media: Media }) => {
           </div>
         </div>
         <div className="absolute flex flex-col h-full justify-center items-start z-10 gap-y-4 px-12">
-          <span className="text-6xl font-bold">{title}</span>
-          <span className="flex gap-2 items-center text-lg">
+          <div className="text-6xl font-bold w-[50vw] text-left">
+            {title}
+          </div>
+          <span className="flex gap-2 items-center text-md">
             <div>
-              {logoProvider
+              {provider?.provider_name
               && (
-                <Image
-                  src={logoProvider}
-                  alt="Provider"
-                  className="w-16 h-10 rounded-xl"
-                />
+                <span className="flex gap-2 items-center">
+                  <div className="">
+                    <Image
+                      src={getLogoPath(provider?.provider_name)}
+                      alt="Provider"
+                      className="w-8 h-8 rounded-xl "
+                      effect="zoomIn"
+                    />
+                  </div>
+                  <span>{provider?.provider_name}</span>
+                  <span><GoDotFill className="text-yellow-500" /></span>
+                </span>
               )}
-
             </div>
-            <span>
-              {media.media_type === 'movie' ? DateHelper.formatDate(media.release_date_th, 'DD MMM YYYY') : DateHelper.formatDate(media.next_episode_to_air?.air_date || media.last_air_date || media.first_air_date || '', 'DD MMM YYYY')}
+            <span className="flex gap-4 items-center">
+              {media.media_type === 'movie' && DateHelper.formatDate(media.release_date_th, 'DD MMM YYYY')}
+              {media.media_type === 'tv'
+              && (
+                <>
+                  <span className="">
+                    {DateHelper.formatDate(media.next_episode_to_air?.air_date || media.last_episode_to_air?.air_date || media.first_air_date || '', 'DD MMM YYYY')}
+                  </span>
+                  <span><GoDotFill className="text-yellow-500" /></span>
+                  { media.next_episode_to_air
+                  && (
+                    <span>
+                      {`Season ${media.next_episode_to_air.season_number} EP. ${media.next_episode_to_air.episode_number} Coming..`}
+                    </span>
+                  )}
+                  {!media.next_episode_to_air && media.last_episode_to_air
+                  && (
+                    <span>
+                      {`Latest on Season ${media.last_episode_to_air.season_number} EP. ${media.last_episode_to_air.episode_number}`}
+                    </span>
+                  )}
 
+                </>
+              )}
+              <span><GoDotFill className="text-yellow-500" /></span>
+              <span>{media.status}</span>
             </span>
           </span>
         </div>

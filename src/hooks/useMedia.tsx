@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { catchError, delay, forkJoin, from, lastValueFrom, map, of } from 'rxjs'
+import { catchError, forkJoin, from, lastValueFrom, map, of } from 'rxjs'
 
 export const useAccountStateAll = () => {
   const { getAccountStates } = useAPI()
@@ -105,7 +105,7 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
   const addWatched = async () => {
     setIsLoading(true)
     const api = updateTVEpisodes({ id: id, episode_watched: [{ season_number: seasonNumber, episode_number: episodeNumber }] })
-    from(api).pipe(delay(2000)).subscribe({
+    from(api).pipe().subscribe({
       next: (resp) => {
         dispatch(setAccountStateById({ ...resp.data, mediaType }))
         setIsLoading(false)
@@ -139,7 +139,7 @@ export const useMediaDetail = (id: string, mediaType: string) => {
   return query
 }
 
-export const useTVSeasonDetail = (mediaType: MediaType, mediaId: number | string, seasonNumber: number) => {
+export const useTVSeasonDetail = (mediaType: MediaType, mediaId: number | string, seasonNumber: number | string) => {
   const { data: tvState } = useMediaAccountStateById(mediaType, mediaId)
   const fetch = () => {
     return lastValueFrom(from(tmdbService.seasonInfo({ id: mediaId, season_number: +seasonNumber })).pipe(
@@ -254,14 +254,14 @@ export const useDiscoverMedia = (mediaType: string, initialSearchParam?: Discove
   }
 
   useEffect(() => {
-    setSearchParam({})
+    // setSearchParam({})
   }, [mediaType])
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [searchParam])
 
-  const query = useQuery(['discovers', mediaType, page, setPage], async () => {
+  const query = useQuery(['discovers', mediaType, page, setPage, { ...searchParam }], async () => {
     return lastValueFrom(handleDiscover())
   })
 

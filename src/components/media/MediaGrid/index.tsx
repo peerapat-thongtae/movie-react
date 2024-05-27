@@ -1,6 +1,7 @@
 // import Input from '@/components/common/Input'
 import Loading from '@/components/common/Loading'
 import MediaCard from '@/components/media/MediaCard'
+import PersonCard from '@/components/media/PersonCard'
 import { MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
 import { Group, Pagination } from '@mantine/core'
@@ -52,7 +53,7 @@ const MediaGrid = (props: IMediaGridProps) => {
             <div className={cn('grid gap-8', gridCols)}>
               {
                 items.length > 0 && items.map((media: any, index: number) => {
-                  return <MediaCard key={index} item={media} mediaType={props.mediaType} />
+                  return props.mediaType === 'person' ? <PersonCard key={media.id} person={media} /> : <MediaCard key={index} item={media} mediaType={props.mediaType} />
                 })
               }
             </div>

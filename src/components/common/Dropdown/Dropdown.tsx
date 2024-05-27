@@ -6,14 +6,17 @@ interface DropdownProps extends Partial<ComboboxLikeProps> {
   placeholder?: string
   options: ComboboxData
   value: string
+  all?: boolean
+  labelAll?: string
   onChange?: (_value: string | null, _option: ComboboxItem) => void
 }
 const Dropdown = (props: DropdownProps) => {
+  const options: ComboboxData = props.all ? [{ label: props.labelAll || '', value: '' }].concat(props.options as []) : []
   return (
     <Select
       label={props.label}
       placeholder={props.placeholder}
-      data={props.options}
+      data={options}
       classNames={{
         root: cn(''),
         input: cn('!bg-main !border-1 !border-yellow-500 !placeholder-white !text-white', ''),

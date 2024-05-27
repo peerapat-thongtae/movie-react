@@ -27,6 +27,7 @@ const EpisodeCard = (props: EpisodeCardProps) => {
             alt={episode.name}
             effect="zoomIn"
             loadIcon
+            reEffect
           />
         </div>
         <div className="">

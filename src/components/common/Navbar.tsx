@@ -4,9 +4,10 @@ import { listenForOutsideClick } from '@/utils/click-outside'
 import { useTheme } from '@/contexts/theme-context'
 import { FiMoon, FiSun } from 'react-icons/fi'
 import { useAuth0 } from '@auth0/auth0-react'
-import { Button } from '@mantine/core'
+import { Button, Input } from '@mantine/core'
 import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
 import { first, isNaN, last } from 'lodash'
+import { inputClassNames } from '@/utils/tailwind.helper'
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
@@ -20,6 +21,7 @@ const Navbar = () => {
   const navbarRef = useRef(null)
   const [listening, setListening] = useState(false)
   const toggleNavbar = () => setShowNav(!showNav)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const login = () => {
     loginWithRedirect()
@@ -48,6 +50,13 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const onSearch = (e: any) => {
+    if (e.key === 'Enter' && searchQuery) {
+      navigate(`/search?name=${searchQuery}`)
+      setSearchQuery('')
+    }
+  }
 
   const isNavBlur = useMemo(() => {
     if (isScrolled) {
@@ -78,6 +87,14 @@ const Navbar = () => {
           <MenuItems setShowNav={setShowNav} />
         </div>
         <div className="lg:flex gap-4 items-center hidden">
+          <Input
+            classNames={inputClassNames()}
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={event => setSearchQuery(event.currentTarget.value)}
+            onKeyDown={onSearch}
+          />
+
           <div
             onClick={() => toggleTheme()}
             aria-label="Theme Switcher"

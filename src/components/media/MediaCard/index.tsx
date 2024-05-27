@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 // import PosterImage from '../common/PosterImage'
 import { Tooltip } from 'react-tooltip'
 // import { useIMDB } from '@/shared/hooks/useMedia'
-import { FaSpinner } from 'react-icons/fa'
+import { FaSpinner, FaStar } from 'react-icons/fa'
 import { FaImdb } from 'react-icons/fa'
 import { SiThemoviedatabase } from 'react-icons/si'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -116,7 +116,7 @@ const MediaCard = (props: MediaCardProps) => {
                     <span>
                       { ratingObj.vote_average ? ratingObj.vote_average?.toFixed(1) : '' }
                     </span>
-                    <span><IoMdEye color="yellow" /></span>
+                    <span><FaStar color="yellow" /></span>
                   </div>
                   <span>
                     { ratingObj.vote_count?.toLocaleString() }

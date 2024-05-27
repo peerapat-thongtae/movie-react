@@ -1,21 +1,25 @@
-import { FaMagnifyingGlassArrowRight } from 'react-icons/fa6'
+// import { cn } from '@/utils/tailwind.helper'
+// import { Input as InputManttine } from '@mantine/core'
 
-const Input = () => {
-  return (
-    <div className="flex shadow-sm w-20 h-8">
-      <input
-        className="py-1 indent-2 w-[80%] text-sm rounded-s-lg focus:outline-none dark:text-white text-black bg-ternary-light"
-        name="text"
-        type="text"
-      />
-      <button
-        className="py-1 rounded-e-lg text-black bg-yellow-500 flex justify-center items-center w-10 h-auto"
-      >
-        <FaMagnifyingGlassArrowRight />
-      </button>
-    </div>
+// type InputProps = {
+//   value: string
+//   setValue:
+// }
+// const Input = (props: InputProps) => {
+//   return (
+//     <InputManttine
+//       classNames={{
+//         wrapper: cn('!bg-main !border-1 !border-yellow-500 !placeholder-white !text-white', ''),
+//         input: cn('!bg-main !border-1 !border-yellow-500 !text-white '),
+//         // option: cn('hover:!text-black'),
+//       }}
+//       placeholder="Search..."
+//       value={props.value}
+//       onChange={event => setSearchQuery(event.currentTarget.value)}
+//       onKeyDown={onSearch}
+//     />
 
-  )
-}
+//   )
+// }
 
-export default Input
+// export default Input

@@ -13,6 +13,33 @@ import { useEffect, useState } from 'react'
 import { setToken } from '@/stores/slice'
 import { useDispatch } from 'react-redux'
 
+import { useWindowScroll } from '@mantine/hooks'
+import { Affix, Button, Text, Transition } from '@mantine/core'
+import { FaArrowUp } from 'react-icons/fa'
+
+function AffixComponent() {
+  const [scroll, scrollTo] = useWindowScroll()
+
+  return (
+    <>
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="slide-up" mounted={scroll.y > 0}>
+          {transitionStyles => (
+            <Button
+              leftSection={<FaArrowUp color="black" />}
+              style={transitionStyles}
+              onClick={() => scrollTo({ y: 0 })}
+              color="yellow"
+            >
+
+            </Button>
+          )}
+        </Transition>
+      </Affix>
+    </>
+  )
+}
+
 function App() {
   const { darkTheme } = useTheme()
   const dispatch = useDispatch()
@@ -38,6 +65,7 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={dehydrateState}>
+          <AffixComponent />
           {/* <LoadingOverlay visible={isLoading} opacity={1} overlayProps={{ backgroundOpacity: 0.3, className: `${darkTheme ? 'bg-primary-light' : 'bg-primary-dark'}` }} zIndex={1000} loaderProps={{ children: <Loading /> }} /> */}
           <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
             <div className="w-full antialiased">

@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
 import { cn } from '@/utils/tailwind.helper'
 import { IoMdEye } from 'react-icons/io'
+import { TbProgressCheck } from 'react-icons/tb'
 
 // Local interface
 interface IProps {
@@ -42,7 +43,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
         <Image
           src={`https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.backdrop_path}`}
           alt={media.name}
-          className="w-full md:min-h-[800px] md:h-[800px] object-cover bg-center pointer"
+          className="w-full md:min-h-[800px] md:h-[800px] object-cover bg-center"
           effect="zoomIn"
         />
         {/* <div className="md:min-h-[800px] md:h-[800px]">
@@ -81,11 +82,18 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                 && (
                   <>
                     <div onClick={() => addToWatchlist(!accountState?.watchlist)} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
-                      <FaBookmark size="24" className={cn(accountState?.watchlist && 'text-yellow-500')} />
+                      <FaBookmark size="24" className={cn(accountState?.account_status === 'watchlist' && 'text-yellow-500')} />
                       <span className="text-xs">Watchlist</span>
                     </div>
+                    {mediaType === 'tv'
+                    && (
+                      <div className="flex flex-col gap-2 items-center">
+                        <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
+                        <span className="text-xs">Watching</span>
+                      </div>
+                    )}
                     <div onClick={() => addRated()} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
-                      <IoMdEye size="24" className={cn(accountState?.watched && 'text-yellow-500')} />
+                      <IoMdEye size="24" className={cn(accountState?.account_status === 'watched' && 'text-yellow-500')} />
                       <span className="text-xs">Watched</span>
                     </div>
                   </>

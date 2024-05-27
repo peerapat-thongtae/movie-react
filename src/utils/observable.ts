@@ -1,6 +1,7 @@
 import tmdbService from '@/services/tmdb-service'
 import { DiscoverMediaRequest, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
+import { DiscoverMovieRequest } from 'moviedb-promise'
 import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs'
 
 export const mediaInfo$ = (media_type: string, id: any) => {
@@ -43,7 +44,7 @@ export const mediaInfo$ = (media_type: string, id: any) => {
   }
 
   if (media_type === 'tv' || media_type === 'anime') {
-    return from(tmdb.tvInfo({ id: id || '', append_to_response: 'credits,account_states,external_ids,casts,crew,recommendations,similar,belongs_to_collection,watch_providers,watch-providers,videos,release_dates,watch/providers' })).pipe(
+    return from(tmdb.tvInfo({ id: id || '', append_to_response: 'credits,account_states,external_ids,casts,crew,recommendations,similar,belongs_to_collection,watch_providers,watch-providers,videos,release_dates,watch/providers,season/episode' })).pipe(
       map((resp: any) => {
         return {
           ...resp,
@@ -94,7 +95,7 @@ export const discoverMedia$ = (mediaType: string, searchParam: DiscoverMediaRequ
   const tmdb = tmdbService
 
   if (mediaType === 'movie') {
-    return from(tmdb.discoverMovie(searchParam)).pipe(
+    return from(tmdb.discoverMovie(searchParam as DiscoverMovieRequest)).pipe(
       switchMap((resp) => {
         return of(resp.results || []).pipe(
           switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),

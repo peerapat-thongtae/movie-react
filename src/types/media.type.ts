@@ -47,6 +47,6 @@ export type AccountState = {
   account_status?: string
 }
 
-export type DiscoverMediaRequest = DiscoverMovieRequest & DiscoverTvRequest
+export type DiscoverMediaRequest = Omit<DiscoverMovieRequest & DiscoverTvRequest, 'sort_by'> & { sort_by?: string }
 
 export type ImageType = 'poster' | 'backdrop'

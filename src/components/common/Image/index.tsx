@@ -66,10 +66,10 @@ const Image: React.FC<ImageProps> = ({
           width={width}
           className={cn(
             'transition-all duration-300 ease-in max-w-full',
-            className,
             !isImageLoaded
               ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
               : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
+            className,
           )}
           onLoad={onLoad}
           onError={onErrorImage}

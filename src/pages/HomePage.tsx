@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 import { shuffle } from 'lodash'
 import { useMemo, useState } from 'react'
 import { Carousel } from 'react-responsive-carousel'
-import { usePageLeave } from 'react-use'
 
 const HomePage = () => {
   const { config } = useConfigTMDB()
@@ -22,9 +21,10 @@ const HomePage = () => {
     'sort_by': 'popularity.desc',
     'with_watch_providers': config.watchProviders.map(val => val.provider_id).join('|'),
     'watch_region': 'TH',
+    'page': 1,
   }
 
-  const [autoPlay, setAutoPlay] = useState<boolean>(true)
+  const [autoPlay] = useState<boolean>(true)
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
 
@@ -37,17 +37,14 @@ const HomePage = () => {
       return []
     }
   }, [isLoadingPopularMovies, isLoadingPopularTV])
-  usePageLeave(() => {
-    setAutoPlay(false)
-  }, [])
 
   return (
     <div className="">
       {
         !isLoadingPopularTV && !isLoadingPopularMovies && popularMerges.length > 0 && (
-          <Carousel showStatus={false} autoPlay={autoPlay} interval={5000}>
+          <Carousel stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
             {popularMerges.map((media: any) => {
-              return <div className="h-[100vh]"><Hero media={media} /></div>
+              return <div key={media.id} className="h-[94vh]"><Hero media={media} /></div>
             })}
           </Carousel>
         )
