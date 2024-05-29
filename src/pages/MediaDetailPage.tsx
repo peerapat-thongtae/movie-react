@@ -4,13 +4,14 @@ import TabLists, { TabProp } from '@/components/common/TabLists'
 import MediaHeroDetail from '@/components/media/MediaHeroDetail'
 import PersonCard from '@/components/media/PersonCard'
 import EpisodeCard from '@/components/media/EpisodeCard'
-import { useCredits, useMediaDetail, useTVSeasonDetail } from '@/hooks/useMedia'
+import { useCredits, useMediaDetail, useRecommendationMedias, useSimilarMedias, useTVSeasonDetail } from '@/hooks/useMedia'
 import { CreditType, Media, MediaType } from '@/types/media.type'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import { Input } from '@mantine/core'
 import { inputClassNames } from '@/utils/tailwind.helper'
+import MediaCard from '@/components/media/MediaCard'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -31,6 +32,16 @@ const MediaDetailPage = (props: MediaDetailPageProps) => {
           value: 'crew',
           title: 'Crews',
           panel: <>{media && <PersonTab media={media} mediaType={props.mediaType} creditType="crew" />}</>,
+        },
+        {
+          value: 'recommendations',
+          title: 'Recommendations',
+          panel: <>{media && <RecommendationTab media={media} mediaType={props.mediaType} />}</>,
+        },
+        {
+          value: 'similars',
+          title: 'Similars',
+          panel: <>{media && <SimilarTab media={media} mediaType={props.mediaType} />}</>,
         },
       ]
     }
@@ -115,7 +126,8 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
   const [filterEpisode, setFilterEpisode] = useState<string>('')
   const { data: seasonDetail, isLoading } = useTVSeasonDetail(mediaType, mediaId, seasonNumber)
   const episodes = useMemo(() => {
-    const eps = seasonDetail?.episodes || []
+    let eps = seasonDetail?.episodes || []
+    eps = eps?.filter(val => val.account_status !== 'watched')
     // if (!seasonNumber) {
     //   eps = media?.seasons?.filter(val => val.season_number !== 0)
     // }
@@ -211,6 +223,48 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
 
     </div>
 
+  )
+}
+
+const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
+  const { data: recommendationMedias, isLoading } = useRecommendationMedias(media?.id || '', mediaType)
+  return (
+    <div>
+      {isLoading
+      && <div className="h-[30vh]"><Loading /></div>}
+      { !isLoading && recommendationMedias?.results
+      && (
+        <div className="grid grid-cols-5 gap-6 px-12 py-8">
+          {recommendationMedias?.results?.map((recommendationMedia) => {
+            return (
+              <div key={recommendationMedia.id} className="min-h-[32vh]">
+                <MediaCard item={recommendationMedia} mediaType={mediaType} />
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+    </div>
+  )
+}
+
+const SimilarTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
+  const { data: similarMedias, isLoading } = useSimilarMedias(media?.id || '', mediaType)
+  return (
+    <div>
+      {isLoading
+      && <div className="h-[30vh]"><Loading /></div>}
+      <div className="grid grid-cols-5 gap-6 px-12 py-8">
+        {!isLoading && similarMedias?.results && similarMedias?.results?.map((similarMedia) => {
+          return (
+            <div key={similarMedia.id} className="min-h-[32vh]">
+              <MediaCard item={similarMedia} mediaType={mediaType} />
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 

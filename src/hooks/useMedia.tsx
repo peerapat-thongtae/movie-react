@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { catchError, forkJoin, from, lastValueFrom, map, of } from 'rxjs'
+import { catchError, forkJoin, from, lastValueFrom, map, of, switchMap } from 'rxjs'
 
 export const useAccountStateAll = () => {
   const { getAccountStates } = useAPI()
@@ -62,6 +62,9 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
     from(api).subscribe({
       next: (resp) => {
         setAccountState(resp.data)
+        dispatch(setAccountStateById(resp.data))
+      },
+      complete: () => {
         setIsLoading(false)
       },
     })
@@ -72,23 +75,66 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
     from(addStateApi(mediaType, id, status ? 'watchlist' : '')).pipe(
     ).subscribe({
       next: (resp) => {
+        console.log('resp', resp.data.media_type)
         setAccountState(resp.data)
-        setIsLoading(false)
+        dispatch(setAccountStateById(resp.data))
         toast('Success')
       },
       error: () => {
-        toast('')
+        toast('Error')
+      },
+      complete: () => {
+        setIsLoading(false)
       },
     })
   }
 
-  useEffect(() => {
-    if (accountState) {
-      dispatch(setAccountStateById(accountState))
-    }
-  }, [accountState])
+  // useEffect(() => {
+  //   if (defaultAccountState) {
+  //     setAccountState(defaultAccountState)
+  //   }
+  // }, [defaultAccountState])
 
   return { data: accountState, isLoading: isLoading, addRated, addToWatchlist }
+}
+
+export const useRecommendationMedias = (id: string | number, mediaType: MediaType) => {
+  const fetch = () => {
+    const func = mediaType === 'movie' ? tmdbService.movieRecommendations(id) : tmdbService.tvRecommendations(id)
+    return lastValueFrom(
+      from(func).pipe(
+        switchMap((resp) => {
+          return of(resp.results || []).pipe(
+            switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
+            map(val => ({ ...resp, results: val })),
+          )
+        }),
+      ),
+    )
+  }
+
+  const query = useQuery(['recommendations', id, mediaType], fetch)
+
+  return query
+}
+
+export const useSimilarMedias = (id: string | number, mediaType: MediaType) => {
+  const fetch = () => {
+    const func = mediaType === 'movie' ? tmdbService.movieSimilar(id) : tmdbService.tvSimilar(id)
+    return lastValueFrom(
+      from(func).pipe(
+        switchMap((resp) => {
+          return of(resp.results || []).pipe(
+            switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
+            map(val => ({ ...resp, results: val })),
+          )
+        }),
+      ),
+    )
+  }
+
+  const query = useQuery(['similars', id, mediaType], fetch)
+  return query
 }
 
 export const useTVEpisodeAccountState = (id: string | number, seasonNumber: number, episodeNumber: number, mediaType: MediaType) => {
@@ -147,7 +193,7 @@ export const useTVSeasonDetail = (mediaType: MediaType, mediaId: number | string
         const episodes = resp.episodes
           ? resp.episodes.map((val) => {
             const findWatched = tvState?.episode_watched?.find((state) => {
-              return state.season_number === seasonNumber && state.episode_number === val.episode_number
+              return state.season_number === +seasonNumber && state.episode_number === val.episode_number
             })
             return {
               ...val,
@@ -164,7 +210,7 @@ export const useTVSeasonDetail = (mediaType: MediaType, mediaId: number | string
     ))
   }
 
-  const query = useQuery(['tv_season', mediaId, seasonNumber], fetch)
+  const query = useQuery(['tv_season', mediaId, seasonNumber, tvState], fetch)
   return query
 }
 

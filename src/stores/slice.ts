@@ -32,19 +32,19 @@ export const accountStateSlice = createSlice({
       state.medias = action.payload
     },
     setAccountStateById: (state, action) => {
-      const mediaType = action.payload.mediaType === 'anime' ? 'tv' : action.payload.mediaType
-      const findMedia = state.medias.findIndex(val => val.id === action.payload.id && mediaType === val.media_type)
+      const mediaType = action.payload.media_type === 'anime' ? 'tv' : action.payload.media_type
+      const findIndex = state.medias.findIndex(val => val.id === action.payload.id && mediaType === val.media_type)
       if (mediaType === 'movie') {
-        if (findMedia) {
-          state.medias[findMedia].watchlist = action.payload
+        if (findIndex >= 0) {
+          state.medias[findIndex] = action.payload
         }
         else {
           state.medias.push(action.payload)
         }
       }
       else {
-        if (findMedia) {
-          state.medias[findMedia] = { ...action.payload }
+        if (findIndex >= 0) {
+          state.medias[findIndex] = { ...action.payload }
         }
         else {
           state.medias.push(action.payload)

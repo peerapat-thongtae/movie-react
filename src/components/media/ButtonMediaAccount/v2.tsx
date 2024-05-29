@@ -45,9 +45,9 @@ const ButtonMediaAccount = (props: any) => {
   // }, [accountState])
   const mediaStatus = useMemo(() => {
     return accountState?.account_status || ''
-  }, [media, accountState])
+  }, [media, accountState, isLoading])
 
-  const iconState = () => {
+  const iconState = useMemo(() => {
     const color = mediaStatus
       || isLoading
       ? 'yellow'
@@ -66,7 +66,7 @@ const ButtonMediaAccount = (props: any) => {
     else {
       return <IoMdEye size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
-  }
+  }, [mediaStatus, isLoading, media])
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -86,7 +86,7 @@ const ButtonMediaAccount = (props: any) => {
   return (
     <>
       <button className="" onClick={handleClick}>
-        {iconState()}
+        {iconState}
       </button>
       <Popper
         id={id}

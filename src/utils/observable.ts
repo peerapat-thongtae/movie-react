@@ -1,8 +1,8 @@
 import tmdbService from '@/services/tmdb-service'
-import { DiscoverMediaRequest, SearchType } from '@/types/media.type'
+import { DiscoverMediaRequest, MediaType, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
 import { DiscoverMovieRequest } from 'moviedb-promise'
-import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs'
+import { forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs'
 
 export const mediaInfo$ = (media_type: string, id: any) => {
   const tmdb = tmdbService
@@ -89,6 +89,13 @@ export const mediaInfo$ = (media_type: string, id: any) => {
       }),
     )
   }
+}
+
+export const mediaInfos$ = (media_type: MediaType, ids: Partial<{ id: string | number, media_type?: MediaType }[]>) => {
+  return of(ids).pipe(
+    switchMap(results => forkJoin(results?.map(val => mediaInfo$(val?.media_type || media_type, val?.id)))),
+    tap(console.log),
+  )
 }
 
 export const discoverMedia$ = (mediaType: string, searchParam: DiscoverMediaRequest): Observable<any> => {

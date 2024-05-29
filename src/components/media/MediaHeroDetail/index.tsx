@@ -89,7 +89,9 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                     && (
                       <div className="flex flex-col gap-2 items-center">
                         <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
-                        <span className="text-xs">Watching</span>
+                        <span className="text-xs">
+                          Watching
+                        </span>
                       </div>
                     )}
                     <div onClick={() => addRated()} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
@@ -106,6 +108,14 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                   </div>
                 )}
               </div>
+
+              {accountState?.account_status === 'watching'
+              && (
+                <div className="justify-center flex gap-2">
+                  <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
+                  <span>{`Watching ${accountState.episode_watched.length} EP. of ${accountState.number_of_episodes} EP.`}</span>
+                </div>
+              )}
             </div>
             <div className="w-full">
               <div className="pb-4">

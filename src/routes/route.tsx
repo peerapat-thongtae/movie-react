@@ -3,6 +3,7 @@ import HomePage from '@/pages/HomePage'
 import MediaDetailPage from '@/pages/MediaDetailPage'
 import MediaHomePage from '@/pages/MediaHomePage'
 import PersonDetailPage from '@/pages/PersonDetailPage'
+import SchedulePage from '@/pages/SchedulePage'
 import SearchMediaPage from '@/pages/SearchPage'
 import { Routes, Route } from 'react-router-dom'
 
@@ -19,6 +20,7 @@ const RouteList = () => {
       <Route path="/demo" element={<DemoComponentPage />} />
       <Route path="/search" element={<SearchMediaPage />} />
       <Route path="/person/:id" element={<PersonDetailPage />} />
+      <Route path="/schedule" element={<SchedulePage />} />
       {/* <Route path="/movie" element={<Discover mediaType="movie" />} />
       <Route path="/tv" element={<Discover mediaType="tv" />} />
       <Route path="/anime" element={<Discover mediaType="anime" />} />
