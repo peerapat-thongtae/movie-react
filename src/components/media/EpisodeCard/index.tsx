@@ -15,7 +15,7 @@ interface EpisodeCardProps {
 }
 const EpisodeCard = (props: EpisodeCardProps) => {
   const episode = props.item
-  const { data: accountState, addWatched, isLoading } = useTVEpisodeAccountState(props.media.id || '', Number(episode.season_number), Number(episode.episode_number), props.mediaType)
+  const { data: accountState, addWatched, isLoading } = useTVEpisodeAccountState(props.media.id || '', Number(episode.season_number), Number(episode.episode_number), Number(episode.id), props.mediaType)
   const { getImagePath } = useConfigTMDB()
   return (
     <div>

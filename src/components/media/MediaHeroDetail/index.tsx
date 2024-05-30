@@ -111,7 +111,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
 
               {accountState?.account_status === 'watching'
               && (
-                <div className="justify-center flex gap-2">
+                <div className="justify-center flex gap-2 text-sm items-center">
                   <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
                   <span>{`Watching ${accountState.episode_watched.length} EP. of ${accountState.number_of_episodes} EP.`}</span>
                 </div>

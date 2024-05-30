@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { listenForOutsideClick } from '@/utils/click-outside'
 import { useTheme } from '@/contexts/theme-context'
-import { FiMoon, FiSun } from 'react-icons/fi'
+// import { FiMoon, FiSun } from 'react-icons/fi'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Button, Input } from '@mantine/core'
 import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const { darkTheme, toggleTheme } = useTheme()
+  const { darkTheme } = useTheme()
 
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
 
@@ -95,7 +95,7 @@ const Navbar = () => {
             onKeyDown={onSearch}
           />
 
-          <div
+          {/* <div
             onClick={() => toggleTheme()}
             aria-label="Theme Switcher"
             className="ml-0 dark:bg-primary-dark dark:bg-opacity-5 bg-ternary-dark p-3 shadow-sm rounded-xl cursor-pointer"
@@ -107,7 +107,7 @@ const Navbar = () => {
               : (
                 <FiSun className="text-gray-500 hover:text-ternary-dark text-xl h-4" />
               )}
-          </div>
+          </div> */}
           <div className="">
             {!isAuthenticated
               ? (

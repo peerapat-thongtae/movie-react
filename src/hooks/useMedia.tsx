@@ -52,8 +52,8 @@ export const useAccountStateAll = () => {
 export const useMediaAccountStateById = (mediaType: MediaType, id: string | number) => {
   const { addToWatchlist: addStateApi } = useAPI()
   const dispatch = useDispatch()
-  const defaultAccountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
-  const [accountState, setAccountState] = useState(defaultAccountState)
+  const accountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
+  // const [accountState, setAccountState] = useState(defaultAccountState)
   const [isLoading, setIsLoading] = useState(false)
 
   const addRated = async () => {
@@ -61,7 +61,7 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
     const api = addStateApi(mediaType, id, !accountState?.watched ? 'watched' : '')
     from(api).subscribe({
       next: (resp) => {
-        setAccountState(resp.data)
+        // setAccountState(resp.data)
         dispatch(setAccountStateById(resp.data))
       },
       complete: () => {
@@ -76,7 +76,7 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
     ).subscribe({
       next: (resp) => {
         console.log('resp', resp.data.media_type)
-        setAccountState(resp.data)
+        // setAccountState(resp.data)
         dispatch(setAccountStateById(resp.data))
         toast('Success')
       },
@@ -137,7 +137,7 @@ export const useSimilarMedias = (id: string | number, mediaType: MediaType) => {
   return query
 }
 
-export const useTVEpisodeAccountState = (id: string | number, seasonNumber: number, episodeNumber: number, mediaType: MediaType) => {
+export const useTVEpisodeAccountState = (id: string | number, seasonNumber: number, episodeNumber: number, episodeId: number, mediaType: MediaType) => {
   const { updateTVEpisodes } = useAPI()
   const dispatch = useDispatch()
   const accountState = useSelector((state: IRootState) => {
@@ -150,7 +150,7 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
 
   const addWatched = async () => {
     setIsLoading(true)
-    const api = updateTVEpisodes({ id: id, episode_watched: [{ season_number: seasonNumber, episode_number: episodeNumber }] })
+    const api = updateTVEpisodes({ id: id, episode_watched: [{ episode_id: episodeId, season_number: seasonNumber, episode_number: episodeNumber }] })
     from(api).pipe().subscribe({
       next: (resp) => {
         dispatch(setAccountStateById({ ...resp.data, mediaType }))
