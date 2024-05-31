@@ -9,8 +9,6 @@ import { CreditType, Media, MediaType } from '@/types/media.type'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import { Input } from '@mantine/core'
-import { inputClassNames } from '@/utils/tailwind.helper'
 import MediaCard from '@/components/media/MediaCard'
 
 interface MediaDetailPageProps {
@@ -123,23 +121,16 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
     value: val.season_number?.toString() || '',
   })).filter(val => val.value !== '0') || []
   const [seasonNumber, setSeasonNumber] = useState<string>('1')
-  const [filterEpisode, setFilterEpisode] = useState<string>('')
+  // const [filterEpisode, setFilterEpisode] = useState<string>('')
   const { data: seasonDetail, isLoading } = useTVSeasonDetail(mediaType, mediaId, seasonNumber)
   const episodes = useMemo(() => {
-    let eps = seasonDetail?.episodes || []
-    eps = eps?.filter(val => val.account_status !== 'watched')
+    const eps = seasonDetail?.episodes || []
+    // eps = eps?.filter(val => val.account_status !== 'watched')
     // if (!seasonNumber) {
     //   eps = media?.seasons?.filter(val => val.season_number !== 0)
     // }
-    if (!filterEpisode) {
-      return eps
-    }
-    else {
-      return eps.filter((val) => {
-        return (val.episode_number || 1) >= +filterEpisode
-      }) || []
-    }
-  }, [filterEpisode, seasonDetail])
+    return eps
+  }, [seasonDetail])
   const parentRef = useRef<HTMLDivElement | null>(null)
 
   // The virtualizer
@@ -150,26 +141,19 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
     scrollMargin: parentRef.current?.offsetTop ?? 0,
   })
 
-  const goToEpisode = (e: any) => {
-    if (e.key === 'Enter') {
-      //
-    }
-  }
-
   return (
     <div className="px-24 py-8" ref={parentRef}>
       <div className="flex justify-between items-center">
-        <div>
+        {/* <div>
           <Input.Wrapper label="Go to episode">
             <Input
               classNames={inputClassNames({ wrapper: 'w-24' })}
               placeholder="Go to ..."
               value={filterEpisode}
               onChange={event => setFilterEpisode(event.currentTarget.value)}
-              onKeyDown={goToEpisode}
             />
           </Input.Wrapper>
-        </div>
+        </div> */}
         { isLoading
           ? <></>
           : (

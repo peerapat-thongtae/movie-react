@@ -1,10 +1,8 @@
 import todoApi from '@/services/todo-client'
 import { getToken } from '@/stores/slice'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useSelector } from 'react-redux'
 
 export const useAPI = () => {
-  useAuth0()
   const token = useSelector(getToken)
 
   const getImdbRating = (imdbId: string) => {

@@ -36,8 +36,8 @@ const AvatarMenu = () => {
                 currentTarget.src = NotFoundImage
               }}
             />
-            <div className="font-medium dark:text-black text-white hidden md:block">
-              <div className="text-sm">{user?.given_name}</div>
+            <div className="font-medium dark:text-black text-white hidden md:block ">
+              <div className="text-sm w-12 truncate">{user?.given_name || user?.email}</div>
               <div className="text-xs text-gray-200 dark:text-gray-400">{user?.family_name}</div>
             </div>
             <div>

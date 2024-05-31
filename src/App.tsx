@@ -10,8 +10,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useEffect, useState } from 'react'
-import { setToken } from '@/stores/slice'
-import { useDispatch } from 'react-redux'
+import { getToken, setToken } from '@/stores/slice'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useWindowScroll } from '@mantine/hooks'
 import { Affix, Button, Transition } from '@mantine/core'
@@ -53,16 +53,29 @@ function App() {
   }))
 
   const dehydrateState = dehydrate(queryClient, { shouldDehydrateQuery: () => true })
-  useAccountStateAll()
+  const { fetch: fetchAccountStates, clear: clearAccountStates } = useAccountStateAll()
   const { getConfiguration } = useConfigTMDB()
+  const token = useSelector(getToken)
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      getAccessTokenSilently().then((token) => {
-        dispatch(setToken(token))
-      }).catch(() => dispatch(setToken('')))
+    if (!isLoading) {
+      if (isAuthenticated) {
+        getAccessTokenSilently().then((token) => {
+          dispatch(setToken(token))
+        }).catch(() => dispatch(setToken('')))
+      }
+      else {
+        dispatch(setToken(''))
+        clearAccountStates()
+      }
     }
   }, [isAuthenticated, isLoading])
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetchAccountStates()
+    }
+  }, [isAuthenticated, token])
 
   useEffect(() => {
     getConfiguration()

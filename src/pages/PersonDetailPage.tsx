@@ -17,6 +17,7 @@ const PersonDetailPage = () => {
           <div className="h-[10vh] w-full absolute bottom-0 left-0 bg-gradient-to-t from-main to-transparent"></div>
         </div>
       </div> */}
+      Is Coming...
     </div>
   )
 }

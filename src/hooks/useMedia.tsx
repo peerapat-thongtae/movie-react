@@ -5,7 +5,6 @@ import { getAccountStateById, setAccountStateById, setAccountStates } from '@/st
 import { IRootState } from '@/stores/store'
 import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
 import { discoverMedia$, mediaInfo$, searchMedia$ } from '@/utils/observable'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +16,7 @@ export const useAccountStateAll = () => {
   const dispatch = useDispatch()
 
   const [data, setDatas] = useState<any[]>([])
-  const { isLoading, isAuthenticated } = useAuth0()
+  // const { isLoading, isAuthenticated } = useAuth0()
 
   const fetchAccountStates = () => {
     forkJoin({ movies: getAccountStates('movie'), tv: getAccountStates('tv') }).subscribe({
@@ -35,18 +34,7 @@ export const useAccountStateAll = () => {
     setDatas([])
   }
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        fetchAccountStates()
-      }
-      else {
-        clearAccountStates()
-      }
-    }
-  }, [isLoading, isAuthenticated])
-
-  return { data, fetch: fetchAccountStates, clearAccountStates }
+  return { data, fetch: fetchAccountStates, clear: clearAccountStates }
 }
 
 export const useMediaAccountStateById = (mediaType: MediaType, id: string | number) => {
