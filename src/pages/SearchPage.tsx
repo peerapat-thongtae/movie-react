@@ -68,10 +68,11 @@ const TabData = (props: any) => {
   }, [dataQuery.page, dataQuery.isFetched])
 
   return (
-    <div className="px-4 min-w-[70vw]">
+    <div className="px-4 w-[70vw]">
       <MediaGrid
         mediaType={mediaType}
         size="MEDIUM"
+        gridCols={4}
         items={dataQuery?.data?.results}
         page={dataQuery.page}
         isLoading={dataQuery.isLoading}

@@ -1,7 +1,7 @@
 import tmdbService from '@/services/tmdb-service'
 import { DiscoverMediaRequest, MediaType, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
-import { DiscoverMovieRequest } from 'moviedb-promise'
+import { DiscoverMovieRequest, DiscoverMovieResponse, DiscoverTvResponse } from 'moviedb-promise'
 import { forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs'
 
 export const mediaInfo$ = (media_type: string, id: any) => {
@@ -91,33 +91,33 @@ export const mediaInfo$ = (media_type: string, id: any) => {
   }
 }
 
-export const mediaInfos$ = (media_type: MediaType, ids: Partial<{ id: string | number, media_type?: MediaType }[]>) => {
-  return of(ids).pipe(
-    switchMap(results => forkJoin(results?.map(val => mediaInfo$(val?.media_type || media_type, val?.id)))),
+export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvResponse, media_type?: MediaType) => {
+  return of(respResults.results || []).pipe(
+    switchMap(results => forkJoin(results?.map(val => mediaInfo$(media_type || val.media_type, val.id)))),
+    // switchMap((results) => {
+    //   return of(getImdbRatingByIds(results.map(val => val.id))).pipe(
+
+    //   )
+    // }),
+    map(val => ({ ...respResults, results: val })),
     tap(console.log),
   )
 }
 
-export const discoverMedia$ = (mediaType: string, searchParam: DiscoverMediaRequest): Observable<any> => {
+export const discoverMedia$ = (mediaType: MediaType, searchParam: DiscoverMediaRequest): Observable<any> => {
   const tmdb = tmdbService
 
   if (mediaType === 'movie') {
     return from(tmdb.discoverMovie(searchParam as DiscoverMovieRequest)).pipe(
       switchMap((resp) => {
-        return of(resp.results || []).pipe(
-          switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
-          map(val => ({ ...resp, results: val })),
-        )
+        return mediaInfos$(resp, 'movie')
       }),
     )
   }
   else {
     return from(tmdb.discoverTv(searchParam)).pipe(
       switchMap((resp) => {
-        return of(resp.results || []).pipe(
-          switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
-          map(val => ({ ...resp, results: val })),
-        )
+        return mediaInfos$(resp, mediaType)
       }),
     )
   }

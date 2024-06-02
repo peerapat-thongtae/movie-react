@@ -1,4 +1,4 @@
-import todoApi from '@/services/todo-client'
+import todoApi from '@/services/client/todo-client'
 import { getToken } from '@/stores/slice'
 import { useSelector } from 'react-redux'
 
@@ -7,6 +7,10 @@ export const useAPI = () => {
 
   const getImdbRating = (imdbId: string) => {
     return todoApi.get(`/rating/imdb/${imdbId}`)
+  }
+
+  const getImdbRatingByIds = (imdbIds: string[]) => {
+    return todoApi.post(`/rating/imdb`, { ids: imdbIds })
   }
 
   const getAccountState = (media_type: string, media_id: string | number) => {
@@ -29,5 +33,5 @@ export const useAPI = () => {
     return todoApi.post(`/tv/episodes`, payload, { headers: { Authorization: `Bearer ${token}` } })
   }
 
-  return { getImdbRating, getAccountState, getAccountStates, addToWatchlist, getAccountStatePaginate, updateTVEpisodes, token }
+  return { getImdbRating, getAccountState, getAccountStates, addToWatchlist, getAccountStatePaginate, updateTVEpisodes, token, getImdbRatingByIds }
 }

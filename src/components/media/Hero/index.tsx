@@ -22,7 +22,7 @@ const Hero2 = ({ media }: { media: Media }) => {
       return null
     }
     else {
-      return media.watch_providers.results?.TH?.flatrate?.[0]
+      return media.watch_providers?.results?.TH?.flatrate?.[0]
     }
   }, [media])
 
@@ -35,6 +35,7 @@ const Hero2 = ({ media }: { media: Media }) => {
             <Image
               src={getImagePath(media.backdrop_path || '', 'backdrop')}
               alt={title}
+              lazy={false}
               className="w-full h-full object-cover object-right-top"
               effect="zoomIn"
             />

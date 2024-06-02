@@ -1,11 +1,9 @@
-// import Loading from '@/components/common/Loading'
 import Navbar from '@/components/common/Navbar'
 import { useTheme } from '@/contexts/theme-context'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import { useAccountStateAll } from '@/hooks/useMedia'
 import RouteList from '@/routes/route'
 import { useAuth0 } from '@auth0/auth0-react'
-// import { LoadingOverlay } from '@mantine/core'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-query'
@@ -30,9 +28,7 @@ function AffixComponent() {
               style={transitionStyles}
               onClick={() => scrollTo({ y: 0 })}
               color="yellow"
-            >
-
-            </Button>
+            />
           )}
         </Transition>
       </Affix>
@@ -47,7 +43,8 @@ function App() {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false, // default: true
+        refetchOnWindowFocus: false, // default: true]
+        retry: false,
       },
     },
   }))

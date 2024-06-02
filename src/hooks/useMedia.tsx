@@ -1,25 +1,31 @@
-import { useAPI } from '@/hooks/api/useAPI'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import tmdbService from '@/services/tmdb-service'
+import TodoService from '@/services/todo.service'
 import { getAccountStateById, setAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
 import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
 import { discoverMedia$, mediaInfo$, searchMedia$ } from '@/utils/observable'
+import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { catchError, forkJoin, from, lastValueFrom, map, of, switchMap } from 'rxjs'
+import { catchError, finalize, forkJoin, from, lastValueFrom, map, of, switchMap } from 'rxjs'
 
 export const useAccountStateAll = () => {
-  const { getAccountStates } = useAPI()
   const dispatch = useDispatch()
+  const auth = useAuth0()
 
   const [data, setDatas] = useState<any[]>([])
   // const { isLoading, isAuthenticated } = useAuth0()
 
   const fetchAccountStates = () => {
-    forkJoin({ movies: getAccountStates('movie'), tv: getAccountStates('tv') }).subscribe({
+    from(auth.getAccessTokenSilently()).pipe(
+      switchMap((token) => {
+        const todoService = new TodoService({ token })
+        return forkJoin({ movies: todoService.getAccountStates('movie'), tv: todoService.getAccountStates('tv') })
+      }),
+    ).subscribe({
       next: (resp) => {
         const { movies, tv } = resp
         const states = [...movies.data.results, ...tv.data.results]
@@ -38,29 +44,36 @@ export const useAccountStateAll = () => {
 }
 
 export const useMediaAccountStateById = (mediaType: MediaType, id: string | number) => {
-  const { addToWatchlist: addStateApi } = useAPI()
   const dispatch = useDispatch()
   const accountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
   // const [accountState, setAccountState] = useState(defaultAccountState)
+  const auth = useAuth0()
   const [isLoading, setIsLoading] = useState(false)
 
   const addRated = async () => {
     setIsLoading(true)
-    const api = addStateApi(mediaType, id, !accountState?.watched ? 'watched' : '')
-    from(api).subscribe({
+    from(auth.getAccessTokenSilently()).pipe(
+      switchMap((token) => {
+        const todoService = new TodoService({ token })
+        return todoService.addToWatchlist(mediaType, id, !accountState?.watched ? 'watched' : '')
+      }),
+      finalize(() => setIsLoading(false)),
+    ).subscribe({
       next: (resp) => {
         // setAccountState(resp.data)
         dispatch(setAccountStateById(resp.data))
-      },
-      complete: () => {
-        setIsLoading(false)
       },
     })
   }
 
   const addToWatchlist = async (status: boolean) => {
     setIsLoading(true)
-    from(addStateApi(mediaType, id, status ? 'watchlist' : '')).pipe(
+    from(auth.getAccessTokenSilently()).pipe(
+      switchMap((token) => {
+        const todoService = new TodoService({ token })
+        return todoService.addToWatchlist(mediaType, id, status ? 'watchlist' : '')
+      }),
+      finalize(() => setIsLoading(false)),
     ).subscribe({
       next: (resp) => {
         console.log('resp', resp.data.media_type)
@@ -68,20 +81,8 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
         dispatch(setAccountStateById(resp.data))
         toast('Success')
       },
-      error: () => {
-        toast('Error')
-      },
-      complete: () => {
-        setIsLoading(false)
-      },
     })
   }
-
-  // useEffect(() => {
-  //   if (defaultAccountState) {
-  //     setAccountState(defaultAccountState)
-  //   }
-  // }, [defaultAccountState])
 
   return { data: accountState, isLoading: isLoading, addRated, addToWatchlist }
 }
@@ -126,8 +127,8 @@ export const useSimilarMedias = (id: string | number, mediaType: MediaType) => {
 }
 
 export const useTVEpisodeAccountState = (id: string | number, seasonNumber: number, episodeNumber: number, episodeId: number, mediaType: MediaType) => {
-  const { updateTVEpisodes } = useAPI()
   const dispatch = useDispatch()
+  const auth = useAuth0()
   const accountState = useSelector((state: IRootState) => {
     const tvState = getAccountStateById(state, mediaType, id)
     return tvState?.episode_watched.find((val) => {
@@ -138,8 +139,12 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
 
   const addWatched = async () => {
     setIsLoading(true)
-    const api = updateTVEpisodes({ id: id, episode_watched: [{ episode_id: episodeId, season_number: seasonNumber, episode_number: episodeNumber }] })
-    from(api).pipe().subscribe({
+    from(auth.getAccessTokenSilently()).pipe(
+      switchMap((token) => {
+        const todoService = new TodoService({ token })
+        return todoService.updateTVEpisodes({ id: id, episode_watched: [{ episode_id: episodeId, season_number: seasonNumber, episode_number: episodeNumber }] })
+      }),
+    ).subscribe({
       next: (resp) => {
         dispatch(setAccountStateById({ ...resp.data, mediaType }))
         setIsLoading(false)
@@ -248,7 +253,7 @@ export const useCredits = (mediaType: MediaType, mediaId: string | number) => {
   return query
 }
 
-export const useDiscoverMedia = (mediaType: string, initialSearchParam?: DiscoverMediaRequest) => {
+export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: DiscoverMediaRequest) => {
   const defaultPage: number = 1
   const { tvShowParams, tvAnimeParams } = useTMDBParam()
   const [searchParam, setSearch] = useState<DiscoverMediaRequest>({
@@ -303,8 +308,6 @@ export const useDiscoverMedia = (mediaType: string, initialSearchParam?: Discove
 }
 
 export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
-  const { getImdbRating } = useAPI()
-
   const fetch = () => {
     if (!imdbId) {
       return of(null)
@@ -312,7 +315,7 @@ export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
     if (disabled) {
       return of(null)
     }
-    return from(getImdbRating(imdbId)).pipe(
+    return from(new TodoService().getImdbRating(imdbId)).pipe(
       catchError(() => of(null)),
       map(resp => ({
         ...resp,

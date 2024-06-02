@@ -3,6 +3,7 @@ import Hero from '@/components/media/Hero'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import { useDiscoverMedia } from '@/hooks/useMedia'
 import { DiscoverMediaRequest } from '@/types/media.type'
+import { useAuth0 } from '@auth0/auth0-react'
 import dayjs from 'dayjs'
 import { shuffle } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -27,10 +28,18 @@ const HomePage = () => {
   const [autoPlay] = useState<boolean>(true)
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
+  const { isAuthenticated } = useAuth0()
 
   const popularMerges = useMemo(() => {
     if (popularMovies && popularTV) {
-      const arr = [...popularMovies.results, ...popularTV.results]
+      const arr = []
+      if (popularMovies?.results.length > 0) {
+        arr.push(...popularMovies.results)
+      }
+
+      if (popularTV?.results.length > 0) {
+        arr.push(...popularTV.results)
+      }
       return shuffle(arr)
     }
     else {
@@ -42,15 +51,29 @@ const HomePage = () => {
     <div className="">
       {
         !isLoadingPopularTV && !isLoadingPopularMovies && popularMerges.length > 0 && (
-          <Carousel stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
+          <Carousel showThumbs={false} stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
             {popularMerges.map((media: any) => {
-              return <div key={media.id} className="h-[94vh]"><Hero media={media} /></div>
+              return <div key={media.id} className="h-[98vh]"><Hero media={media} /></div>
             })}
           </Carousel>
         )
       }
       {(isLoadingPopularMovies || isLoadingPopularTV)
       && <div className="h-screen"><Loading /></div>}
+
+      {isAuthenticated
+      && (
+        <div className="my-12 px-16 text-xl font-bold flex flex-col gap-8">
+          <div className="flex justify-between">
+            <span>Continue Watching</span>
+            <span>See All...</span>
+          </div>
+          <div>
+            Slider...
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

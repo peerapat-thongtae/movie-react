@@ -1,13 +1,17 @@
 // import Input from '@/components/common/Input'
+import Dropdown from '@/components/common/Dropdown/Dropdown'
 import Loading from '@/components/common/Loading'
+import NoData from '@/components/common/NoData'
 import MediaCard from '@/components/media/MediaCard'
 import PersonCard from '@/components/media/PersonCard'
-import { MediaType } from '@/types/media.type'
+import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
 import { Group, Pagination } from '@mantine/core'
+import { Person } from 'moviedb-promise'
+import { useState } from 'react'
 
 interface IMediaGridProps {
-  items: []
+  items: (Media | Person)[]
   page?: number
   isLoading?: boolean
   pagination?: boolean
@@ -21,7 +25,9 @@ interface IMediaGridProps {
 
 const MediaGrid = (props: IMediaGridProps) => {
   const items = props.items || []
+  const [sort] = useState('')
   const page = props.page || 1
+  const mediaType = props.mediaType
   const isLoading = props.isLoading || false
   const pagination = props.pagination || true
   const totalPages = props?.totalPages || 1
@@ -32,62 +38,85 @@ const MediaGrid = (props: IMediaGridProps) => {
     }
   }
 
-  const size = props.size || 'FULL'
-
-  const gridCols = size === 'FULL' ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+  const sortOptions = [
+    {
+      label: 'Popularity',
+      value: 'popularity.desc',
+    },
+  ]
 
   return (
-    <div className="w-full">
+    <>
       {!isLoading
-        ? (
-          <>
-            <div className="flex justify-between mb-4">
-              <div>
-                Total :
-                {totalResults?.toLocaleString() || ''}
-              </div>
-              <div>
-                {/* <Select /> */}
-              </div>
-            </div>
-            <div className={cn('grid gap-8', gridCols)}>
-              {
-                items.length > 0 && items.map((media: any, index: number) => {
-                  return props.mediaType === 'person' ? <PersonCard key={media.id} person={media} /> : <MediaCard key={index} item={media} mediaType={props.mediaType} />
-                })
-              }
-            </div>
-            {pagination
-            && (
-              <div className="flex justify-center items-center md:w-full py-8">
-                <Pagination.Root
-                  classNames={{ root: '', control: '!text-white !bg-main data-active:!bg-yellow-500 data-active:!border-0 hover:!bg-white data-active:!bg-yellow-500 data-active:!text-black hover:!text-black' }}
-                  total={(totalPages > 500 ? 500 : totalPages)}
-                  value={page}
-                  onChange={setPage}
-                >
-                  <Group gap={5} justify="center">
-                    <Pagination.First />
-                    <Pagination.Previous />
-                    <Pagination.Items />
-                    <Pagination.Next />
-                    <Pagination.Last />
-                    {/* <div className="px-2">
-                    <Input />
-                  </div> */}
-                  </Group>
-                </Pagination.Root>
-              </div>
-            )}
-          </>
-        )
-        : (
+      && (
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            {`Total : ${totalResults?.toLocaleString() || ''}`}
+          </div>
+          <div>
+            <Dropdown
+              placeholder="Select Sort"
+              options={sortOptions}
+              value={sort}
+            />
+          </div>
+        </div>
+      )}
+
+      {
+        isLoading
+        && (
           <div className="flex items-center justify-center min-h-[76vh] w-full">
             <Loading />
           </div>
-        )}
+        )
+      }
 
-    </div>
+      {!isLoading && items.length > 0
+      && (
+        <div className={cn('grid place-items-center gap-[clamp(20px,3vw,32px)]', `grid-cols-${props.gridCols || 5}`)}>
+          {items.map((media, index: number) => {
+            return (
+              <>
+                {mediaType === 'person'
+                  ? <PersonCard key={index} person={media as Person} />
+                  : <MediaCard key={index} item={media as Media} mediaType={props.mediaType} />}
+              </>
+            )
+          })}
+        </div>
+      )}
+
+      {items.length === 0
+      && (
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <NoData />
+        </div>
+      )}
+
+      {pagination && totalResults > 0
+      && (
+        <div className="flex justify-center items-center md:w-full py-8">
+          <Pagination.Root
+            classNames={{ root: '', control: '!text-white !bg-main data-active:!bg-yellow-500 data-active:!border-0 hover:!bg-white data-active:!bg-yellow-500 data-active:!text-black hover:!text-black' }}
+            total={(totalPages > 500 ? 500 : totalPages)}
+            value={page}
+            onChange={setPage}
+          >
+            <Group gap={5} justify="center">
+              <Pagination.First />
+              <Pagination.Previous />
+              <Pagination.Items />
+              <Pagination.Next />
+              <Pagination.Last />
+              {/* <div className="px-2">
+                    <Input />
+                  </div> */}
+            </Group>
+          </Pagination.Root>
+        </div>
+      )}
+    </>
   )
 }
 

@@ -17,6 +17,8 @@ interface ImageProps {
   type?: ImageType
   reEffect?: boolean
   loadIcon?: boolean
+  lazy?: boolean
+  onClick?: () => void
 }
 
 const Image: React.FC<ImageProps> = ({
@@ -29,8 +31,11 @@ const Image: React.FC<ImageProps> = ({
   type,
   reEffect,
   loadIcon,
+  lazy,
+  onClick,
 }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
+  lazy = lazy === undefined ? true : lazy
   const imageType = type || 'poster'
   loadIcon = loadIcon || false
   const onLoad = () => {
@@ -54,27 +59,55 @@ const Image: React.FC<ImageProps> = ({
 
     && (
       <>
-        { !isImageLoaded && loadIcon && (
+        { !isImageLoaded && loadIcon && lazy && (
           <div className=" flex items-center justify-center w-full h-full">
             <LuLoader size={50} className="animate-spin text-yellow-500" />
           </div>
         )}
-        <LazyLoadImage
-          src={src}
-          alt={alt}
-          height={height}
-          width={width}
-          className={cn(
-            'transition-all duration-300 ease-in max-w-full',
-            !isImageLoaded
-              ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
-              : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
-            className,
-          )}
-          onLoad={onLoad}
-          onError={onErrorImage}
-          onChange={() => console.log('change')}
-        />
+
+        {lazy
+        && (
+          <LazyLoadImage
+            src={src}
+            alt={alt}
+            loading={undefined}
+            height={height}
+            width={width}
+            className={cn(
+              'transition-all duration-300 ease-in max-w-full',
+              !isImageLoaded
+                ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
+                : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
+              className,
+            )}
+            onLoad={onLoad}
+            onError={onErrorImage}
+            onChange={() => console.log('change')}
+            onClick={onClick}
+          />
+        )}
+
+        {!lazy
+        && (
+          <img
+            src={src}
+            alt={alt}
+            loading={undefined}
+            height={height}
+            width={width}
+            className={cn(
+              'transition-all duration-300 ease-in max-w-full',
+              !isImageLoaded
+                ? `opacity-0 ${effect === 'zoomIn' ? 'scale-50' : ''}`
+                : `opacity-100 ${effect === 'zoomIn' ? 'scale-100' : ''}`,
+              className,
+            )}
+            onLoad={onLoad}
+            onError={onErrorImage}
+            onChange={() => console.log('change')}
+          />
+        )}
+
       </>
     )
 
