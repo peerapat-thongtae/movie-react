@@ -2,14 +2,15 @@ import Dropdown from '@/components/common/Dropdown/Dropdown'
 import Loading from '@/components/common/Loading'
 import TabLists, { TabProp } from '@/components/common/TabLists'
 import MediaHeroDetail from '@/components/media/MediaHeroDetail'
-import PersonCard from '@/components/media/PersonCard'
 import EpisodeCard from '@/components/media/EpisodeCard'
 import { useCredits, useMediaDetail, useRecommendationMedias, useSimilarMedias, useTVSeasonDetail } from '@/hooks/useMedia'
 import { CreditType, Media, MediaType } from '@/types/media.type'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import MediaCard from '@/components/media/MediaCard'
+import MediaGrid from '@/components/media/MediaGrid'
+import { Person } from 'moviedb-promise'
+import PersonCard from '@/components/media/PersonCard'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -100,16 +101,19 @@ const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: 
   }, [persons])
 
   return (
-    <div>
-      <div className="grid grid-cols-6 gap-6 px-12 py-8">
-        {!isLoading && personCredit && personCredit.map((person) => {
+    <div className="px-12 py-8">
+      <MediaGrid
+        items={personCredit as Person[]}
+        isLoading={isLoading}
+        mediaType="person"
+        gridCols={6}
+        pagination={false}
+        mediaElement={personCredit && personCredit.map((person) => {
           return (
-            <div key={person.id} className="min-h-[32vh]">
-              <PersonCard person={person} type={creditType} />
-            </div>
+            <PersonCard person={person} type={creditType} />
           )
         })}
-      </div>
+      />
     </div>
   )
 }
@@ -213,21 +217,14 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
 const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const { data: recommendationMedias, isLoading } = useRecommendationMedias(media?.id || '', mediaType)
   return (
-    <div>
-      {isLoading
-      && <div className="h-[30vh]"><Loading /></div>}
-      { !isLoading && recommendationMedias?.results
-      && (
-        <div className="grid grid-cols-5 gap-6 px-12 py-8">
-          {recommendationMedias?.results?.map((recommendationMedia) => {
-            return (
-              <div key={recommendationMedia.id} className="min-h-[32vh]">
-                <MediaCard item={recommendationMedia} mediaType={mediaType} />
-              </div>
-            )
-          })}
-        </div>
-      )}
+    <div className="px-12 py-8">
+      <MediaGrid
+        items={recommendationMedias?.results || []}
+        isLoading={isLoading}
+        mediaType={mediaType}
+        gridCols={6}
+        pagination={false}
+      />
 
     </div>
   )
@@ -236,18 +233,15 @@ const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: Medi
 const SimilarTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const { data: similarMedias, isLoading } = useSimilarMedias(media?.id || '', mediaType)
   return (
-    <div>
-      {isLoading
-      && <div className="h-[30vh]"><Loading /></div>}
-      <div className="grid grid-cols-5 gap-6 px-12 py-8">
-        {!isLoading && similarMedias?.results && similarMedias?.results?.map((similarMedia) => {
-          return (
-            <div key={similarMedia.id} className="min-h-[32vh]">
-              <MediaCard item={similarMedia} mediaType={mediaType} />
-            </div>
-          )
-        })}
-      </div>
+    <div className="px-12 py-8">
+      <MediaGrid
+        items={similarMedias?.results || []}
+        isLoading={isLoading}
+        mediaType={mediaType}
+        gridCols={6}
+        pagination={false}
+      />
+
     </div>
   )
 }

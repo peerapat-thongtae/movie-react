@@ -8,10 +8,10 @@ import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
 import { Group, Pagination } from '@mantine/core'
 import { Person } from 'moviedb-promise'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 interface IMediaGridProps {
-  items: (Media | Person)[]
+  items: (Media | Person | any)[]
   page?: number
   isLoading?: boolean
   pagination?: boolean
@@ -21,6 +21,8 @@ interface IMediaGridProps {
   mediaType: MediaType
   gridCols?: number
   size?: 'FULL' | 'MEDIUM'
+  className?: string
+  mediaElement?: ReactNode
 }
 
 const MediaGrid = (props: IMediaGridProps) => {
@@ -29,8 +31,9 @@ const MediaGrid = (props: IMediaGridProps) => {
   const page = props.page || 1
   const mediaType = props.mediaType
   const isLoading = props.isLoading || false
-  const pagination = props.pagination || true
+  const pagination = props.pagination !== undefined ? props.pagination : true
   const totalPages = props?.totalPages || 1
+  const gridCols = props.gridCols || 5
   const totalResults = props?.totalResults || items.length || 0
   const setPage = (page: number) => {
     if (pagination && props.setPage) {
@@ -74,16 +77,26 @@ const MediaGrid = (props: IMediaGridProps) => {
 
       {!isLoading && items.length > 0
       && (
-        <div className={cn('grid place-items-center gap-[clamp(20px,3vw,32px)]', `grid-cols-${props.gridCols || 5}`)}>
-          {items.map((media, index: number) => {
-            return (
-              <>
-                {mediaType === 'person'
-                  ? <PersonCard key={index} person={media as Person} />
-                  : <MediaCard key={index} item={media as Media} mediaType={props.mediaType} />}
-              </>
-            )
-          })}
+        <div className={cn(
+          'grid place-items-center gap-[clamp(20px,3vw,32px)]',
+          `grid-cols-${gridCols}`,
+          // `md:grid-cols-${gridCols - 2}`,
+          // `grid-cols-${gridCols - 3}`,
+        )}
+        >
+          {props?.mediaElement
+            ? props.mediaElement
+            : (
+              items.map((media) => {
+                return (
+                  <>
+                    {mediaType === 'person'
+                      ? <PersonCard key={media.id} person={media as Person} />
+                      : <MediaCard key={media.id} item={media as Media} mediaType={props.mediaType} />}
+                  </>
+                )
+              })
+            )}
         </div>
       )}
 
