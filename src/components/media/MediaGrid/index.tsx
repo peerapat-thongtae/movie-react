@@ -87,7 +87,7 @@ const MediaGrid = (props: IMediaGridProps) => {
         </div>
       )}
 
-      {items.length === 0
+      {items.length === 0 && !isLoading
       && (
         <div className="flex items-center justify-center min-h-[50vh]">
           <NoData />
