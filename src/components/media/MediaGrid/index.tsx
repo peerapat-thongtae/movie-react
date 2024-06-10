@@ -89,11 +89,9 @@ const MediaGrid = (props: IMediaGridProps) => {
             : (
               items.map((media) => {
                 return (
-                  <>
-                    {mediaType === 'person'
-                      ? <PersonCard key={media.id} person={media as Person} />
-                      : <MediaCard key={media.id} item={media as Media} mediaType={props.mediaType} />}
-                  </>
+                  mediaType === 'person'
+                    ? <PersonCard key={media.id} person={media as Person} />
+                    : <MediaCard key={media.id} item={media as Media} mediaType={props.mediaType} />
                 )
               })
             )}

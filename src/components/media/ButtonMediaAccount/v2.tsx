@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react'
 import { MdBookmarkAdd } from 'react-icons/md'
 import { TbProgressCheck } from 'react-icons/tb'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
-import { IoMdEye } from 'react-icons/io'
+import { FaCheck } from 'react-icons/fa6'
 
 const ButtonMediaAccount = (props: any) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
@@ -64,7 +64,7 @@ const ButtonMediaAccount = (props: any) => {
       return <FaStar size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
     else {
-      return <IoMdEye size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
+      return <FaCheck size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }
   }, [mediaStatus, isLoading, media])
 
@@ -120,7 +120,8 @@ const ButtonMediaAccount = (props: any) => {
                 onClick={clickWatched}
               >
                 <div className="flex items-center gap-1">
-                  <IoMdEye size={20} className={`${mediaStatus === 'watched' ? 'text-yellow-500' : 'text-black'}`} />
+                  /
+                  <FaCheck size={20} className={`${mediaStatus === 'watched' ? 'text-yellow-500' : 'text-black'}`} />
                   <span>
                     Watched
                   </span>

@@ -8,7 +8,7 @@ import { FaBookmark, FaPlayCircle, FaSpinner } from 'react-icons/fa'
 import { useState } from 'react'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
 import { cn } from '@/utils/tailwind.helper'
-import { IoMdEye } from 'react-icons/io'
+import { FaCheck } from 'react-icons/fa6'
 import { TbProgressCheck } from 'react-icons/tb'
 
 // Local interface
@@ -95,7 +95,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                       </div>
                     )}
                     <div onClick={() => addRated()} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">
-                      <IoMdEye size="24" className={cn(accountState?.account_status === 'watched' && 'text-yellow-500')} />
+                      <FaCheck size="24" className={cn(accountState?.account_status === 'watched' && 'text-yellow-500')} />
                       <span className="text-xs">Watched</span>
                     </div>
                   </>

@@ -1,7 +1,9 @@
 import Loading from '@/components/common/Loading'
+import Slider from '@/components/common/Slider'
 import Hero from '@/components/media/Hero'
+import { MediaCard } from '@/components/media/MediaCard/test'
 import { useConfigTMDB } from '@/hooks/useConfig'
-import { useDiscoverMedia } from '@/hooks/useMedia'
+import { useDiscoverMedia, useMediasByStatus } from '@/hooks/useMedia'
 import { DiscoverMediaRequest } from '@/types/media.type'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs from 'dayjs'
@@ -28,6 +30,7 @@ const HomePage = () => {
   const [autoPlay] = useState<boolean>(true)
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
+  const { data: continueWatchingTV } = useMediasByStatus('tv', 'watching')
   const { isAuthenticated } = useAuth0()
 
   const popularMerges = useMemo(() => {
@@ -64,12 +67,29 @@ const HomePage = () => {
       {isAuthenticated
       && (
         <div className="my-12 px-16 text-xl font-bold flex flex-col gap-8">
-          <div className="flex justify-between">
-            <span>Continue Watching</span>
-            <span>See All...</span>
-          </div>
           <div>
-            Slider...
+            <Slider
+              header={(
+                <div className="flex justify-between">
+                  <span>
+                    Continue Watching
+                    {continueWatchingTV?.total_results && ` (${continueWatchingTV?.total_results})`}
+                  </span>
+                  <span>See All...</span>
+                </div>
+              )}
+              children={(
+                <div className="flex gap-8">
+                  {continueWatchingTV?.results.map((item: any) => {
+                    return (
+                      <div className="w-[300px] h-[550px]  overflow-hidden">
+                        <MediaCard item={item} mediaType="tv" />
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            />
           </div>
         </div>
       )}

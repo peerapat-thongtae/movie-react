@@ -133,7 +133,7 @@ export const MediaCard = (props: MediaCardProps) => {
               )}
         </div>
       </div>
-      <div className="truncate text-left text-md font-bold hover:cursor-pointer dark:text-black hover:text-yellow-500 py-2 w-auto">
+      <div className="truncate text-left font-bold hover:cursor-pointer dark:text-black hover:text-yellow-500 py-2">
         <Tooltip id="my-tooltip" className="z-[99]" />
         <span
           data-tooltip-id="my-tooltip"

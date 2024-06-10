@@ -33,6 +33,10 @@ class TodoService {
   updateTVEpisodes(payload: any) {
     return todoApi.post(`/tv/episodes`, payload, { headers: { Authorization: `Bearer ${this.token}` } })
   }
+
+  getTVWatching(page: number) {
+    return todoApi.get(`/tv/tv-watching?page=${page}`, { headers: { Authorization: `Bearer ${this.token}` } })
+  }
 }
 
 export default TodoService

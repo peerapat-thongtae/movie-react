@@ -4,7 +4,7 @@ import TodoService from '@/services/todo.service'
 import { getAccountStateById, setAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
 import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
-import { discoverMedia$, mediaInfo$, searchMedia$ } from '@/utils/observable'
+import { discoverMedia$, mediaInfo$, mediaInfos$, searchMedia$ } from '@/utils/observable'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -93,10 +93,7 @@ export const useRecommendationMedias = (id: string | number, mediaType: MediaTyp
     return lastValueFrom(
       from(func).pipe(
         switchMap((resp) => {
-          return of(resp.results || []).pipe(
-            switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
-            map(val => ({ ...resp, results: val })),
-          )
+          return mediaInfos$(resp, mediaType)
         }),
       ),
     )
@@ -113,10 +110,7 @@ export const useSimilarMedias = (id: string | number, mediaType: MediaType) => {
     return lastValueFrom(
       from(func).pipe(
         switchMap((resp) => {
-          return of(resp.results || []).pipe(
-            switchMap(results => forkJoin(results.map(val => mediaInfo$(mediaType, val.id)))),
-            map(val => ({ ...resp, results: val })),
-          )
+          return mediaInfos$(resp, mediaType)
         }),
       ),
     )
@@ -297,7 +291,7 @@ export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: Disc
   }, [mediaType])
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [searchParam])
 
   const query = useQuery(['discovers', mediaType, page, setPage, { ...searchParam }], async () => {
@@ -330,4 +324,29 @@ export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
   }, [imdbId])
 
   return useQuery(['imdb_rating', imdbId, disabled], async () => await lastValueFrom(fetch()))
+}
+
+export const useMediasByStatus = (mediaType: MediaType, status: string) => {
+  const auth = useAuth0()
+  const defaultPage: number = 1
+  const [page, setPage] = useState(defaultPage)
+
+  const handleDiscover = () => {
+    return lastValueFrom(from(
+      auth.getAccessTokenSilently(),
+    ).pipe(
+      switchMap((token) => {
+        const todoService = new TodoService({ token })
+        return todoService.getTVWatching(page)
+      }),
+      map(resp => resp.data),
+      switchMap((data) => {
+        return mediaInfos$(data, 'tv')
+      }),
+    ))
+  }
+
+  const query = useQuery(['medias_state', mediaType, page, status], handleDiscover, { enabled: auth.isAuthenticated })
+
+  return { ...query, page, setPage }
 }

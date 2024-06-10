@@ -1,7 +1,8 @@
 import tmdbService from '@/services/tmdb-service'
+import TodoService from '@/services/todo.service'
 import { DiscoverMediaRequest, MediaType, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
-import { DiscoverMovieRequest, DiscoverMovieResponse, DiscoverTvResponse } from 'moviedb-promise'
+import { DiscoverMovieRequest, DiscoverMovieResponse, DiscoverTvResponse, SearchMultiResponse } from 'moviedb-promise'
 import { forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs'
 
 export const mediaInfo$ = (media_type: string, id: any) => {
@@ -91,14 +92,29 @@ export const mediaInfo$ = (media_type: string, id: any) => {
   }
 }
 
-export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvResponse, media_type?: MediaType) => {
+export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvResponse | SearchMultiResponse, media_type?: MediaType) => {
   return of(respResults.results || []).pipe(
     switchMap(results => forkJoin(results?.map(val => mediaInfo$(media_type || val.media_type, val.id)))),
-    // switchMap((results) => {
-    //   return of(getImdbRatingByIds(results.map(val => val.id))).pipe(
+    switchMap((results) => {
+      const todoService = new TodoService()
+      return from(todoService.getImdbRatingByIds(results.map(val => val.imdb_id))).pipe(
+        map(resp => resp.data),
+        map((imdbs) => {
+          const resultsWithIMDB = results.map((tmdb) => {
+            const findIMDB = imdbs.find((imdb: any) => imdb.id === tmdb.imdb_id)
+            if (findIMDB) {
+              // console.log('imdb', findIMDB)
+              tmdb.vote_average = findIMDB.rating
+              tmdb.vote_count = findIMDB.votes
+            }
+            console.log('tmdb', tmdb)
+            return tmdb
+          })
 
-    //   )
-    // }),
+          return resultsWithIMDB
+        }),
+      )
+    }),
     map(val => ({ ...respResults, results: val })),
     tap(console.log),
   )
@@ -142,10 +158,7 @@ export const searchMedia$ = (searchType: SearchType, searchParam: string, page: 
   }
   return from(searchFn()).pipe(
     switchMap((resp) => {
-      return of(resp.results || []).pipe(
-        switchMap(results => forkJoin(results.map(val => mediaInfo$(val.media_type || searchType, val.id)))),
-        map(val => ({ ...resp, results: val })),
-      )
+      return mediaInfos$(resp, searchType as MediaType)
     }),
   )
 }
