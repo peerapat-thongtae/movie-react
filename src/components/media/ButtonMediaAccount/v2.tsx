@@ -120,7 +120,6 @@ const ButtonMediaAccount = (props: any) => {
                 onClick={clickWatched}
               >
                 <div className="flex items-center gap-1">
-                  /
                   <FaCheck size={20} className={`${mediaStatus === 'watched' ? 'text-yellow-500' : 'text-black'}`} />
                   <span>
                     Watched
