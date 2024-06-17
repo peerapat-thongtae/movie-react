@@ -78,6 +78,7 @@ const HomePage = () => {
                   <span>See All...</span>
                 </div>
               )}
+              isLoading={!!(isLoadingPopularMovies && isLoadingPopularTV)}
               children={(
                 <div className="flex gap-8">
                   {continueWatchingTV?.results.map((item: any) => {

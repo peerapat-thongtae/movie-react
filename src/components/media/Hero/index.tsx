@@ -2,10 +2,13 @@ import Image from '@/components/common/Image'
 import { useConfigTMDB } from '@/hooks/useConfig'
 import { Media } from '@/types/media.type'
 import { DateHelper } from '@/utils/date.helper'
+import { Button } from '@mantine/core'
 import { useMemo } from 'react'
 import { GoDotFill } from 'react-icons/go'
+import { useNavigate } from 'react-router-dom'
 
 const Hero2 = ({ media }: { media: Media }) => {
+  const navigate = useNavigate()
   const { getImagePath, getLogoPath } = useConfigTMDB()
 
   const provider = useMemo(() => {
@@ -94,6 +97,16 @@ const Hero2 = ({ media }: { media: Media }) => {
               <span>{media.status}</span>
             </span>
           </span>
+          <div className="m-4 w-36">
+            <Button
+              onClick={() => navigate(`/${media.media_type}/${media.id}`)}
+              variant="outline"
+              color="yellow"
+              fullWidth
+            >
+              Full Details
+            </Button>
+          </div>
         </div>
       </div>
       {/* <div>Test</div> */}

@@ -3,24 +3,35 @@ import { ReactNode } from 'react'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
 import 'react-horizontal-scrolling-menu/dist/styles.css'
 import './style.css'
+import Loading from '@/components/common/Loading'
 
 interface SliderProps {
   label?: string
   children: ReactNode
   header?: ReactNode
+  isLoading?: boolean
 }
-const Slider = ({ children, header }: SliderProps) => {
+const Slider = ({ children, header, isLoading }: SliderProps) => {
   const { disableScroll, enableScroll } = usePreventBodyScroll()
   return (
     <div className="text-base" onMouseEnter={disableScroll} onMouseLeave={enableScroll}>
-      <ScrollMenu
-        Header={header}
-        // LeftArrow={LeftArrow}
-        // RightArrow={RightArrow}
-        onWheel={onWheel}
-      >
-        <div className="pt-4">{children}</div>
-      </ScrollMenu>
+      {isLoading
+      && (
+        <div className="flex items-center justify-center min-h-[50vh] w-full">
+          <Loading />
+        </div>
+      )}
+      {!isLoading
+      && (
+        <ScrollMenu
+          Header={header}
+          // LeftArrow={LeftArrow}
+          // RightArrow={RightArrow}
+          onWheel={onWheel}
+        >
+          <div className="pt-4">{children}</div>
+        </ScrollMenu>
+      )}
     </div>
   )
 }
