@@ -23,7 +23,7 @@ const Slider = ({ children, header, isLoading }: SliderProps) => {
       >
         {isLoading
           ? (
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center min-h-[20vh] w-full">
               <Loading />
             </div>
           )
