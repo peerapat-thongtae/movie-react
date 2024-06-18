@@ -14,7 +14,7 @@ interface SliderProps {
 const Slider = ({ children, header, isLoading }: SliderProps) => {
   const { disableScroll, enableScroll } = usePreventBodyScroll()
   return (
-    <div className="text-base" onMouseEnter={disableScroll} onMouseLeave={enableScroll}>
+    <div className="text-base w-full" onMouseEnter={disableScroll} onMouseLeave={enableScroll}>
       <ScrollMenu
         Header={header}
         // LeftArrow={LeftArrow}
