@@ -15,23 +15,21 @@ const Slider = ({ children, header, isLoading }: SliderProps) => {
   const { disableScroll, enableScroll } = usePreventBodyScroll()
   return (
     <div className="text-base" onMouseEnter={disableScroll} onMouseLeave={enableScroll}>
-      {isLoading
-      && (
-        <div className="flex items-center justify-center min-h-[50vh] w-full">
-          <Loading />
-        </div>
-      )}
-      {!isLoading
-      && (
-        <ScrollMenu
-          Header={header}
-          // LeftArrow={LeftArrow}
-          // RightArrow={RightArrow}
-          onWheel={onWheel}
-        >
-          <div className="pt-4">{children}</div>
-        </ScrollMenu>
-      )}
+      <ScrollMenu
+        Header={header}
+        // LeftArrow={LeftArrow}
+        // RightArrow={RightArrow}
+        onWheel={onWheel}
+      >
+        {isLoading
+          ? (
+            <div className="flex items-center justify-center w-full">
+              <Loading />
+            </div>
+          )
+          : <div className="pt-4">{children}</div>}
+
+      </ScrollMenu>
     </div>
   )
 }
