@@ -24,11 +24,13 @@ function AffixComponent() {
         <Transition transition="slide-up" mounted={scroll.y > 0}>
           {transitionStyles => (
             <Button
-              leftSection={<FaArrowUp color="black" />}
+              // leftSection={}
               style={transitionStyles}
               onClick={() => scrollTo({ y: 0 })}
               color="yellow"
-            />
+            >
+              <FaArrowUp color="black" />
+            </Button>
           )}
         </Transition>
       </Affix>
