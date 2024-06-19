@@ -20,9 +20,9 @@ const TabLists = (props: TabListsProp) => {
       onChange={setActiveTab}
       unstyled
       classNames={{
-        panel: 'bg-gray-500 bg-opacity-10 min-h-[64vh]',
+        panel: 'bg-main bg-opacity-10 min-h-[64vh]',
         tabLabel: 'mx-2',
-        list: 'grid grid-flow-col text-center bg-gray-500 bg-opacity-10 text-white font-bold p-1',
+        list: 'grid grid-flow-col text-center bg-main bg-opacity-10 text-white font-bold p-1',
         tab: 'data-[active=true]:bg-pink-500 border-yellow-200 border-[0.5px] flex justify-center items-center py-4 cursor-pointer hover:bg-pink-500',
       }}
     >

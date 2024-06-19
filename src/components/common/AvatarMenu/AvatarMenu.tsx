@@ -1,9 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useClickAway } from 'react-use'
 import NotFoundImage from '@/assets/images/avatar-placeholder.jpeg'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { useNavigate } from 'react-router-dom'
 
 const AvatarMenu = () => {
   const [show, setShow] = useState(false)
@@ -11,6 +12,7 @@ const AvatarMenu = () => {
 
   const menuRef = useRef(null)
   const profileBarRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
   useClickAway(menuRef, (event) => {
     // Case : click profile menu bar
     if (profileBarRef.current && profileBarRef.current.contains(event?.target as Node)) {
@@ -21,6 +23,10 @@ const AvatarMenu = () => {
       setShow(false)
     }
   })
+
+  useEffect(() => {
+    setShow(false)
+  }, [navigate])
 
   return (
     <>
@@ -52,7 +58,7 @@ const AvatarMenu = () => {
               </div>
               <ul className="py-2 text-sm dark:text-gray-700 text-gray-200" aria-labelledby="avatarButton">
                 <li>
-                  <a href="#" className="block px-4 py-2 dark:hover:bg-gray-100 hover:bg-gray-600 hover:text-white dark:text-gray-700">Dashboard</a>
+                  <span onClick={() => navigate('/account')} className="cursor-pointer block px-4 py-2 dark:hover:bg-gray-100 hover:bg-gray-600 hover:text-white dark:text-gray-700">Dashboard</span>
                 </li>
               </ul>
               <div className="py-1">

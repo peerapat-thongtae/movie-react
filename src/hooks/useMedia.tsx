@@ -43,6 +43,28 @@ export const useAccountStateAll = () => {
   return { data, fetch: fetchAccountStates, clear: clearAccountStates }
 }
 
+export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaType, status: string }) => {
+  const [page, setPage] = useState<number>(1)
+  const auth = useAuth0()
+
+  const fetch = () => {
+    return lastValueFrom(
+      from(auth.getAccessTokenSilently()).pipe(
+        switchMap((token) => {
+          const todoService = new TodoService({ token })
+          return todoService.getAccountStatePaginate(mediaType, status, page)
+        }),
+        switchMap((resp) => {
+          return mediaInfos$(resp?.data as any, mediaType)
+        }),
+      ),
+    )
+  }
+
+  const dataQuery = useQuery([page, mediaType, status], fetch)
+  return { ...dataQuery, page, setPage }
+}
+
 export const useMediaAccountStateById = (mediaType: MediaType, id: string | number) => {
   const dispatch = useDispatch()
   const accountState = useSelector((state: IRootState) => getAccountStateById(state, mediaType, id))
