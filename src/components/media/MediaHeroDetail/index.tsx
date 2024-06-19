@@ -10,6 +10,7 @@ import { useMediaAccountStateById } from '@/hooks/useMedia'
 import { cn } from '@/utils/tailwind.helper'
 import { FaCheck } from 'react-icons/fa6'
 import { TbProgressCheck } from 'react-icons/tb'
+import { useAuth0 } from '@auth0/auth0-react'
 
 // Local interface
 interface IProps {
@@ -19,6 +20,7 @@ interface IProps {
 
 const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   // Variables
+  const { isAuthenticated } = useAuth0()
   const title = media.title || media.name
   const releaseDate = dayjs(media.release_date_th || media.release_date || media.first_air_date).format('DD/MM/YYYY') || ''
   const originalName = media.original_name || media.title || media.name
@@ -78,7 +80,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
               </div>
               {/* Section Account State */}
               <div className="flex justify-around my-4">
-                {!isLoadingAccountState
+                {!isLoadingAccountState && isAuthenticated
                 && (
                   <>
                     <div onClick={() => addToWatchlist(!accountState?.watchlist)} className="flex flex-col gap-2 items-center cursor-pointer hover:text-yellow-500">

@@ -3,6 +3,7 @@ import { useConfigTMDB } from '@/hooks/useConfig'
 import { useTVEpisodeAccountState } from '@/hooks/useMedia'
 import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
+import { useAuth0 } from '@auth0/auth0-react'
 import dayjs from 'dayjs'
 import { Episode } from 'moviedb-promise'
 import { FaSpinner } from 'react-icons/fa'
@@ -14,6 +15,7 @@ interface EpisodeCardProps {
   item: Episode & { account_status?: string | undefined }
 }
 const EpisodeCard = (props: EpisodeCardProps) => {
+  const { isAuthenticated } = useAuth0()
   const episode = props.item
   const { data: accountState, addWatched, isLoading } = useTVEpisodeAccountState(props.media.id || '', Number(episode.season_number), Number(episode.episode_number), Number(episode.id), props.mediaType)
   const { getImagePath } = useConfigTMDB()
@@ -39,25 +41,29 @@ const EpisodeCard = (props: EpisodeCardProps) => {
           <div className="line-clamp-4">{ episode.overview }</div>
 
           <div className="flex justify-start gap-8 my-4">
-            <div onClick={() => addWatched()} className="flex flex-col items-center gap-2 cursor-pointer hover:text-yellow-500">
-              {isLoading && (
-                <>
-                  <FaSpinner className="animate-spin text-yellow-500" size="24" />
-                  <span className="text-xs">
-                    Loading...
-                  </span>
-                </>
-              )}
-              {!isLoading
-              && (
-                <>
-                  <IoMdEye size="24" className={cn(accountState && 'text-yellow-500')} />
-                  <span className="text-xs">
-                    Watched
-                  </span>
-                </>
-              )}
-            </div>
+            {isAuthenticated
+            && (
+              <div onClick={() => addWatched()} className="flex flex-col items-center gap-2 cursor-pointer hover:text-yellow-500">
+                {isLoading && (
+                  <>
+                    <FaSpinner className="animate-spin text-yellow-500" size="24" />
+                    <span className="text-xs">
+                      Loading...
+                    </span>
+                  </>
+                )}
+                {!isLoading
+                && (
+                  <>
+                    <IoMdEye size="24" className={cn(accountState && 'text-yellow-500')} />
+                    <span className="text-xs">
+                      Watched
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+
           </div>
         </div>
       </div>
