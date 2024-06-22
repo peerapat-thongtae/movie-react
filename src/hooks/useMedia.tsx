@@ -359,7 +359,7 @@ export const useMediasByStatus = (mediaType: MediaType, status: string) => {
     ).pipe(
       switchMap((token) => {
         const todoService = new TodoService({ token })
-        return todoService.getTVWatching(page)
+        return todoService.getAccountStatePaginate(mediaType, status, page)
       }),
       map(resp => resp.data),
       switchMap((data) => {

@@ -23,6 +23,8 @@ const RouteList = () => {
       <Route path="/person/:id" element={<PersonDetailPage />} />
       <Route path="/schedule" element={<SchedulePage />} />
       <Route path="/account" element={<AccountMainPage initialTab="main" />} />
+      <Route path="/account/movie" element={<AccountMainPage initialTab="movie" />} />
+      <Route path="/account/tv" element={<AccountMainPage initialTab="tv" />} />
       {/* <Route path="/movie" element={<Discover mediaType="movie" />} />
       <Route path="/tv" element={<Discover mediaType="tv" />} />
       <Route path="/anime" element={<Discover mediaType="anime" />} />

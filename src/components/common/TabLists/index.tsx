@@ -8,8 +8,9 @@ export interface TabProp {
   panel: ReactNode
 }
 interface TabListsProp {
-  defaultTab: string
+  defaultTab: string | null
   tabs: TabProp[]
+  onChange?: (activeTab: string | null) => void
 }
 const TabLists = (props: TabListsProp) => {
   const [activeTab, setActiveTab] = useState<string | null>(props.defaultTab)
@@ -17,7 +18,7 @@ const TabLists = (props: TabListsProp) => {
     <Tabs
       keepMounted={false}
       value={activeTab}
-      onChange={setActiveTab}
+      onChange={(val) => props.onChange ? props.onChange(val) : setActiveTab(val)}
       unstyled
       classNames={{
         panel: 'bg-main bg-opacity-10 min-h-[64vh]',
