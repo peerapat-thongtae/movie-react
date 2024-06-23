@@ -93,9 +93,13 @@ export const mediaInfo$ = (media_type: string, id: any) => {
 }
 
 export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvResponse | SearchMultiResponse, media_type?: MediaType) => {
+  const disableImdb = import.meta.env.MODE !== 'develop'
   return of(respResults.results || []).pipe(
     switchMap(results => forkJoin(results?.map(val => mediaInfo$(media_type || val.media_type, val.id)))),
     switchMap((results) => {
+      if (disableImdb) {
+        return results
+      }
       const todoService = new TodoService()
       return from(todoService.getImdbRatingByIds(results.map(val => val.imdb_id))).pipe(
         map(resp => resp.data),
