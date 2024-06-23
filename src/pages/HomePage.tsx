@@ -61,7 +61,7 @@ const HomePage = () => {
           </Carousel>
         )
       }
-      {(isLoadingPopularMovies || isLoadingPopularTV)
+      {(isLoadingPopularMovies && isLoadingPopularTV)
       && <div className="h-screen"><Loading /></div>}
 
       {isAuthenticated
