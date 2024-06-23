@@ -98,7 +98,7 @@ export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvRespo
     switchMap(results => forkJoin(results?.map(val => mediaInfo$(media_type || val.media_type, val.id)))),
     switchMap((results) => {
       if (disableImdb) {
-        return results
+        return of(results)
       }
       const todoService = new TodoService()
       return from(todoService.getImdbRatingByIds(results.map(val => val.imdb_id))).pipe(
