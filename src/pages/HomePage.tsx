@@ -52,17 +52,19 @@ const HomePage = () => {
 
   return (
     <div className="">
-      {
-        !isLoadingPopularTV && !isLoadingPopularMovies && popularMerges.length > 0 && (
-          <Carousel showThumbs={false} stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
-            {popularMerges.map((media: any) => {
-              return <div key={media.id} className="h-[98vh]"><Hero media={media} /></div>
-            })}
-          </Carousel>
-        )
-      }
-      {(isLoadingPopularMovies && isLoadingPopularTV)
-      && <div className="h-screen"><Loading /></div>}
+      <div className="hidden md:block">
+        {
+          !isLoadingPopularTV && !isLoadingPopularMovies && popularMerges.length > 0 && (
+            <Carousel showThumbs={false} stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
+              {popularMerges.map((media: any) => {
+                return <div key={media.id} className="h-[98vh]"><Hero media={media} /></div>
+              })}
+            </Carousel>
+          )
+        }
+        {(isLoadingPopularMovies && isLoadingPopularTV)
+        && <div className="h-screen"><Loading /></div>}
+      </div>
 
       {isAuthenticated
       && (
