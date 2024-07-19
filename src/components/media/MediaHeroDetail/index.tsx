@@ -34,7 +34,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   return (
     <>
       {/* Banner */}
-      <div className="relative">
+      <div className="relative hidden md:block">
         <ModalVideo
           channel="youtube"
           youtube={{ mute: 0, autoplay: 1 }}
@@ -45,7 +45,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
         <Image
           src={`https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.backdrop_path}`}
           alt={media.name}
-          className="w-full md:min-h-[800px] md:h-[800px] object-cover bg-center"
+          className="w-full h-full md:min-h-[800px] md:h-[800px] object-cover bg-center"
           effect="zoomIn"
         />
         {/* <div className="md:min-h-[800px] md:h-[800px]">
@@ -59,7 +59,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
 
       {/* Detail */}
       <div
-        className={`relative flex justify-center ${media.backdrop_path ? 'md:-mt-52 -mt-28' : 'mt-32'} z-10`}
+        className={`relative flex justify-center ${media.backdrop_path ? 'md:-mt-52 mt-32' : 'mt-32'} z-10`}
       >
         <div className="mx-48 pb-24">
           <div className="flex justify-between">

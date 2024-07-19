@@ -33,7 +33,7 @@ const MediaGrid = (props: IMediaGridProps) => {
   const isLoading = props.isLoading || false
   const pagination = props.pagination !== undefined ? props.pagination : true
   const totalPages = props?.totalPages || 1
-  const gridCols = props.gridCols || 5
+  // const gridCols = props.gridCols || 5
   const totalResults = props?.totalResults || items.length || 0
   const setPage = (page: number) => {
     if (pagination && props.setPage) {
@@ -79,7 +79,7 @@ const MediaGrid = (props: IMediaGridProps) => {
       && (
         <div className={cn(
           'grid place-items-center gap-[clamp(20px,3vw,32px)]',
-          `grid-cols-${gridCols}`,
+          `grid-cols-5`,
           // `md:grid-cols-${gridCols - 2}`,
           // `grid-cols-${gridCols - 3}`,
         )}

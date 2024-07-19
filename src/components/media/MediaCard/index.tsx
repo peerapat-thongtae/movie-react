@@ -98,16 +98,20 @@ const MediaCard2 = (props: MediaCardProps) => {
         </div>
       </div>
 
-      <div className="truncate text-left text-md font-bold hover:cursor-pointer dark:text-black hover:text-yellow-500 py-2 w-auto">
+      <div className="truncate text-left text-md font-bold hover:cursor-pointer dark:text-black hover:text-yellow-500 my-2 w-auto">
+
         <Tooltip id="my-tooltip" className="z-[99]" />
         <span
           data-tooltip-id="my-tooltip"
           data-tooltip-content={title}
           data-tooltip-place="top"
         >
-          { title }
+          <a href={`/${mediaType}/${item.id}`}>
+            { title }
+          </a>
         </span>
       </div>
+
     </div>
   )
 }
