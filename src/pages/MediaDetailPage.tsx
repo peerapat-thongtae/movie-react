@@ -106,7 +106,7 @@ const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: 
         items={personCredit as Person[]}
         isLoading={isLoading}
         mediaType="person"
-        gridCols={6}
+        size="SMALL"
         pagination={false}
         mediaElement={personCredit && personCredit.map((person) => {
           return (
@@ -221,6 +221,7 @@ const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: Medi
       <MediaGrid
         items={recommendationMedias?.results || []}
         isLoading={isLoading}
+        size="MEDIUM"
         mediaType={mediaType}
         gridCols={6}
         pagination={false}
@@ -237,6 +238,7 @@ const SimilarTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
       <MediaGrid
         items={similarMedias?.results || []}
         isLoading={isLoading}
+        size="MEDIUM"
         mediaType={mediaType}
         gridCols={6}
         pagination={false}

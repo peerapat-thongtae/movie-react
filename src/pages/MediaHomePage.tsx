@@ -17,7 +17,7 @@ const MediaHomePage = (props: MediaHomePageProps) => {
 
       <MediaGrid
         mediaType={props.mediaType}
-        size="FULL"
+        size="MEDIUM"
         isLoading={isLoading}
         items={medias?.results}
         totalResults={medias?.total_results}

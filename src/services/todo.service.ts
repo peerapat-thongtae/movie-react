@@ -27,7 +27,10 @@ class TodoService {
   }
 
   getAccountStatePaginate(media_type: string, status: string, page: number) {
-    return todoApi.get(`/${media_type}/paginate/${status}?page=${page}`, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.get(`/v2/${media_type}/paginate/${status}`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      params: { page, with_imdb_rating: true },
+    })
   }
 
   updateTVEpisodes(payload: any) {

@@ -48,14 +48,16 @@ export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaT
   const auth = useAuth0()
 
   const fetch = () => {
+    const now = new Date().getTime()
     return lastValueFrom(
       from(auth.getAccessTokenSilently()).pipe(
         switchMap((token) => {
           const todoService = new TodoService({ token })
           return todoService.getAccountStatePaginate(mediaType, status, page)
         }),
-        switchMap((resp) => {
-          return mediaInfos$(resp?.data as any, mediaType)
+        map(resp => resp.data),
+        finalize(() => {
+          console.log(new Date().getTime() - now)
         }),
       ),
     )

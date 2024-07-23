@@ -20,7 +20,7 @@ interface IMediaGridProps {
   totalPages?: number
   mediaType: MediaType
   gridCols?: number
-  size?: 'FULL' | 'MEDIUM'
+  size?: 'LARGE' | 'MEDIUM' | 'SMALL'
   className?: string
   mediaElement?: ReactNode
 }
@@ -29,6 +29,7 @@ const MediaGrid = (props: IMediaGridProps) => {
   const items = props.items || []
   const [sort] = useState('')
   const page = props.page || 1
+  const size = props.size || 'LARGE'
   const mediaType = props.mediaType
   const isLoading = props.isLoading || false
   const pagination = props.pagination !== undefined ? props.pagination : true
@@ -79,7 +80,10 @@ const MediaGrid = (props: IMediaGridProps) => {
       && (
         <div className={cn(
           'grid place-items-center gap-[clamp(20px,3vw,32px)]',
-          `grid-cols-5`,
+          `grid-cols-2`,
+          `${size === 'LARGE' && 'md:grid-cols-4'}`,
+          `${size === 'MEDIUM' && ' md:grid-cols-5'}`,
+          `${size === 'SMALL' && 'md:grid-cols-6'}`,
           // `md:grid-cols-${gridCols - 2}`,
           // `grid-cols-${gridCols - 3}`,
         )}

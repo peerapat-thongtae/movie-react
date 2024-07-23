@@ -71,7 +71,7 @@ const TabData = (props: any) => {
     <div className="px-4 w-[70vw]">
       <MediaGrid
         mediaType={mediaType}
-        size="MEDIUM"
+        size="LARGE"
         gridCols={4}
         items={dataQuery?.data?.results}
         page={dataQuery.page}
