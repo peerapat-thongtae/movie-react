@@ -93,7 +93,7 @@ export const mediaInfo$ = (media_type: string, id: any) => {
 }
 
 export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvResponse | SearchMultiResponse, media_type?: MediaType) => {
-  const disableImdb = true // import.meta.env.MODE !== 'development'
+  const disableImdb = false // import.meta.env.MODE !== 'development'
   return of(respResults.results || []).pipe(
     switchMap(results => forkJoin(results?.map(val => mediaInfo$(media_type || val.media_type, val.id)))),
     switchMap((results) => {
