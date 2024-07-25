@@ -10,6 +10,7 @@ export interface TabProp {
 interface TabListsProp {
   defaultTab: string | null
   tabs: TabProp[]
+  // eslint-disable-next-line no-unused-vars
   onChange?: (activeTab: string | null) => void
 }
 const TabLists = (props: TabListsProp) => {
@@ -18,7 +19,7 @@ const TabLists = (props: TabListsProp) => {
     <Tabs
       keepMounted={false}
       value={activeTab}
-      onChange={(val) => props.onChange ? props.onChange(val) : setActiveTab(val)}
+      onChange={val => props.onChange ? props.onChange(val) : setActiveTab(val)}
       unstyled
       classNames={{
         panel: 'bg-main bg-opacity-10 min-h-[64vh]',

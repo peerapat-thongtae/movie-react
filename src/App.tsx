@@ -8,8 +8,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useEffect, useState } from 'react'
-import { getToken, setToken } from '@/stores/slice'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { useWindowScroll } from '@mantine/hooks'
 import { Affix, Button, Transition } from '@mantine/core'
@@ -41,8 +39,7 @@ function AffixComponent() {
 
 function App() {
   const { darkTheme } = useTheme()
-  const dispatch = useDispatch()
-  const { isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const { isLoading, isAuthenticated } = useAuth0()
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {

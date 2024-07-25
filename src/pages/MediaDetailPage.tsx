@@ -11,7 +11,6 @@ import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import MediaGrid from '@/components/media/MediaGrid'
 import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
-import useVirtual from 'react-cool-virtual'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
