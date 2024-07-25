@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWindowScroll } from '@mantine/hooks'
 import { Affix, Button, Transition } from '@mantine/core'
 import { FaArrowUp } from 'react-icons/fa'
+import Loading from '@/components/common/Loading'
 
 function AffixComponent() {
   const [scroll, scrollTo] = useWindowScroll()
@@ -54,27 +55,18 @@ function App() {
   const dehydrateState = dehydrate(queryClient, { shouldDehydrateQuery: () => true })
   const { fetch: fetchAccountStates, clear: clearAccountStates } = useAccountStateAll()
   const { getConfiguration } = useConfigTMDB()
-  const token = useSelector(getToken)
 
   useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        getAccessTokenSilently().then((token) => {
-          dispatch(setToken(token))
-        }).catch(() => dispatch(setToken('')))
-      }
-      else {
-        dispatch(setToken(''))
-        clearAccountStates()
-      }
+    if (!isLoading && !isAuthenticated) {
+      clearAccountStates()
     }
   }, [isAuthenticated, isLoading])
 
   useEffect(() => {
-    if (isAuthenticated && token) {
+    if (isAuthenticated) {
       fetchAccountStates()
     }
-  }, [isAuthenticated, token])
+  }, [isAuthenticated])
 
   useEffect(() => {
     getConfiguration()
@@ -91,11 +83,20 @@ function App() {
                 <Navbar />
               </div>
               <div className="grow text-white">
-                <div className="">
-                  {/* my-32 */}
-                  <ToastContainer />
-                  <RouteList />
-                </div>
+                {isLoading
+                  ? (
+                    <div className="min-h-screen h-screen">
+                      <Loading />
+                    </div>
+                  )
+                  : (
+                    <div className="">
+                      {/* my-32 */}
+                      <ToastContainer />
+                      <RouteList />
+                    </div>
+                  )}
+
               </div>
             </div>
           </>
