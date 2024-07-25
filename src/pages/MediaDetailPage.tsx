@@ -11,6 +11,7 @@ import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import MediaGrid from '@/components/media/MediaGrid'
 import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
+import useVirtual from 'react-cool-virtual'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -146,8 +147,8 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
   })
 
   return (
-    <div className="px-24 py-8" ref={parentRef}>
-      <div className="flex justify-between items-center">
+    <div className="px-8 md:px-24 py-8" ref={parentRef}>
+      <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
         {/* <div>
           <Input.Wrapper label="Go to episode">
             <Input
@@ -191,19 +192,20 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
           <div
             key={item.key}
             style={{
-              position: 'absolute',
               top: 0,
               left: 0,
               width: '100%',
-              height: `${item.size}px`,
               transform: `translateY(${
                 item.start - virtualizer.options.scrollMargin
               }px)`,
             }}
+            className="h-48 md:h-2"
           >
             {episodes?.[item.index]
             && (
-              <EpisodeCard media={media} item={episodes[item.index]} mediaType={mediaType} />
+              <div className="">
+                <EpisodeCard media={media} item={episodes[item.index]} mediaType={mediaType} />
+              </div>
             )}
           </div>
         ))}

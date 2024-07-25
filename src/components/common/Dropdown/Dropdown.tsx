@@ -1,5 +1,6 @@
 import { cn } from '@/utils/tailwind.helper'
 import { ComboboxData, ComboboxItem, ComboboxLikeProps, Select } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 
 interface DropdownProps extends Partial<ComboboxLikeProps> {
   label?: string
@@ -11,6 +12,7 @@ interface DropdownProps extends Partial<ComboboxLikeProps> {
   onChange?: (_value: string | null, _option: ComboboxItem) => void
 }
 const Dropdown = (props: DropdownProps) => {
+  const isMobile = useMediaQuery('only screen and (max-width : 640px)')
   const options: ComboboxData = props.all ? [{ label: props.labelAll || '', value: '' }].concat(props.options as []) : props.options
   return (
     <Select
@@ -25,6 +27,7 @@ const Dropdown = (props: DropdownProps) => {
       }}
       onChange={props.onChange}
       value={props.value}
+      size={isMobile ? 'xs' : 'sm'}
     />
   )
 }

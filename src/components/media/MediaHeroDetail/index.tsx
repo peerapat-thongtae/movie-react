@@ -45,7 +45,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
         <Image
           src={`https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${media.backdrop_path}`}
           alt={media.name}
-          className="w-full h-full md:min-h-[800px] md:h-[800px] object-cover bg-center"
+          className="w-full h-full min-h-auto max-h-auto md:min-h-[800px] md:h-[800px] object-cover bg-center"
           effect="zoomIn"
         />
         {/* <div className="md:min-h-[800px] md:h-[800px]">
@@ -62,20 +62,19 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
         className={`relative flex justify-center ${media.backdrop_path ? 'md:-mt-52 mt-32' : 'mt-32'} z-10`}
       >
         <div className="mx-48 pb-24">
-          <div className="flex justify-between">
+          <div className="flex flex-col gap-4 md:flex-row justify-between">
             <span className="text-4xl text-left font-extrabold truncate ">{title}</span>
             <span className="text-4xl text-left font-extrabold truncate ">{releaseDate}</span>
           </div>
           <hr className="my-8" />
-          <div className="flex w-[64rem] max-w-[64rem] gap-8">
+          <div className="flex flex-col md:flex-row w-auto h-auto md:w-[64rem] md:max-w-[64rem] gap-8">
             <div className="">
-              <div className="w-full">
-                {/* <PosterImage image_path={media?.poster_path} /> */}
+              <div className="w-full flex justify-center ">
                 <Image
                   src={media?.poster_path ? `https://www.themoviedb.org/t/p/w1280/${media.poster_path}` : ''}
                   alt={media?.title || ''}
                   effect="zoomIn"
-                  className="min-h-[400px] h-auto w-[400px] rounded-lg"
+                  className="h-64 w-auto md:min-h-[400px] md:w-[400px] rounded-lg"
                 />
               </div>
               {/* Section Account State */}

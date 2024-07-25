@@ -7,6 +7,7 @@ import PersonCard from '@/components/media/PersonCard'
 import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
 import { Group, Pagination } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import { Person } from 'moviedb-promise'
 import { ReactNode, useState } from 'react'
 
@@ -42,6 +43,8 @@ const MediaGrid = (props: IMediaGridProps) => {
     }
   }
 
+  const isMobile = useMediaQuery('only screen and (max-width : 640px)')
+
   const sortOptions = [
     {
       label: 'Popularity',
@@ -54,7 +57,7 @@ const MediaGrid = (props: IMediaGridProps) => {
       {!isLoading
       && (
         <div className="flex justify-between items-center mb-4">
-          <div>
+          <div className="text-sm md:text-lg">
             {`Total : ${totalResults?.toLocaleString() || ''}`}
           </div>
           <div>
@@ -70,7 +73,7 @@ const MediaGrid = (props: IMediaGridProps) => {
       {
         isLoading
         && (
-          <div className="flex items-center justify-center min-h-[76vh] w-full">
+          <div className="flex items-center justify-center min-h-[50vh] md:min-h-[76vh] w-auto">
             <Loading />
           </div>
         )
@@ -113,10 +116,12 @@ const MediaGrid = (props: IMediaGridProps) => {
       && (
         <div className="flex justify-center items-center md:w-full py-8">
           <Pagination.Root
+            siblings={1}
             classNames={{ root: '', control: '!text-white !bg-main data-active:!bg-yellow-500 data-active:!border-0 hover:!bg-white data-active:!bg-yellow-500 data-active:!text-black hover:!text-black' }}
             total={(totalPages > 500 ? 500 : totalPages)}
             value={page}
             onChange={setPage}
+            size={isMobile ? 'xs' : 'md'}
           >
             <Group gap={5} justify="center">
               <Pagination.First />

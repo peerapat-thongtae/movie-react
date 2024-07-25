@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { getToken, setToken } from '@/stores/slice'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useMediaQuery, useWindowScroll } from '@mantine/hooks'
+import { useWindowScroll } from '@mantine/hooks'
 import { Affix, Button, Transition } from '@mantine/core'
 import { FaArrowUp } from 'react-icons/fa'
 
@@ -51,8 +51,6 @@ function App() {
     },
   }))
 
-  const isMobile = useMediaQuery('only screen and (max-width : 640px)')
-
   const dehydrateState = dehydrate(queryClient, { shouldDehydrateQuery: () => true })
   const { fetch: fetchAccountStates, clear: clearAccountStates } = useAccountStateAll()
   const { getConfiguration } = useConfigTMDB()
@@ -85,26 +83,22 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={dehydrateState}>
-          {isMobile
-            ? (<>Mobile Soon</>)
-            : (
-              <>
-                <AffixComponent />
-                {/* <LoadingOverlay visible={isLoading} opacity={1} overlayProps={{ backgroundOpacity: 0.3, className: `${darkTheme ? 'bg-primary-light' : 'bg-primary-dark'}` }} zIndex={1000} loaderProps={{ children: <Loading /> }} /> */}
-                <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
-                  <div className="w-full antialiased">
-                    <Navbar />
-                  </div>
-                  <div className="grow text-white">
-                    <div className="">
-                      {/* my-32 */}
-                      <ToastContainer />
-                      <RouteList />
-                    </div>
-                  </div>
+          <>
+            <AffixComponent />
+            {/* <LoadingOverlay visible={isLoading} opacity={1} overlayProps={{ backgroundOpacity: 0.3, className: `${darkTheme ? 'bg-primary-light' : 'bg-primary-dark'}` }} zIndex={1000} loaderProps={{ children: <Loading /> }} /> */}
+            <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
+              <div className="w-full antialiased">
+                <Navbar />
+              </div>
+              <div className="grow text-white">
+                <div className="">
+                  {/* my-32 */}
+                  <ToastContainer />
+                  <RouteList />
                 </div>
-              </>
-            )}
+              </div>
+            </div>
+          </>
         </Hydrate>
       </QueryClientProvider>
     </BrowserRouter>

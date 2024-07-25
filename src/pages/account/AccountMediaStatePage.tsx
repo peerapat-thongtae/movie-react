@@ -7,7 +7,15 @@ import { useEffect, useState } from 'react'
 const AccountMediaStatePage = ({ mediaType }: { mediaType: MediaType }) => {
   const [statusTab, setStatusTab] = useState<string>('watchlist')
   return (
-    <Tabs keepMounted={false} unstyled onChange={val => setStatusTab(val || '')} classNames={{ root: 'flex', panel: '', tabSection: 'w-auto flex flex-col text-center text-white font-bold p-1 mx-4', tab: 'data-[active=true]:bg-pink-500 w-[20vw] h-[6vh] border-yellow-200 border-[0.5px] text-white py-4 cursor-pointer hover:bg-pink-500' }} value={statusTab}>
+    <Tabs
+      keepMounted={false}
+      unstyled
+      onChange={val => setStatusTab(val || '')}
+      classNames={{ root: 'flex flex-col md:flex-row items-center md:items-start justify-center', panel: '',
+        tabSection: 'w-auto flex flex-col text-center text-white font-bold p-1 mx-4 text-center',
+        tab: 'data-[active=true]:bg-pink-500 w-auto md:w-[20vw] items-center text-center h-auto md:h-[6vh] border-yellow-200 border-[0.5px] text-white py-4 cursor-pointer hover:bg-pink-500' }}
+      value={statusTab}
+    >
       <Tabs.List>
         <Tabs.Tab value="watchlist">
           <div className="flex justify-between px-4">
@@ -64,7 +72,7 @@ const TabData = (props: { mediaType: MediaType, status: string }) => {
   }, [dataQuery.page, dataQuery.isFetched])
 
   return (
-    <div className="px-4 w-[70vw]">
+    <div className="px-4 py-4 md:py-0 w-auto md:w-[70vw]">
       <MediaGrid
         mediaType={mediaType}
         size="LARGE"

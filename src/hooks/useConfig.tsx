@@ -52,7 +52,7 @@ export const useConfigTMDB = () => {
   const getLogoPath = (providerName: string) => {
     const findProviderLogo: WatchProvider | undefined = config.watchProviders.find(val => val.provider_name === providerName)
 
-    return providerName ? `${config.images.base_url}/w92${findProviderLogo?.logo_path}` : ''
+    return providerName && findProviderLogo ? `${config.images.base_url}/w92${findProviderLogo?.logo_path}` : ''
   }
 
   return { config, getConfiguration, getImagePath, getLogoPath }

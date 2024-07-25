@@ -52,18 +52,23 @@ const HomePage = () => {
 
   return (
     <div className="">
-      <div className="hidden md:block">
+      <div className="min-h-screen">
         {
           !isLoadingPopularTV && !isLoadingPopularMovies && popularMerges.length > 0 && (
-            <Carousel showThumbs={false} stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
+            <Carousel showIndicators={false} showThumbs={false} stopOnHover={false} showStatus={false} autoPlay={autoPlay} interval={10000}>
               {popularMerges.map((media: any) => {
-                return <div key={media.id} className="h-[98vh]"><Hero media={media} /></div>
+                return (
+                  <div key={media.id} className="">
+                    <Hero media={media} />
+                    {/* <div className="items-center flex">Fuck</div> */}
+                  </div>
+                )
               })}
             </Carousel>
           )
         }
         {(isLoadingPopularMovies && isLoadingPopularTV)
-        && <div className="h-screen"><Loading /></div>}
+        && <div className="min-h-screen h-screen "><Loading /></div>}
       </div>
 
       {isAuthenticated
@@ -85,7 +90,7 @@ const HomePage = () => {
                 <div className="flex gap-8">
                   {continueWatchingTV?.results.map((item: any) => {
                     return (
-                      <div className="w-[300px] h-[550px]  overflow-hidden">
+                      <div className="w-[40vw] h-[50vh] md:w-[300px] md:h-[550px] overflow-hidden">
                         <MediaCard item={item} mediaType="tv" />
                       </div>
                     )
