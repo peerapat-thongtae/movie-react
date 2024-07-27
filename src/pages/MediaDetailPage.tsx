@@ -11,6 +11,7 @@ import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import MediaGrid from '@/components/media/MediaGrid'
 import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
+import CompanyCard from '@/components/media/CompanyCard'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -31,6 +32,11 @@ const MediaDetailPage = (props: MediaDetailPageProps) => {
           value: 'crew',
           title: 'Crews',
           panel: <>{media && <PersonTab media={media} mediaType={props.mediaType} creditType="crew" />}</>,
+        },
+        {
+          value: 'company',
+          title: 'Companies',
+          panel: <>{media && <CompanyTab media={media} mediaType={props.mediaType} />}</>,
         },
         {
           value: 'recommendations',
@@ -87,6 +93,21 @@ const MediaDetailPage = (props: MediaDetailPageProps) => {
           </div>
         </>
       )}
+
+    </div>
+  )
+}
+
+const CompanyTab = ({ media }: { media: Media, mediaType: MediaType }) => {
+  return (
+    <div className="px-8 py-4">
+      <div className="grid grid-cols-6 gap-4">
+        {media.production_companies && media.production_companies.map((company) => {
+          return (
+            <CompanyCard company={company} />
+          )
+        })}
+      </div>
 
     </div>
   )
@@ -218,7 +239,7 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
 const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const { data: recommendationMedias, isLoading } = useRecommendationMedias(media?.id || '', mediaType)
   return (
-    <div className="px-12 py-8">
+    <div className="px-4 md:px-12 py-8">
       <MediaGrid
         items={recommendationMedias?.results || []}
         isLoading={isLoading}
@@ -235,7 +256,7 @@ const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: Medi
 const SimilarTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const { data: similarMedias, isLoading } = useSimilarMedias(media?.id || '', mediaType)
   return (
-    <div className="px-12 py-8">
+    <div className="px-4 md:px-12 py-8">
       <MediaGrid
         items={similarMedias?.results || []}
         isLoading={isLoading}

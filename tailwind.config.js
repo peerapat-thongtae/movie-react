@@ -11,6 +11,9 @@ export default {
     {
       pattern: /grid-cols-(4|5|6|7)/,
     },
+    {
+      pattern: /genre-/,
+    },
   ],
   theme: {
     extend: {
@@ -23,6 +26,32 @@ export default {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'genre-28': 'url(\'./src/assets/gif/action-movie.webp\')',
+        'genre-12': 'url(https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3RhenFlbzd6dDBzMnNyNml3ZDRxazA5M3V3ejUyMGdubWM3MmZlbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TaZh6NiCVityg/giphy.webp)',
+        'genre-16': 'url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGt4eGF5c2RldHA1MWh2cTA2Z2djZmZkZDY1OXNxc3dtaWN4N3A4cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2QJzmJv0PhAiI/200.webp)',
+        'genre-35': 'url(https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmZoeDBnNnRvcGVjc2JvdHRzaGFqaHRhNXB3bThucWtjdWp5MXF2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0EwYucKUhwDBwCD6/giphy.webp)',
+        'genre-80': 'url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWEzYWVtb2l0cTltZ2YzaTNzczVmemJ2YXVmZWFmbXExeHdwcjNjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UZdNkc62OVvRm/200.webp)',
+        'genre-99': 'url(https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmdhYjI3Nmc5a3prM2ppdmFiMmFyMWkxdWh3cGMzZndlbnJxM3h2ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ar9f9YKRYlhjG/200.webp)',
+        'genre-18': 'url(https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FsbW5pcDZwaW9yYmZrY2M1aXExNXlvc3J1aHhkZXo1eDFmMHlleiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FBE4ImV0ukXn2/giphy.webp)',
+        'genre-10751': 'url(https://media1.tenor.com/m/C4tl2b0ZiHkAAAAd/bridge-to-terabithia.gif)',
+        'genre-14': 'url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjNxdndpNHFnNTVwNW02aTJuMHhtNGlwbW1xZmxud3lqeXVrNmJhNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BRzozg4TCBXv6QU/giphy.webp)',
+        'genre-36': 'url(https://media1.tenor.com/m/1HIGq0hCXP0AAAAd/oppenheimer-oppenheimer-movie.gif)',
+        'genre-27': 'url(https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDc1cTB2dnNsNmJqMHFhNTlieGg4cHYzcnFlNWluNWRmcG85Y2pqNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10TB6QfNrahdhS/giphy.webp)',
+        'genre-10402': 'url(https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTJiN25jYzhoZTlpZXYxMHV5OGc5bXlqbDZuaGMycTNyZGZ3bGg5diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qRh0l0wxXNkDS/giphy.webp)',
+        'genre-9648': 'url(https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHV2YmxkcW43dzVyN2puY2pybWpkcHR5dWkzNDNnOGpmaXd2a3J5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KGXzcnBjPdOjmLnL03/giphy.webp)',
+        'genre-10749': 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWx6dXZidHAycHh0Nm0wMThxeWxxeGk4OGhkbnRuNzEyOGNxd2x3NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Yic5dM2urnqXzAo1iG/giphy.webp)',
+        'genre-878': 'url(https://media1.tenor.com/m/bu2u5qfF9JEAAAAd/blade-runner-2049.gif)',
+        'genre-53': 'url(https://media1.tenor.com/m/f1L7CaGwhwkAAAAC/look-aim.gif)',
+        'genre-10770': 'url(https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW1jMWRkdnQyZGQ5a3phaHczbzkwZm9vMDkyZXBnNjl2MTVuNmowOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CHYjhfBd34tCE/200.webp)',
+        'genre-10752': 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExemtybTBqcGJxZXowcmdrdmpvM2hnc2J2cjh0NnEzN253Y2U5anluZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/n7TyooZtZn3Ko/giphy.webp)',
+        'genre-37': 'url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHdsbXZ5N2w5eHhsbXpjeTR0MXFlYjI5cnNhOHNyZTEwYndod240MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ILW1fbJHW0Ndm/giphy.webp)',
+        //
+        'genre-10759': 'url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExemJubzdnNDF1NTJqdmdodDYzZnNraTJyNG4zZjUzM2I0MnRxOHBkNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oEjI1erPMTMBFmNHi/giphy.webp)',
+        'genre-10762': 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWpsdWVldWtyZDN2aDc5M25oNzRncXc0Y2RtbzUyZ3A2aTlxZHJxMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4a9t3k2VosLicILddl/giphy.webp)',
+        'genre-10763': 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXVycjg4a2c2ajZuZ3k4dTJnbGhvN2dhNjNyNnlyanNsbGV1c3lhdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BRvFbqtNjOikYve/giphy.webp)',
+        'genre-10764': 'url(https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmx2djVvMG1temp1bG10bDg3cWRpbHVwbG95dHN6MHNiMXJlNDh4dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohc0QsfDzYRj9yZ2M/giphy.webp)',
+        'genre-10765': 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExazQxdXlzZzVtN3I1ZHM3aGRwM2dtczc3dHNiNDFjanFsd2VmZHpubCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQwdn31M3ddjV3a/giphy.webp)',
+        'genre-10768': 'url(https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnRoem55YmFmYnA5dDZkdWNyMjM2cXJuYmJyNzJyMmVjd3g4eWpmdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3osxYCwut0jN4tQ5z2/giphy.webp)',
       },
       animation: {
         marquee: 'marquee 4s linear infinite',

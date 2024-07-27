@@ -82,7 +82,6 @@ const Image: React.FC<ImageProps> = ({
             )}
             onLoad={onLoad}
             onError={onErrorImage}
-            onChange={() => console.log('change')}
             onClick={onClick}
           />
         )}
@@ -104,7 +103,6 @@ const Image: React.FC<ImageProps> = ({
             )}
             onLoad={onLoad}
             onError={onErrorImage}
-            onChange={() => console.log('change')}
           />
         )}
 

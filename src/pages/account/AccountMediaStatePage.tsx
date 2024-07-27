@@ -15,6 +15,7 @@ const AccountMediaStatePage = ({ mediaType }: { mediaType: MediaType }) => {
         tabSection: 'w-auto flex flex-col text-center text-white font-bold p-1 mx-4 text-center',
         tab: 'data-[active=true]:bg-pink-500 w-auto md:w-[20vw] items-center text-center h-auto md:h-[6vh] border-yellow-200 border-[0.5px] text-white py-4 cursor-pointer hover:bg-pink-500' }}
       value={statusTab}
+      orientation="vertical"
     >
       <Tabs.List>
         <Tabs.Tab value="watchlist">

@@ -44,7 +44,7 @@ const ButtonMediaAccount = (props: any) => {
   //   return ''
   // }, [accountState])
   const mediaStatus = useMemo(() => {
-    return media?.account_status || accountState?.account_status || ''
+    return accountState?.account_status || media?.account_status || ''
   }, [media, accountState, isLoading])
 
   const iconState = useMemo(() => {

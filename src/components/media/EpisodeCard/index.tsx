@@ -12,7 +12,7 @@ import { IoMdEye } from 'react-icons/io'
 interface EpisodeCardProps {
   media: Media
   mediaType: MediaType
-  item: Episode & { account_status?: string | undefined }
+  item: (Episode & { account_status?: string | undefined }) | any
 }
 const EpisodeCard = (props: EpisodeCardProps) => {
   const { isAuthenticated } = useAuth0()
@@ -33,9 +33,19 @@ const EpisodeCard = (props: EpisodeCardProps) => {
       </div>
       <span className="">
         <div className="text-lg font-bold text-yellow-500 pb-4">{`${episode.episode_number} : ${episode.name}`}</div>
-        <div className="mb-4 text-md">
-          Air Date :
-          {episode.air_date ? dayjs(episode.air_date).format('DD/MM/YYYY') : ''}
+        <div className="mb-4 text-sm flex flex-col gap-1">
+          <div className="">
+            Air Date :
+            { ' ' }
+            {episode.air_date ? dayjs(episode.air_date).format('DD/MM/YYYY') : ''}
+          </div>
+          <div className="">
+            Runtime :
+            { ' ' }
+            {episode.runtime}
+            {' '}
+            minutes
+          </div>
         </div>
         <div className="line-clamp-4">{ episode.overview }</div>
 

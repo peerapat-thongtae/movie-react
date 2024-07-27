@@ -166,7 +166,7 @@ const Hero = ({ media }: { media: Media }) => {
             {title}
           </h1>
 
-          <span className="flex gap-2 items-center text-md my-4">
+          <span className="flex gap-2 items-center text-xs md:text-base my-4">
             <div>
               {providerImage
               && (
@@ -183,14 +183,14 @@ const Hero = ({ media }: { media: Media }) => {
                 </span>
               )}
             </div>
-            <span className="flex gap-4 items-center">
+            <span className="flex gap-2 md:gap-4 items-center">
               {media.media_type === 'movie' && DateHelper.formatDate(media.release_date_th, 'DD MMM YYYY')}
               <span><GoDotFill className="text-yellow-500" /></span>
               <span>{media.status}</span>
             </span>
           </span>
 
-          <span className="flex gap-4 items-center">
+          <span className="flex gap-2 md:gap-4 items-center text-xs md:text-base">
             {media.media_type === 'tv'
             && (
               <>

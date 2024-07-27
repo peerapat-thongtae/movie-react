@@ -48,7 +48,6 @@ export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaT
   const auth = useAuth0()
 
   const fetch = () => {
-    const now = new Date().getTime()
     return lastValueFrom(
       from(auth.getAccessTokenSilently()).pipe(
         switchMap((token) => {
@@ -56,9 +55,6 @@ export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaT
           return todoService.getAccountStatePaginate(mediaType, status, page)
         }),
         map(resp => resp.data),
-        finalize(() => {
-          console.log(new Date().getTime() - now)
-        }),
       ),
     )
   }
@@ -160,7 +156,7 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
     from(auth.getAccessTokenSilently()).pipe(
       switchMap((token) => {
         const todoService = new TodoService({ token })
-        return todoService.updateTVEpisodes({ id: id, episode_watched: [{ episode_id: episodeId, season_number: seasonNumber, episode_number: episodeNumber }] })
+        return todoService.updateTVEpisodes({ id: id, episodes: [{ episode_id: episodeId, season_number: seasonNumber, episode_number: episodeNumber }] })
       }),
     ).subscribe({
       next: (resp) => {
@@ -364,9 +360,6 @@ export const useMediasByStatus = (mediaType: MediaType, status: string) => {
         return todoService.getAccountStatePaginate(mediaType, status, page)
       }),
       map(resp => resp.data),
-      switchMap((data) => {
-        return mediaInfos$(data, 'tv')
-      }),
     ))
   }
 

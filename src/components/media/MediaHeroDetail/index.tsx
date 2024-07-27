@@ -61,7 +61,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
       <div
         className={`relative flex justify-center ${media.backdrop_path ? 'md:-mt-52 mt-32' : 'mt-32'} z-10`}
       >
-        <div className="mx-48 pb-24">
+        <div className="mx-8 md:mx-48 pb-24">
           <div className="flex flex-col gap-4 md:flex-row justify-between">
             <span className="text-4xl text-left font-extrabold truncate ">{title}</span>
             <span className="text-4xl text-left font-extrabold truncate ">{releaseDate}</span>

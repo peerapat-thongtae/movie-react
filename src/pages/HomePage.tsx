@@ -79,7 +79,7 @@ const HomePage = () => {
               header={(
                 <div className="flex justify-between">
                   <span>
-                    Continue Watching
+                    Continue Watching Series
                     {continueWatchingTV?.total_results && ` (${continueWatchingTV?.total_results})`}
                   </span>
                   <span>See All...</span>
@@ -102,6 +102,9 @@ const HomePage = () => {
         </div>
       )}
 
+      {/* <div className="grid grid-cols-2 place-items-center md:grid-cols-5 gap-4 md:px-16">
+        {genres.map(genre => <GenreCard genre={genre} />)}
+      </div> */}
     </div>
   )
 }

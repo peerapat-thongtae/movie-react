@@ -8,6 +8,7 @@ import { Button, Input } from '@mantine/core'
 import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
 import { first, isNaN, last } from 'lodash'
 import { inputClassNames } from '@/utils/tailwind.helper'
+import usePreviousRoute from '@/hooks/usePreviousRoute'
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
@@ -15,6 +16,8 @@ const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { darkTheme } = useTheme()
+
+  usePreviousRoute()
 
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
 

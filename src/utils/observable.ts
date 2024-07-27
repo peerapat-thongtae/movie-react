@@ -2,8 +2,8 @@ import tmdbService from '@/services/tmdb-service'
 import TodoService from '@/services/todo.service'
 import { DiscoverMediaRequest, MediaType, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
-import { DiscoverMovieRequest, DiscoverMovieResponse, DiscoverTvResponse, SearchMultiResponse } from 'moviedb-promise'
-import { forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs'
+import { DiscoverMovieResponse, DiscoverTvResponse, SearchMultiResponse } from 'moviedb-promise'
+import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs'
 
 export const mediaInfo$ = (media_type: string, id: any) => {
   const tmdb = tmdbService
@@ -119,25 +119,18 @@ export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvRespo
       )
     }),
     map(val => ({ ...respResults, results: val })),
-    tap(console.log),
   )
 }
 
 export const discoverMedia$ = (mediaType: MediaType, searchParam: DiscoverMediaRequest): Observable<any> => {
-  const tmdb = tmdbService
-
   if (mediaType === 'movie') {
-    return from(tmdb.discoverMovie(searchParam as DiscoverMovieRequest)).pipe(
-      switchMap((resp) => {
-        return mediaInfos$(resp, 'movie')
-      }),
+    return from(new TodoService().discoverMovie(searchParam)).pipe(
+      map(resp => resp.data),
     )
   }
   else {
-    return from(tmdb.discoverTv(searchParam)).pipe(
-      switchMap((resp) => {
-        return mediaInfos$(resp, mediaType)
-      }),
+    return from(new TodoService().discoverTV(searchParam)).pipe(
+      map(resp => resp.data),
     )
   }
 }

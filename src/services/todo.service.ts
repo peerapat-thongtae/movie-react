@@ -14,16 +14,24 @@ class TodoService {
     return todoApi.post(`/rating/imdb`, { ids: imdbIds })
   }
 
-  getAccountState(media_type: string, media_id: string | number) {
-    return todoApi.get(`/${media_type}/${media_id}`, { headers: { Authorization: `Bearer ${this.token}` } })
+  discoverMovie(payload: any) {
+    return todoApi.get(`/v2/movie/discover`, {
+      params: payload,
+    })
+  }
+
+  discoverTV(payload: any) {
+    return todoApi.get(`/v2/tv/discover`, {
+      params: payload,
+    })
   }
 
   getAccountStates(media_type: string | number) {
-    return todoApi.get(`/${media_type}`, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.get(`/v2/${media_type}`, { headers: { Authorization: `Bearer ${this.token}` } })
   }
 
   addToWatchlist(media_type: string, media_id: string | number, status: string) {
-    return todoApi.post(`/${media_type}`, { id: media_id, status }, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.post(`/v2/${media_type}`, { id: media_id, status }, { headers: { Authorization: `Bearer ${this.token}` } })
   }
 
   getAccountStatePaginate(media_type: string, status: string, page: number) {
@@ -34,7 +42,7 @@ class TodoService {
   }
 
   updateTVEpisodes(payload: any) {
-    return todoApi.post(`/tv/episodes`, payload, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.post(`/v2/tv/episodes`, payload, { headers: { Authorization: `Bearer ${this.token}` } })
   }
 }
 
