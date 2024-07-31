@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { listenForOutsideClick } from '@/utils/click-outside'
 import { useTheme } from '@/contexts/theme-context'
 // import { FiMoon, FiSun } from 'react-icons/fi'
@@ -8,16 +8,14 @@ import { Button, Input } from '@mantine/core'
 import AvatarMenu from '@/components/common/AvatarMenu/AvatarMenu'
 import { first, isNaN, last } from 'lodash'
 import { inputClassNames } from '@/utils/tailwind.helper'
-import usePreviousRoute from '@/hooks/usePreviousRoute'
+import { useRoute } from '@/hooks/useRoute'
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const navigate = useNavigate()
+  const { navigate } = useRoute()
   const location = useLocation()
   const { darkTheme } = useTheme()
-
-  usePreviousRoute()
 
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
 
@@ -76,10 +74,10 @@ const Navbar = () => {
   return (
     <div ref={navbarRef} className={`fixed top-0 z-50  w-full items-center justify-between px-4 py-4 transition-all ${isNavBlur} lg:px-10 lg:py-2 text-white ${isScrolled && 'bg-[#141414] dark:bg-primary-light'} dark:hover:bg-secondary-light hover:bg-[#141414]`}>
       <div className="w-full flex flex-wrap items-center justify-between p-4">
-        <div onClick={() => navigate('/')} className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
+        <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
           <img src="/movizius.svg" className="h-8" alt="Movizius" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-yellow-700">Movizius</span>
-        </div>
+        </Link>
         <button onClick={() => toggleNavbar()} data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
           <span className="sr-only">Open main menu</span>
           <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
@@ -137,6 +135,7 @@ const Navbar = () => {
 
 interface IMenuItem {
   title: string
+  routeType?: string
   path: string
   onlyMobile?: boolean
   onClick?: () => void
@@ -150,26 +149,31 @@ const MenuItems = (props: MenuItemProps) => {
   const menus: IMenuItem[] = [
     {
       path: '/',
+      routeType: 'home',
       title: 'Home',
       onlyMobile: false,
     },
     {
       path: '/movie',
+      routeType: 'movie',
       title: 'Movie',
       onlyMobile: false,
     },
     {
       path: '/tv',
+      routeType: 'tv',
       title: 'TV Show',
       onlyMobile: false,
     },
     {
       path: '/anime',
+      routeType: 'anime',
       title: 'Anime',
       onlyMobile: false,
     },
     {
       path: '/schedule',
+      routeType: 'schedule',
       title: 'Schedule',
       onlyMobile: false,
     },
@@ -184,10 +188,13 @@ const MenuItems = (props: MenuItemProps) => {
   ]
 
   const location = useLocation()
-  const navigate = useNavigate()
+  const { navigate } = useRoute()
 
-  const isActivePath = (path: string) => {
-    if (path === location.pathname) {
+  const isActivePath = (route: IMenuItem) => {
+    if (route.routeType === 'home' && location.pathname === '/') {
+      return true
+    }
+    if (route.routeType && location.pathname.search(route.routeType) === 1) {
       return true
     }
 
@@ -207,7 +214,7 @@ const MenuItems = (props: MenuItemProps) => {
             <li key={index} className={`${menu.onlyMobile && 'sm:hidden'}`}>
               <span
                 onClick={() => !menu.path ? (menu.onClick && menu.onClick()) : onClickTitle(menu.path)}
-                className={`font-bold block py-2 px-3 text-white rounded md:bg-transparent cursor-pointer dark:hover:text-yellow-500 hover:text-yellow-500 dark:text-primary-dark ${isActivePath(menu.path) && 'text-yellow-500 dark:text-yellow-500'}`}
+                className={`font-bold block py-2 px-3 text-white rounded md:bg-transparent cursor-pointer dark:hover:text-yellow-500 hover:text-yellow-500 dark:text-primary-dark ${isActivePath(menu) && 'text-yellow-500 dark:text-yellow-500'}`}
               >
                 {menu.title}
               </span>

@@ -58,6 +58,7 @@ export const accountStateSlice = createSlice({
       state.token = action.payload
     },
     setStateRoute: (state, action) => {
+      state.stateRoute
       state.stateRoute[action.payload.path] = action.payload.state
     },
   },
@@ -86,7 +87,7 @@ export const getToken = (state: IRootState) => {
 }
 
 export const getStateRouteFromPath = (state: IRootState, path: string) => {
-  return state?.accountState.stateRoute[path]
+  return { path: path, state: state?.accountState.stateRoute[path] || {} }
 }
 
 export default accountStateSlice.reducer

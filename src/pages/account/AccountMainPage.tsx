@@ -23,7 +23,12 @@ const AccountMainPage = (props: IAccountMainPageProps) => {
     {
       value: 'tv',
       title: 'TV Series',
-      panel: <div className="w-full p-12"><AccountMediaStatePage mediaType="tv" /></div>,
+      panel: <div className="w-full p-12"><AccountMediaStatePage mediaType="tv" is_anime={false} /></div>,
+    },
+    {
+      value: 'anime',
+      title: 'Anime',
+      panel: <div className="w-full p-12"><AccountMediaStatePage mediaType="tv" is_anime={true} /></div>,
     },
   ]
   return (

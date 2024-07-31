@@ -10,8 +10,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { Media, MediaType } from '@/types/media.type'
 import NotFoundImage from '@/assets/images/image-not-found.png'
 import Image from '@/components/common/Image'
-import { useNavigate } from 'react-router-dom'
 import { useConfigTMDB } from '@/hooks/useConfig'
+import { useRoute } from '@/hooks/useRoute'
 
 interface MediaCardProps {
   item: Media
@@ -19,7 +19,7 @@ interface MediaCardProps {
   size?: string
 }
 export const MediaCard = (props: MediaCardProps) => {
-  const navigate = useNavigate()
+  const { navigate } = useRoute()
   const item = props.item
   // const disabledImdb = import.meta.env.MODE !== 'development'
   const mediaType = props.mediaType || item.media_type || ''

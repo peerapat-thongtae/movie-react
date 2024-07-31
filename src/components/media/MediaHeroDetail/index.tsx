@@ -11,6 +11,7 @@ import { cn } from '@/utils/tailwind.helper'
 import { FaCheck } from 'react-icons/fa6'
 import { TbProgressCheck } from 'react-icons/tb'
 import { useAuth0 } from '@auth0/auth0-react'
+import GenreChip from '@/components/media/GenreChip'
 
 // Local interface
 interface IProps {
@@ -64,7 +65,6 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
         <div className="mx-8 md:mx-48 pb-24">
           <div className="flex flex-col gap-4 md:flex-row justify-between">
             <span className="text-4xl text-left font-extrabold truncate ">{title}</span>
-            <span className="text-4xl text-left font-extrabold truncate ">{releaseDate}</span>
           </div>
           <hr className="my-8" />
           <div className="flex flex-col md:flex-row w-auto h-auto md:w-[64rem] md:max-w-[64rem] gap-8">
@@ -124,7 +124,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                   {media?.genres?.map((genre: any) => {
                     if (!genre) return
                     // onClick={() => discoverByGenre(genre.id)}
-                    return <div key={genre.id} className="cursor-pointer truncate px-2 py-0.5 text-center items-center rounded-lg text-xs bg-pink-600 hover:text-yellow-500 text-white font-bold">{genre.name}</div>
+                    return <GenreChip genre={genre} />
                   })}
                 </div>
                 {media.tagline
@@ -163,6 +163,13 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                     <span className="text-gray-400 ">{releaseDate}</span>
                     <span className="text-gray-200 hover:text-yellow-500 cursor-pointer">See more..</span>
                   </div>
+                  {mediaType === 'tv'
+                  && (
+                    <div className="flex gap-2 py-1">
+                      <span>Seasons:</span>
+                      <span className="text-gray-400 ">{`${media.number_of_seasons} Seasons ; ${media.number_of_episodes} Episodes`}</span>
+                    </div>
+                  )}
 
                 </div>
               </div>

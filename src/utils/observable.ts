@@ -105,11 +105,11 @@ export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvRespo
         map(resp => resp.data),
         map((imdbs) => {
           const resultsWithIMDB = results.map((tmdb) => {
-            const findIMDB = imdbs.find((imdb: any) => imdb?.id === tmdb?.imdb_id)
+            const findIMDB = imdbs.find((imdb: any) => imdb?.imdb_id === tmdb?.imdb_id)
             if (findIMDB) {
               // console.log('imdb', findIMDB)
-              tmdb.vote_average = findIMDB.rating
-              tmdb.vote_count = findIMDB.votes
+              tmdb.vote_average = findIMDB.vote_average
+              tmdb.vote_count = findIMDB.vote_count
             }
             return tmdb
           })

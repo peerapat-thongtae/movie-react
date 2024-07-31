@@ -3,8 +3,8 @@ import tmdbService from '@/services/tmdb-service'
 import TodoService from '@/services/todo.service'
 import { getAccountStateById, setAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
-import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
-import { discoverMedia$, mediaInfo$, mediaInfos$, searchMedia$ } from '@/utils/observable'
+import { Media, MediaType, SearchType } from '@/types/media.type'
+import { discoverMedia$, mediaInfos$, searchMedia$ } from '@/utils/observable'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -43,7 +43,7 @@ export const useAccountStateAll = () => {
   return { data, fetch: fetchAccountStates, clear: clearAccountStates }
 }
 
-export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaType, status: string }) => {
+export const useMediaAccountStates = ({ mediaType, status, is_anime }: { mediaType: MediaType, status: string, is_anime?: boolean }) => {
   const [page, setPage] = useState<number>(1)
   const auth = useAuth0()
 
@@ -52,14 +52,14 @@ export const useMediaAccountStates = ({ mediaType, status }: { mediaType: MediaT
       from(auth.getAccessTokenSilently()).pipe(
         switchMap((token) => {
           const todoService = new TodoService({ token })
-          return todoService.getAccountStatePaginate(mediaType, status, page)
+          return todoService.getAccountStatePaginate({ media_type: mediaType, status, page, is_anime })
         }),
         map(resp => resp.data),
       ),
     )
   }
 
-  const dataQuery = useQuery([page, mediaType, status], fetch)
+  const dataQuery = useQuery([page, mediaType, status, is_anime], fetch)
   return { ...dataQuery, page, setPage }
 }
 
@@ -107,14 +107,16 @@ export const useMediaAccountStateById = (mediaType: MediaType, id: string | numb
   return { data: accountState, isLoading: isLoading, addRated, addToWatchlist }
 }
 
-export const useRecommendationMedias = (id: string | number, mediaType: MediaType) => {
+export const useRecommendationMedias = (id: number, mediaType: MediaType) => {
+  const auth = useAuth0()
   const fetch = () => {
-    const func = mediaType === 'movie' ? tmdbService.movieRecommendations(id) : tmdbService.tvRecommendations(id)
     return lastValueFrom(
-      from(func).pipe(
-        switchMap((resp) => {
-          return mediaInfos$(resp, mediaType)
+      from(auth.getAccessTokenSilently()).pipe(
+        switchMap((token) => {
+          const todoService = new TodoService({ token })
+          return todoService.getRecommendationMedias({ media_type: mediaType, id })
         }),
+        map(resp => resp.data),
       ),
     )
   }
@@ -124,14 +126,16 @@ export const useRecommendationMedias = (id: string | number, mediaType: MediaTyp
   return query
 }
 
-export const useSimilarMedias = (id: string | number, mediaType: MediaType) => {
+export const useSimilarMedias = (id: number, mediaType: MediaType) => {
+  const auth = useAuth0()
   const fetch = () => {
-    const func = mediaType === 'movie' ? tmdbService.movieSimilar(id) : tmdbService.tvSimilar(id)
     return lastValueFrom(
-      from(func).pipe(
-        switchMap((resp) => {
-          return mediaInfos$(resp, mediaType)
+      from(auth.getAccessTokenSilently()).pipe(
+        switchMap((token) => {
+          const todoService = new TodoService({ token })
+          return todoService.getSimilarMedias({ media_type: mediaType, id })
         }),
+        map(resp => resp.data),
       ),
     )
   }
@@ -163,6 +167,9 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
         dispatch(setAccountStateById({ ...resp.data, mediaType }))
         setIsLoading(false)
       },
+      complete: () => {
+        setIsLoading(false)
+      },
     })
   }
 
@@ -178,16 +185,27 @@ export const usePopularMedia = (mediaType: MediaType) => {
   return useQuery(['popular', mediaType], fetch)
 }
 
-export const useMediaDetail = (id: string, mediaType: string) => {
+export const useMediaDetail = (id: number, mediaType: MediaType) => {
+  const auth = useAuth0()
   const getDetail = () => {
-    return mediaInfo$(mediaType, id).pipe(
-      catchError(() => {
-        return of(null)
-      }),
+    // return mediaInfo$(mediaType, id).pipe(
+    //   catchError(() => {
+    //     return of(null)
+    //   }),
+    // )
+
+    return lastValueFrom(
+      from(auth.getAccessTokenSilently()).pipe(
+        switchMap((token) => {
+          const todoService = new TodoService({ token })
+          return todoService.getMediaInfo({ media_type: mediaType, id })
+        }),
+        map(resp => resp.data),
+      ),
     )
   }
 
-  const query = useQuery<Media | undefined>(['media_detail', id, mediaType], () => lastValueFrom(getDetail()))
+  const query = useQuery<Media | undefined>(['media_detail', id, mediaType], () => (getDetail()))
 
   return query
 }
@@ -256,7 +274,7 @@ export const useTMDBParam = () => {
 
 export const useCredits = (mediaType: MediaType, mediaId: string | number) => {
   const fetch = () => {
-    const creditFn = mediaType === 'movie' ? tmdbService.movieCredits({ id: mediaId }) : tmdbService.tvCredits({ id: mediaId })
+    const creditFn = mediaType === 'movie' ? tmdbService.movieCredits({ id: mediaId }) : tmdbService.seasonCredits({ id: mediaId, season_number: 1 })
     return lastValueFrom(
       from(creditFn).pipe(
       ),
@@ -267,10 +285,10 @@ export const useCredits = (mediaType: MediaType, mediaId: string | number) => {
   return query
 }
 
-export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: DiscoverMediaRequest) => {
+export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: any) => {
   const defaultPage: number = 1
   const { tvShowParams, tvAnimeParams } = useTMDBParam()
-  const [searchParam, setSearch] = useState<DiscoverMediaRequest>({
+  const [searchParam, setSearch] = useState<any>({
     ...initialSearchParam,
     page: initialSearchParam?.page || defaultPage,
   })
@@ -281,7 +299,7 @@ export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: Disc
     setSearch({ ...searchParam, page })
   }
 
-  const setSearchParam = (param: DiscoverMediaRequest) => {
+  const setSearchParam = (param: any) => {
     setSearch({ ...param })
     setPage(1)
   }
@@ -333,8 +351,8 @@ export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
       catchError(() => of(null)),
       map(resp => ({
         ...resp,
-        vote_average: resp?.data?.rating,
-        vote_count: resp?.data?.votes,
+        vote_average: resp?.data?.vote_average,
+        vote_count: resp?.data?.vote_count,
       })),
     )
   }
@@ -344,26 +362,4 @@ export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
   }, [imdbId])
 
   return useQuery(['imdb_rating', imdbId, disabled], async () => await lastValueFrom(fetch()))
-}
-
-export const useMediasByStatus = (mediaType: MediaType, status: string) => {
-  const auth = useAuth0()
-  const defaultPage: number = 1
-  const [page, setPage] = useState(defaultPage)
-
-  const handleDiscover = () => {
-    return lastValueFrom(from(
-      auth.getAccessTokenSilently(),
-    ).pipe(
-      switchMap((token) => {
-        const todoService = new TodoService({ token })
-        return todoService.getAccountStatePaginate(mediaType, status, page)
-      }),
-      map(resp => resp.data),
-    ))
-  }
-
-  const query = useQuery(['medias_state', mediaType, page, status], handleDiscover, { enabled: auth.isAuthenticated })
-
-  return { ...query, page, setPage }
 }

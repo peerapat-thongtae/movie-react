@@ -4,7 +4,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useClickAway } from 'react-use'
 import NotFoundImage from '@/assets/images/avatar-placeholder.jpeg'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const AvatarMenu = () => {
   const [show, setShow] = useState(false)
@@ -58,7 +58,7 @@ const AvatarMenu = () => {
               </div>
               <ul className="py-2 text-sm dark:text-gray-700 text-gray-200" aria-labelledby="avatarButton">
                 <li>
-                  <span onClick={() => navigate('/account')} className="cursor-pointer block px-4 py-2 dark:hover:bg-gray-100 hover:bg-gray-600 hover:text-white dark:text-gray-700">Dashboard</span>
+                  <Link to="/account" className="cursor-pointer block px-4 py-2 dark:hover:bg-gray-100 hover:bg-gray-600 hover:text-white dark:text-gray-700">Dashboard</Link>
                 </li>
               </ul>
               <div className="py-1">

@@ -1,4 +1,5 @@
 import todoApi from '@/services/client/todo-client'
+import { MediaType } from '@/types/media.type'
 
 class TodoService {
   private token = ''
@@ -6,12 +7,24 @@ class TodoService {
     this.token = payload?.token || ''
   }
 
+  getMediaInfo(payload: { media_type: MediaType, id: number }) {
+    return todoApi.get(`/v2/${payload.media_type}/${payload.id}`)
+  }
+
+  getRecommendationMedias(payload: { media_type: MediaType, id: number }) {
+    return todoApi.get(`/v2/${payload.media_type}/${payload.id}/recommendations`)
+  }
+
+  getSimilarMedias(payload: { media_type: MediaType, id: number }) {
+    return todoApi.get(`/v2/${payload.media_type}/${payload.id}/similar`)
+  }
+
   getImdbRating(imdbId: string) {
-    return todoApi.get(`/rating/imdb/${imdbId}`)
+    return todoApi.get(`/v2/rating/${imdbId}`)
   }
 
   getImdbRatingByIds(imdbIds: string[]) {
-    return todoApi.post(`/rating/imdb`, { ids: imdbIds })
+    return todoApi.post(`/v2/rating`, { ids: imdbIds })
   }
 
   discoverMovie(payload: any) {
@@ -34,10 +47,10 @@ class TodoService {
     return todoApi.post(`/v2/${media_type}`, { id: media_id, status }, { headers: { Authorization: `Bearer ${this.token}` } })
   }
 
-  getAccountStatePaginate(media_type: string, status: string, page: number) {
-    return todoApi.get(`/v2/${media_type}/paginate/${status}`, {
+  getAccountStatePaginate(payload: { media_type: string, status: string, page: number, is_anime?: boolean }) {
+    return todoApi.get(`/v2/${payload.media_type}/paginate/${payload.status}`, {
       headers: { Authorization: `Bearer ${this.token}` },
-      params: { page, with_imdb_rating: true },
+      params: { page: payload.page, is_anime: payload?.is_anime, with_imdb_rating: true },
     })
   }
 

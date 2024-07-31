@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom'
 import { CreditType } from '@/types/media.type'
 import Image from '@/components/common/Image'
 import { Cast, Crew, Person } from 'moviedb-promise'
 import { Tooltip } from 'react-tooltip'
+import { useRoute } from '@/hooks/useRoute'
 
 type PersonProps = {
   person: Person | Cast | Crew
@@ -12,7 +12,7 @@ type PersonProps = {
 const PersonCard = (props: PersonProps) => {
   const type = props.type
   const person = props.person as Person & Cast & Crew
-  const navigate = useNavigate()
+  const { navigate } = useRoute()
 
   const goToDetail = () => {
     navigate(`/person/${person.id}`)

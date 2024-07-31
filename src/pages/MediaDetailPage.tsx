@@ -18,7 +18,7 @@ interface MediaDetailPageProps {
 }
 const MediaDetailPage = (props: MediaDetailPageProps) => {
   const param = useParams()
-  const mediaId = param.id || ''
+  const mediaId: number = Number(param.id)
   const { data: media, isLoading, isFetched } = useMediaDetail(mediaId, props.mediaType)
   const tabs: TabProp[] = useMemo(() => {
     if (props.mediaType === 'movie') {
@@ -63,6 +63,11 @@ const MediaDetailPage = (props: MediaDetailPageProps) => {
           panel: <>{media && <PersonTab media={media} mediaType={props.mediaType} creditType="crew" />}</>,
         },
         {
+          value: 'company',
+          title: 'Companies',
+          panel: <>{media && <CompanyTab media={media} mediaType={props.mediaType} />}</>,
+        },
+        {
           value: 'episode',
           title: 'Episodes',
           panel: <>{media && <EpisodeTab mediaType={props.mediaType} media={media} />}</>,
@@ -101,7 +106,7 @@ const MediaDetailPage = (props: MediaDetailPageProps) => {
 const CompanyTab = ({ media }: { media: Media, mediaType: MediaType }) => {
   return (
     <div className="px-8 py-4">
-      <div className="grid grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         {media.production_companies && media.production_companies.map((company) => {
           return (
             <CompanyCard company={company} />
@@ -131,7 +136,7 @@ const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: 
         pagination={false}
         mediaElement={personCredit && personCredit.map((person) => {
           return (
-            <PersonCard person={person} type={creditType} />
+            <PersonCard key={person.id} person={person} type={creditType} />
           )
         })}
       />
@@ -237,7 +242,7 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
 }
 
 const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
-  const { data: recommendationMedias, isLoading } = useRecommendationMedias(media?.id || '', mediaType)
+  const { data: recommendationMedias, isLoading } = useRecommendationMedias(Number(media?.id), mediaType)
   return (
     <div className="px-4 md:px-12 py-8">
       <MediaGrid
@@ -254,7 +259,7 @@ const RecommendationTab = ({ media, mediaType }: { media: Media, mediaType: Medi
 }
 
 const SimilarTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
-  const { data: similarMedias, isLoading } = useSimilarMedias(media?.id || '', mediaType)
+  const { data: similarMedias, isLoading } = useSimilarMedias(Number(media?.id), mediaType)
   return (
     <div className="px-4 md:px-12 py-8">
       <MediaGrid

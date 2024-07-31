@@ -1,9 +1,9 @@
 import Loading from '@/components/common/Loading'
 import Slider from '@/components/common/Slider'
 import Hero from '@/components/media/Hero'
-import { MediaCard } from '@/components/media/MediaCard/test'
+import MediaCard from '@/components/media/MediaCard/index'
 import { useConfigTMDB } from '@/hooks/useConfig'
-import { useDiscoverMedia, useMediasByStatus } from '@/hooks/useMedia'
+import { useDiscoverMedia, useMediaAccountStates } from '@/hooks/useMedia'
 import { DiscoverMediaRequest } from '@/types/media.type'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs from 'dayjs'
@@ -30,7 +30,7 @@ const HomePage = () => {
   const [autoPlay] = useState<boolean>(true)
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
-  const { data: continueWatchingTV } = useMediasByStatus('tv', 'watching')
+  const { data: continueWatchingTV } = useMediaAccountStates({ mediaType: 'tv', status: 'watching' })
   const { isAuthenticated } = useAuth0()
 
   const popularMerges = useMemo(() => {
@@ -73,16 +73,16 @@ const HomePage = () => {
 
       {isAuthenticated
       && (
-        <div className="my-12 px-16 text-xl font-bold flex flex-col gap-8">
+        <div className="my-12 px-4 md:px-16 text-xl font-bold flex flex-col gap-8">
           <div>
             <Slider
               header={(
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm md:text-base">
                   <span>
-                    Continue Watching Series
+                    Continue Watching
                     {continueWatchingTV?.total_results && ` (${continueWatchingTV?.total_results})`}
                   </span>
-                  <span>See All...</span>
+                  <span className="cursor-pointer hover:text-yellow-500">See All...</span>
                 </div>
               )}
               isLoading={!!(isLoadingPopularMovies && isLoadingPopularTV)}
@@ -90,7 +90,7 @@ const HomePage = () => {
                 <div className="flex gap-8">
                   {continueWatchingTV?.results.map((item: any) => {
                     return (
-                      <div className="w-[40vw] h-[50vh] md:w-[300px] md:h-[550px] overflow-hidden">
+                      <div key={item.id} className="w-[40vw] h-[50vh] md:w-[300px] md:h-[550px] overflow-hidden">
                         <MediaCard item={item} mediaType="tv" />
                       </div>
                     )

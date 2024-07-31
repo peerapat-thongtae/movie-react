@@ -10,7 +10,8 @@ import { SiThemoviedatabase } from 'react-icons/si'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Media, MediaType } from '@/types/media.type'
 import Image from '@/components/common/Image'
-import { useNavigate } from 'react-router-dom'
+import { useRoute } from '@/hooks/useRoute'
+import { Link } from 'react-router-dom'
 
 interface MediaCardProps {
   item: Media
@@ -19,7 +20,7 @@ interface MediaCardProps {
 }
 
 const MediaCard2 = (props: MediaCardProps) => {
-  const navigate = useNavigate()
+  const { navigate } = useRoute()
   const item = props.item
   // const disabledImdb = import.meta.env.MODE !== 'development'
   const mediaType = props.mediaType || item.media_type || ''
@@ -34,7 +35,7 @@ const MediaCard2 = (props: MediaCardProps) => {
   const mediaYear = (item.release_date || item.first_air_date) ? dayjs(item.release_date || item.first_air_date).format('YYYY') : '-'
   return (
     <div className="w-full h-full relative aspect-[1_/_1.54] cursor-pointer">
-      <div className="group relative text-center w-full aspect-[1_/_1.54] shadow-[0px_4px_5px_0px_hsla(0,0%,0%,0.14),0px_1px_10px_0px_hsla(0,0%,0%,0.12),0px_2px_4px_-1px_hsla(0,0%,0%,0.2)] overflow-hidden rounded-xl">
+      <div className="group hover:border border-yellow-500 relative text-center w-full aspect-[1_/_1.54] shadow-[0px_4px_5px_0px_hsla(0,0%,0%,0.14),0px_1px_10px_0px_hsla(0,0%,0%,0.12),0px_2px_4px_-1px_hsla(0,0%,0%,0.2)] overflow-hidden rounded-xl">
         <div className="absolute z-20 w-full">
           <div className="flex justify-between">
             <div
@@ -106,9 +107,9 @@ const MediaCard2 = (props: MediaCardProps) => {
           data-tooltip-content={title}
           data-tooltip-place="top"
         >
-          <a href={`/${mediaType}/${item.id}`}>
+          <Link to={`/${mediaType}/${item.id}`}>
             { title }
-          </a>
+          </Link>
         </span>
       </div>
 

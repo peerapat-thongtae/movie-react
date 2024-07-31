@@ -5,7 +5,7 @@ import { DateHelper } from '@/utils/date.helper'
 import { Button } from '@mantine/core'
 import { useMemo } from 'react'
 import { GoDotFill } from 'react-icons/go'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 // const Hero2 = ({ media }: { media: Media }) => {
 //   const navigate = useNavigate()
@@ -116,7 +116,6 @@ import { useNavigate } from 'react-router-dom'
 // }
 
 const Hero = ({ media }: { media: Media }) => {
-  const navigate = useNavigate()
   const { getImagePath, getLogoPath } = useConfigTMDB()
 
   const provider = useMemo(() => {
@@ -151,10 +150,6 @@ const Hero = ({ media }: { media: Media }) => {
       style={{ backgroundImage: `url(${bgUrl})` }}
       className="relative bg-cover h-full min-h-screen bg-center bg-no-repeat"
     >
-      {/* <div
-        className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"
-      >
-      </div> */}
       <div className="h-full w-3/4 absolute bottom-0 left-0 bg-gradient-to-r from-main to-transparent"></div>
       <div className="h-[20vh] md:h-[80vh] w-full absolute bottom-0 left-0 bg-gradient-to-t from-main to-transparent"></div>
 
@@ -184,7 +179,7 @@ const Hero = ({ media }: { media: Media }) => {
               )}
             </div>
             <span className="flex gap-2 md:gap-4 items-center">
-              {media.media_type === 'movie' && DateHelper.formatDate(media.release_date_th, 'DD MMM YYYY')}
+              {media.media_type === 'movie' && DateHelper.formatDate(media.release_date || '', 'DD MMM YYYY')}
               <span><GoDotFill className="text-yellow-500" /></span>
               <span>{media.status}</span>
             </span>
@@ -217,11 +212,12 @@ const Hero = ({ media }: { media: Media }) => {
 
           <div className="mt-8 flex flex-wrap gap-4 text-center">
             <Button
-              onClick={() => navigate(`/${media.media_type}/${media.id}`)}
               variant="outline"
               color="yellow"
             >
-              Full Details
+              <Link to={`/${media.media_type}/${media.id}`}>
+                Full Details
+              </Link>
             </Button>
           </div>
         </div>

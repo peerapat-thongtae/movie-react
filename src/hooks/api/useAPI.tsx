@@ -6,7 +6,7 @@ export const useAPI = () => {
   const token = useSelector(getToken)
 
   const getImdbRating = (imdbId: string) => {
-    return todoApi.get(`/rating/imdb/${imdbId}`)
+    return todoApi.get(`/rating/${imdbId}`)
   }
 
   const getImdbRatingByIds = (imdbIds: string[]) => {

@@ -17,6 +17,7 @@ interface IMediaGridProps {
   isLoading?: boolean
   pagination?: boolean
   setPage?: (_page: number) => void
+  goToDetail?: (_id: number, _media_type: MediaType) => void
   totalResults?: number
   totalPages?: number
   mediaType: MediaType

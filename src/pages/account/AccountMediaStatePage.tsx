@@ -4,7 +4,7 @@ import { MediaType } from '@/types/media.type'
 import { Tabs } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
-const AccountMediaStatePage = ({ mediaType }: { mediaType: MediaType }) => {
+const AccountMediaStatePage = ({ mediaType, is_anime }: { mediaType: MediaType, is_anime?: boolean }) => {
   const [statusTab, setStatusTab] = useState<string>('watchlist')
   return (
     <Tabs
@@ -43,25 +43,25 @@ const AccountMediaStatePage = ({ mediaType }: { mediaType: MediaType }) => {
       </Tabs.List>
 
       <Tabs.Panel value="watchlist">
-        <TabData mediaType={mediaType} status={statusTab} />
+        <TabData mediaType={mediaType} is_anime={is_anime} status={statusTab} />
       </Tabs.Panel>
 
       <Tabs.Panel value="watched">
-        <TabData mediaType={mediaType} status={statusTab} />
+        <TabData mediaType={mediaType} is_anime={is_anime} status={statusTab} />
       </Tabs.Panel>
 
       <Tabs.Panel value="watching">
-        <TabData mediaType={mediaType} status={statusTab} />
+        <TabData mediaType={mediaType} is_anime={is_anime} status={statusTab} />
       </Tabs.Panel>
     </Tabs>
   )
 }
 
-const TabData = (props: { mediaType: MediaType, status: string }) => {
+const TabData = (props: { mediaType: MediaType, status: string, is_anime?: boolean }) => {
   const mediaType = props.mediaType
   const status = props.status
 
-  const dataQuery = useMediaAccountStates({ mediaType, status })
+  const dataQuery = useMediaAccountStates({ mediaType, status, is_anime: props?.is_anime })
 
   useEffect(() => {
     dataQuery.setPage(1)
