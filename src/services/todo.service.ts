@@ -2,11 +2,6 @@ import todoApi from '@/services/client/todo-client'
 import { MediaType } from '@/types/media.type'
 
 class TodoService {
-  private token = ''
-  constructor(payload?: { token?: string }) {
-    this.token = payload?.token || ''
-  }
-
   getMediaInfo(payload: { media_type: MediaType, id: number }) {
     return todoApi.get(`/v2/${payload.media_type}/${payload.id}`)
   }
@@ -40,23 +35,22 @@ class TodoService {
   }
 
   getAccountStates(media_type: string | number) {
-    return todoApi.get(`/v2/${media_type}`, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.get(`/v2/${media_type}`)
   }
 
   addToWatchlist(media_type: string, media_id: string | number, status: string) {
-    return todoApi.post(`/v2/${media_type}`, { id: media_id, status }, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.post(`/v2/${media_type}`, { id: media_id, status })
   }
 
   getAccountStatePaginate(payload: { media_type: string, status: string, page: number, is_anime?: boolean }) {
     return todoApi.get(`/v2/${payload.media_type}/paginate/${payload.status}`, {
-      headers: { Authorization: `Bearer ${this.token}` },
       params: { page: payload.page, is_anime: payload?.is_anime, with_imdb_rating: true },
     })
   }
 
   updateTVEpisodes(payload: any) {
-    return todoApi.post(`/v2/tv/episodes`, payload, { headers: { Authorization: `Bearer ${this.token}` } })
+    return todoApi.post(`/v2/tv/episodes`, payload)
   }
 }
 
-export default TodoService
+export default new TodoService()

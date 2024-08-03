@@ -16,7 +16,6 @@ const MediaHomePage = (props: MediaHomePageProps) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     setPrevState(searchParam)
-    console.log('set ', props.mediaType, searchParam)
   }, [searchParam])
 
   const isInitialRender = useRef(true)

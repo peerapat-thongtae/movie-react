@@ -136,6 +136,15 @@ const Hero = ({ media }: { media: Media }) => {
     }
   }, [media])
 
+  const releaseDate = useMemo(() => {
+    if (media.media_type === 'movie') {
+      return media?.release_dates?.results?.find(val => val.iso_3166_1 === 'TH')?.release_dates?.[0]?.release_date
+    }
+    else {
+      return media.first_air_date
+    }
+  }, [media])
+
   const providerImage = useMemo(() => {
     return getLogoPath(provider?.provider_name || '')
   }, [provider, media])
@@ -175,12 +184,12 @@ const Hero = ({ media }: { media: Media }) => {
                     effect="zoomIn"
                   />
                   <span>{provider?.provider_name}</span>
+                  <span><GoDotFill className="text-yellow-500" /></span>
                 </span>
               )}
             </div>
             <span className="flex gap-2 md:gap-4 items-center">
-              {media.media_type === 'movie' && DateHelper.formatDate(media.release_date || '', 'DD MMM YYYY')}
-              <span><GoDotFill className="text-yellow-500" /></span>
+              {media.media_type === 'movie' && DateHelper.formatDate(releaseDate || '', 'DD MMM YYYY')}
               <span>{media.status}</span>
             </span>
           </span>

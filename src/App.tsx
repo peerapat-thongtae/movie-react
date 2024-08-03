@@ -13,6 +13,7 @@ import { useWindowScroll } from '@mantine/hooks'
 import { Affix, Button, Transition } from '@mantine/core'
 import { FaArrowUp } from 'react-icons/fa'
 import Loading from '@/components/common/Loading'
+import AxiosInterceptor from '@/services/client/axios-interceptor'
 
 function AffixComponent() {
   const [scroll, scrollTo] = useWindowScroll()
@@ -72,7 +73,7 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={dehydrateState}>
-          <>
+          <AxiosInterceptor>
             <AffixComponent />
             {/* <LoadingOverlay visible={isLoading} opacity={1} overlayProps={{ backgroundOpacity: 0.3, className: `${darkTheme ? 'bg-primary-light' : 'bg-primary-dark'}` }} zIndex={1000} loaderProps={{ children: <Loading /> }} /> */}
             <div className={`flex min-h-screen flex-col ${darkTheme ? 'text-primary-light bg-primary-dark' : 'text-primary-dark bg-primary-light'}`}>
@@ -96,7 +97,7 @@ function App() {
 
               </div>
             </div>
-          </>
+          </AxiosInterceptor>
         </Hydrate>
       </QueryClientProvider>
     </BrowserRouter>

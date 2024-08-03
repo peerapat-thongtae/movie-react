@@ -1,5 +1,5 @@
 import tmdbService from '@/services/tmdb-service'
-import TodoService from '@/services/todo.service'
+import todoService from '@/services/todo.service'
 import { DiscoverMediaRequest, MediaType, SearchType } from '@/types/media.type'
 import dayjs from 'dayjs'
 import { DiscoverMovieResponse, DiscoverTvResponse, SearchMultiResponse } from 'moviedb-promise'
@@ -100,7 +100,6 @@ export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvRespo
       if (disableImdb) {
         return of(results)
       }
-      const todoService = new TodoService()
       return from(todoService.getImdbRatingByIds(results.map(val => val.imdb_id))).pipe(
         map(resp => resp.data),
         map((imdbs) => {
@@ -124,12 +123,12 @@ export const mediaInfos$ = (respResults: DiscoverMovieResponse | DiscoverTvRespo
 
 export const discoverMedia$ = (mediaType: MediaType, searchParam: DiscoverMediaRequest): Observable<any> => {
   if (mediaType === 'movie') {
-    return from(new TodoService().discoverMovie(searchParam)).pipe(
+    return from(todoService.discoverMovie(searchParam)).pipe(
       map(resp => resp.data),
     )
   }
   else {
-    return from(new TodoService().discoverTV(searchParam)).pipe(
+    return from(todoService.discoverTV(searchParam)).pipe(
       map(resp => resp.data),
     )
   }

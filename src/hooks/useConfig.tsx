@@ -46,7 +46,8 @@ export const useConfigTMDB = () => {
 
   const getImagePath = (imagePath: string, type: ImageType) => {
     const posterSize = type === 'poster' ? 'w780' : 'original'
-    return imagePath ? `${config.images.base_url}/${posterSize}${imagePath}` : (type === 'poster' ? NotFoundImage : NoImageBackdrop)
+    const resImage = imagePath ? `${config.images.base_url}/${posterSize}${imagePath}` : (type === 'poster' ? NotFoundImage : NoImageBackdrop)
+    return resImage
   }
 
   const getLogoPath = (providerName: string) => {
