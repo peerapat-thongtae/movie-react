@@ -23,11 +23,11 @@ const Slider = ({ children, header, isLoading }: SliderProps) => {
       >
         {isLoading
           ? (
-            <div className="flex items-center justify-center min-h-[20vh] w-full">
+            <div className="flex items-center justify-center min-h-[20vh] min-w-[90vw] w-full">
               <Loading />
             </div>
           )
-          : <div className="pt-4">{children}</div>}
+          : <div className="pt-4 min-h-[20vh]">{children}</div>}
 
       </ScrollMenu>
     </div>

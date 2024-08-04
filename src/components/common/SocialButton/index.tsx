@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { BsFacebook, BsInstagram } from 'react-icons/bs'
+import { FaFacebookF } from 'react-icons/fa6'
 import { SiImdb, SiThemoviedatabase } from 'react-icons/si'
 
 type ProviderType = 'facebook' | 'instagram' | 'imdb' | 'tmdb'
@@ -10,13 +11,14 @@ interface SocialButtonProps {
   label: string
   showDetail?: boolean
   size?: SizeType
+  to?: string
 }
-const SocialButton = (props: SocialButtonProps) => {
-  const { onClick, provider, label } = props
+export const _SocialButton2 = (props: SocialButtonProps) => {
+  const { provider, onClick, label } = props
   const showDetail = props.showDetail
   const size: SizeType = props.size || ''
 
-  const iconClass = 'w-8 h-8 shrink-0'
+  const iconClass = 'w-6 h-6 shrink-0'
   const colorClass = useMemo(() => {
     if (provider === 'facebook') {
       return 'hover:bg-sky-600 bg-sky-700 before:bg-sky-700 before:hover:bg-sky-600'
@@ -41,11 +43,12 @@ const SocialButton = (props: SocialButtonProps) => {
     }
 
     if (size === 'small') {
-      return 'w-6 h-6'
+      return 'w-10 h-10'
     }
 
     return 'w-12 h-12'
   }, [size])
+
   return (
     <button
       className={`group ${showDetail && 'hover:w-44'} ${sizeClass} relative
@@ -70,6 +73,63 @@ const SocialButton = (props: SocialButtonProps) => {
 
       </span>
     </button>
+  )
+}
+
+const SocialButton = (props: SocialButtonProps) => {
+  const { onClick, provider } = props
+  const size: SizeType = props.size || ''
+
+  const colorClass = useMemo(() => {
+    if (provider === 'facebook') {
+      return 'hover:bg-sky-600 before:bg-sky-700 before:hover:bg-sky-600'
+    }
+
+    if (provider === 'instagram') {
+      return 'hover:bg-pink-600  before:bg-pink-700 before:hover:bg-pink-600'
+    }
+
+    if (provider === 'imdb') {
+      return 'hover:bg-yellow-600 before:bg-yellow-700 before:hover:bg-yellow-600'
+    }
+
+    if (provider === 'tmdb') {
+      return 'hover:bg-blue-600 before:bg-blue-700 before:hover:bg-blue-600'
+    }
+  }, [provider])
+
+  const sizeClass = useMemo(() => {
+    if (size === 'large') {
+      return 'w-12 h-12'
+    }
+
+    if (size === 'small') {
+      return 'w-10 h-10'
+    }
+
+    return 'w-12 h-12'
+  }, [size])
+  return (
+    <div
+      className={`group cursor-pointer rounded-full ${sizeClass}
+       hover:border-0 border border-yellow-500 ${colorClass}`}
+      onClick={onClick}
+    >
+      <div className="w-full h-full flex justify-center items-center ">
+        {provider === 'facebook' && <FaFacebookF size="20" />}
+        {provider === 'instagram' && <BsInstagram size="20" />}
+        {provider === 'imdb' && <SiImdb size="20" />}
+        {provider === 'tmdb' && <SiThemoviedatabase size="20" />}
+      </div>
+      {/* <span
+        className={`${!showDetail && 'hidden'} truncate origin-left inline-flex duration-100 group-hover:duration-300 group-hover:delay-500 opacity-0 group-hover:opacity-100 border-l-2 px-2 transform scale-x-0 group-hover:scale-x-100 transition-all`}
+      >
+        <div className="animate-marquee whitespace-nowrap">
+          {label}
+        </div>
+
+      </span> */}
+    </div>
   )
 }
 

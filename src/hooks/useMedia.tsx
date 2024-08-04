@@ -138,23 +138,8 @@ export const useTVEpisodeAccountState = (id: string | number, seasonNumber: numb
   return { data: accountState, isLoading: isLoading, addWatched }
 }
 
-export const usePopularMedia = (mediaType: MediaType) => {
-  const fetch = () => {
-    const func = mediaType === 'movie' ? tmdbService.moviePopular() : tmdbService.moviePopular()
-    return lastValueFrom(from(func))
-  }
-
-  return useQuery(['popular', mediaType], fetch)
-}
-
 export const useMediaDetail = (id: number, mediaType: MediaType) => {
   const getDetail = () => {
-    // return mediaInfo$(mediaType, id).pipe(
-    //   catchError(() => {
-    //     return of(null)
-    //   }),
-    // )
-
     return lastValueFrom(
       from(todoService.getMediaInfo({ media_type: mediaType, id })).pipe(
         map(resp => resp.data),
@@ -163,7 +148,6 @@ export const useMediaDetail = (id: number, mediaType: MediaType) => {
   }
 
   const query = useQuery<Media | undefined>(['media_detail', id, mediaType], () => (getDetail()))
-
   return query
 }
 
@@ -319,4 +303,8 @@ export const useIMDBRating = (imdbId: string | undefined, disabled = false) => {
   }, [imdbId])
 
   return useQuery(['imdb_rating', imdbId, disabled], async () => await lastValueFrom(fetch()))
+}
+
+export const usePersonDetail = (personId: number) => {
+  return useQuery(['person_detail', personId], () => tmdbService.personInfo({ id: personId, append_to_response: 'external_ids,movie_credits,tv_credits' }))
 }

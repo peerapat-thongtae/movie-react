@@ -6,13 +6,11 @@ const AxiosInterceptor = ({ children }: any) => {
   const { getAccessTokenSilently } = useAuth0()
 
   useEffect(() => {
-    console.log('yess')
     const requestInterceptor = todoApi.interceptors.request.use(
       async (config) => {
         try {
           const token = await getAccessTokenSilently()
           config.headers.Authorization = `Bearer ${token}`
-          console.log('tooo', token)
         }
         catch (error) {
           console.error('Error getting token:', error)

@@ -12,6 +12,8 @@ import MediaGrid from '@/components/media/MediaGrid'
 import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
 import CompanyCard from '@/components/media/CompanyCard'
+import { take } from 'lodash'
+import { Button } from '@mantine/core'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -121,25 +123,52 @@ const CompanyTab = ({ media }: { media: Media, mediaType: MediaType }) => {
 const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: MediaType, creditType: CreditType }) => {
   const mediaId = media.id || ''
   const { data: persons, isLoading } = useCredits(mediaType, mediaId)
+  const [showAll, setShowAll] = useState(false)
 
   const personCredit = useMemo(() => {
     return persons?.[creditType] || []
   }, [persons])
 
+  const currentShowPerson = useMemo(() => {
+    if (showAll) {
+      return personCredit
+    }
+    else {
+      return take(personCredit, 12)
+    }
+  }, [personCredit, showAll, setShowAll])
+
+  const onClickLoadmore = () => {
+    setShowAll(!showAll)
+  }
+
   return (
     <div className="px-12 py-8">
       <MediaGrid
-        items={personCredit as Person[]}
+        items={currentShowPerson as Person[]}
         isLoading={isLoading}
         mediaType="person"
         size="SMALL"
         pagination={false}
-        mediaElement={personCredit && personCredit.map((person) => {
+        mediaElement={currentShowPerson && currentShowPerson.map((person) => {
           return (
             <PersonCard key={person.id} person={person} type={creditType} />
           )
         })}
       />
+
+      {personCredit.length > 12
+      && (
+        <div className="flex justify-center my-8">
+          <Button
+            variant="outline"
+            color="yellow"
+            onClick={onClickLoadmore}
+          >
+            {showAll ? 'Show only main' : 'Load more...'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

@@ -35,7 +35,7 @@ const MediaCard2 = (props: MediaCardProps) => {
   const mediaYear = (item.release_date || item.first_air_date) ? dayjs(item.release_date || item.first_air_date).format('YYYY') : '-'
   return (
     <div className="w-full h-full relative aspect-[1_/_1.54] cursor-pointer">
-      <div className="group hover:border border-yellow-500 relative text-center w-full aspect-[1_/_1.54] shadow-[0px_4px_5px_0px_hsla(0,0%,0%,0.14),0px_1px_10px_0px_hsla(0,0%,0%,0.12),0px_2px_4px_-1px_hsla(0,0%,0%,0.2)] overflow-hidden rounded-xl">
+      <div className="group relative text-center w-full aspect-[1_/_1.54] shadow-[0px_4px_5px_0px_hsla(0,0%,0%,0.14),0px_1px_10px_0px_hsla(0,0%,0%,0.12),0px_2px_4px_-1px_hsla(0,0%,0%,0.2)] overflow-hidden rounded-xl">
         <div className="absolute z-20 w-full">
           <div className="flex justify-between">
             <div
