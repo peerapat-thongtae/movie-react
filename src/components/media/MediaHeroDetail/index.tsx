@@ -46,8 +46,8 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
     return crews ? crews.filter((val: any) => val.job === 'Writer' || val.job === 'Novel' || val.job === 'Screenplay') : []
   }
 
-  const director = getDirectors(media.credits?.cast)?.[0]?.name || '-'
-  const writer = getWriters(media.credits?.cast)?.[0]?.name || '-'
+  const director = getDirectors(media.credits?.crew)?.[0]?.name || '-'
+  const writer = getWriters(media.credits?.crew)?.[0]?.name || '-'
 
   // Error image
 
