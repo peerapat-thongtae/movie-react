@@ -15,7 +15,7 @@ import GenreChip from '@/components/media/GenreChip'
 
 // Local interface
 interface IProps {
-  media: Media
+  media: Media | any
   mediaType: MediaType
 }
 
@@ -25,10 +25,29 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   const title = media.title || media.name
   const releaseDate = dayjs(media.release_date_th || media.release_date || media.first_air_date).format('DD/MM/YYYY') || ''
   const originalName = media.original_name || media.title || media.name
-  const director = media.directors?.[0]?.name || '-'
-  const writer = media.writers?.[0]?.name || '-'
   const [isOpenTrailer, setIsOpenTrailer] = useState(false)
   const { data: accountState, addToWatchlist, addRated, isLoading: isLoadingAccountState } = useMediaAccountStateById(mediaType, media.id || '')
+
+  const getTrailers = (videos: any) => {
+    const trailers = videos?.results?.filter((video: any) => video.type === 'Trailer') || []
+
+    if (trailers.length === 0) {
+      return videos?.results?.filter((video: any) => video.type === 'Teaser') || []
+    }
+
+    return trailers
+  }
+
+  const getDirectors = (crews: any) => {
+    return crews ? crews.filter((val: any) => val.job === 'Director') : []
+  }
+
+  const getWriters = (crews: any) => {
+    return crews ? crews.filter((val: any) => val.job === 'Writer' || val.job === 'Novel' || val.job === 'Screenplay') : []
+  }
+
+  const director = getDirectors(media.credits?.cast)?.[0]?.name || '-'
+  const writer = getWriters(media.credits?.cast)?.[0]?.name || '-'
 
   // Error image
 
@@ -40,7 +59,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
           channel="youtube"
           youtube={{ mute: 0, autoplay: 1 }}
           isOpen={isOpenTrailer}
-          videoId={media.trailers?.[0]?.key}
+          videoId={getTrailers((media as any)?.videos)?.[0]?.key}
           onClose={() => setIsOpenTrailer(false)}
         />
         <Image
