@@ -182,7 +182,7 @@ const MenuItems = (props: MenuItemProps) => {
       title: isAuthenticated ? 'Logout' : 'Login',
       onlyMobile: true,
       onClick: () => {
-        isAuthenticated ? login() : logout()
+        isAuthenticated ? logout() : login()
       },
     },
   ]

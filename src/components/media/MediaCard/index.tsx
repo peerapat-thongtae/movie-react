@@ -49,7 +49,7 @@ const MediaCard2 = (props: MediaCardProps) => {
                 className="pointer-events-auto rounded-full bg-black px-1.5 py-1 opacity-100 m-2 transition duration-300 ease-in-out group-hover:opacity-100"
               >
                 <div className="flex items-center justify-center">
-                  <ButtonMediaAccount media={item} />
+                  <ButtonMediaAccount media={item} mediaType={mediaType} />
                 </div>
               </div>
             )}

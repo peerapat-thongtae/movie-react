@@ -36,18 +36,18 @@ export const accountStateSlice = createSlice({
       const findIndex = state.medias.findIndex(val => val.id === action.payload.id && mediaType === val.media_type)
       if (mediaType === 'movie') {
         if (findIndex >= 0) {
-          state.medias[findIndex] = action.payload
+          state.medias[findIndex] = { ...action.payload, media_type: mediaType }
         }
         else {
-          state.medias.push(action.payload)
+          state.medias.push({ ...action.payload, media_type: mediaType })
         }
       }
       else {
         if (findIndex >= 0) {
-          state.medias[findIndex] = { ...action.payload }
+          state.medias[findIndex] = { ...action.payload, media_type: mediaType }
         }
         else {
-          state.medias.push(action.payload)
+          state.medias.push({ ...action.payload, media_type: mediaType })
         }
       }
     },
