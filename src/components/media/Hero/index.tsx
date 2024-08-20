@@ -220,14 +220,15 @@ const Hero = ({ media }: { media: Media }) => {
           </span>
 
           <div className="mt-8 flex flex-wrap gap-4 text-center">
-            <Button
-              variant="outline"
-              color="yellow"
-            >
-              <Link to={`/${media.media_type}/${media.id}`}>
+            <Link to={`/${media.media_type}/${media.id}`}>
+              <Button
+                variant="outline"
+                color="yellow"
+              >
+
                 Full Details
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

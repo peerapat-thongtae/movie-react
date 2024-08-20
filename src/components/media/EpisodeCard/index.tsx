@@ -1,5 +1,4 @@
 import Image from '@/components/common/Image'
-import { useConfigTMDB } from '@/hooks/useConfig'
 import { useTVEpisodeAccountState } from '@/hooks/useMedia'
 import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
@@ -18,15 +17,15 @@ const EpisodeCard = (props: EpisodeCardProps) => {
   const { isAuthenticated } = useAuth0()
   const episode = props.item
   const { data: accountState, addWatched, isLoading } = useTVEpisodeAccountState(props.media.id || '', Number(episode.season_number), Number(episode.episode_number), Number(episode.id), props.mediaType)
-  const { getImagePath } = useConfigTMDB()
   return (
     <div className="flex flex-col md:flex-row gap-4 md:gap-24">
       <div className="w-auto h-48 min-h-48 md:min-w-[28rem] md:w-[28rem] md:h-64 md:min-h-64">
         <Image
           className={cn('w-full h-full rounded-lg')}
-          src={getImagePath(episode?.still_path?.toString() || '', 'backdrop')}
+          src={`https://image.tmdb.org/t/p/w780${episode?.still_path}`}
           alt={episode.name}
           effect="zoomIn"
+          type="backdrop"
           loadIcon
           reEffect
         />

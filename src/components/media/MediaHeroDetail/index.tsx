@@ -5,7 +5,7 @@ import Image from '@/components/common/Image'
 import dayjs from 'dayjs'
 import ModalVideo from 'react-modal-video'
 import { FaBookmark, FaPlayCircle, FaSpinner } from 'react-icons/fa'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useMediaAccountStateById } from '@/hooks/useMedia'
 import { cn } from '@/utils/tailwind.helper'
 import { FaCheck } from 'react-icons/fa6'
@@ -46,8 +46,22 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
     return crews ? crews.filter((val: any) => val.job === 'Writer' || val.job === 'Novel' || val.job === 'Screenplay') : []
   }
 
-  const director = getDirectors(media.casts?.crew)?.[0]?.name || '-'
-  const writer = getWriters(media.casts?.crew)?.[0]?.name || '-'
+  const director = useMemo(() => {
+    if (mediaType === 'movie') {
+      return getDirectors(media?.casts?.crew)?.[0]?.name || '-'
+    }
+    else {
+      return getDirectors(media?.credits?.crew)?.[0]?.name || media?.created_by?.[0]?.name || '-'
+    }
+  }, [media])
+  const writer = useMemo(() => {
+    if (mediaType === 'movie') {
+      return getWriters(media?.casts?.crew)?.[0]?.name || '-'
+    }
+    else {
+      return getWriters(media?.credits?.crew)?.[0]?.name || media?.created_by?.[0]?.name || '-'
+    }
+  }, [media])
 
   // Error image
 

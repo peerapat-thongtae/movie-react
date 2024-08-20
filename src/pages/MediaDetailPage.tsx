@@ -13,7 +13,7 @@ import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
 import CompanyCard from '@/components/media/CompanyCard'
 import { take } from 'lodash'
-import { Button } from '@mantine/core'
+import { Button, Checkbox } from '@mantine/core'
 
 interface MediaDetailPageProps {
   mediaType: MediaType
@@ -175,6 +175,7 @@ const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: 
 
 const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const mediaId = media.id || ''
+  const [onlyUnwatched, setOnlyUnwatched] = useState(false)
   const seasonOptions = media?.seasons?.map(val => ({
     label: `${val.season_number} : ${val.name}`,
     value: val.season_number?.toString() || '',
@@ -184,12 +185,11 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
   const { data: seasonDetail, isLoading } = useTVSeasonDetail(mediaType, mediaId, seasonNumber)
   const episodes = useMemo(() => {
     const eps = seasonDetail?.episodes || []
-    // eps = eps?.filter(val => val.account_status !== 'watched')
-    // if (!seasonNumber) {
-    //   eps = media?.seasons?.filter(val => val.season_number !== 0)
-    // }
+    if (onlyUnwatched) {
+      return eps?.filter(val => val.account_status !== 'watched')
+    }
     return eps
-  }, [seasonDetail])
+  }, [seasonDetail, onlyUnwatched])
   const parentRef = useRef<HTMLDivElement | null>(null)
 
   // The virtualizer
@@ -218,7 +218,7 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
           : (
             <>
               <div className="text-2xl font-bold">{`${seasonDetail?.season_number} : ${seasonDetail?.name}`}</div>
-              <div>
+              <div className="flex gap-4 items-center">
                 <Dropdown
                   all
                   labelAll="All Seasons"
@@ -227,6 +227,15 @@ const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }
                   options={seasonOptions}
                   value={seasonNumber}
                   onChange={val => setSeasonNumber(val || '')}
+                />
+                <Checkbox
+                  checked={onlyUnwatched}
+                  onChange={() => setOnlyUnwatched(!onlyUnwatched)}
+                  label="Only Unwatched"
+                  color="yellow"
+                  variant="outline"
+                  className="pt-6 "
+                  classNames={{ input: '!bg-transparent !border-1 !border-yellow-500' }}
                 />
               </div>
             </>
