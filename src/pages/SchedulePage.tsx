@@ -12,18 +12,18 @@ const SchedulePage = () => {
     'release_date.lte': currentDate,
     'region': 'TH',
   }
-  const tvTodayRequest: DiscoverMediaRequest = {
-    'air_date.gte': currentDate,
-    'air_date.lte': currentDate,
-    'sort_by': 'popularity.desc',
-    // 'with_watch_providers': config.watchProviders.map(val => val.provider_id).join('|'),
-    // 'region': 'TH',
-    // 'timezone': 'Asia/Bangkok',
-    // 'watch_region': 'TH',
-    'page': 1,
-  }
+  // const tvTodayRequest: DiscoverMediaRequest = {
+  //   'air_date.gte': currentDate,
+  //   'air_date.lte': currentDate,
+  //   'sort_by': 'popularity.desc',
+  //   // 'with_watch_providers': config.watchProviders.map(val => val.provider_id).join('|'),
+  //   // 'region': 'TH',
+  //   // 'timezone': 'Asia/Bangkok',
+  //   // 'watch_region': 'TH',
+  //   'page': 1,
+  // }
   const movieTodayQuery = useDiscoverMedia('movie', movieTodayRequest)
-  const tvTodayQuery = useDiscoverMedia('tv_anime', tvTodayRequest)
+  // const tvTodayQuery = useDiscoverMedia('tv_anime', tvTodayRequest)
   return (
     <div className="my-24 px-8">
       <div className="flex justify-center text-2xl font-bold mt-36 mb-4">Movie Release Today</div>
