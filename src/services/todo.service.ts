@@ -51,6 +51,10 @@ class TodoService {
   updateTVEpisodes(payload: any) {
     return todoApi.post(`/v2/tv/episodes`, payload)
   }
+
+  getAiringTV() {
+    return todoApi.get(`/v2/tv/airing-today`)
+  }
 }
 
 export default new TodoService()

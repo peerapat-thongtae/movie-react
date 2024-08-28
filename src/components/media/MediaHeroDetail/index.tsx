@@ -39,7 +39,7 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
   }
 
   const getDirectors = (crews: any) => {
-    return crews ? crews.filter((val: any) => val.job === 'Director') : []
+    return crews ? crews.filter((val: any) => val.job === 'Director' || val.job === 'Creator') : []
   }
 
   const getWriters = (crews: any) => {

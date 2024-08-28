@@ -1,6 +1,6 @@
 import { Country, DiscoverMovieRequest, DiscoverTvRequest, Genre, Job, Language, MovieReleaseDatesResponse, MovieResponse, ShowResponse, WatchProvider, WatchProviderResponse } from 'moviedb-promise'
 
-export type MediaType = 'movie' | 'tv' | 'anime' | 'person'
+export type MediaType = 'movie' | 'tv' | 'anime' | 'person' | 'tv_anime'
 export type SearchType = 'movie' | 'tv' | 'person' | 'multi'
 
 export type CreditType = 'cast' | 'crew'
@@ -47,6 +47,9 @@ export type AccountState = {
   account_status?: string
 }
 
-export type DiscoverMediaRequest = Omit<DiscoverMovieRequest & DiscoverTvRequest, 'sort_by'> & { sort_by?: string }
+export type DiscoverMediaRequest = Omit<DiscoverMovieRequest & DiscoverTvRequest, 'sort_by'> & {
+  sort_by?: string
+  with_type?: string
+}
 
 export type ImageType = 'poster' | 'backdrop'

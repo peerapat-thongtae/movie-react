@@ -3,7 +3,7 @@ import tmdbService from '@/services/tmdb-service'
 import todoService from '@/services/todo.service'
 import { getAccountStateById, setAccountStateById, setAccountStates } from '@/stores/slice'
 import { IRootState } from '@/stores/store'
-import { Media, MediaType, SearchType } from '@/types/media.type'
+import { DiscoverMediaRequest, Media, MediaType, SearchType } from '@/types/media.type'
 import { discoverMedia$, searchMedia$ } from '@/utils/observable'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -205,6 +205,7 @@ export const useTMDBParam = () => {
   }, [config])
   const tvAnimeParams = useMemo(() => {
     return {
+      with_type: '2|4',
       with_original_language: 'ja',
       with_genres: '16',
     }
@@ -226,11 +227,12 @@ export const useCredits = (mediaType: MediaType, mediaId: string | number) => {
   return query
 }
 
-export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: any) => {
+export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: DiscoverMediaRequest) => {
   const defaultPage: number = 1
   const { tvShowParams, tvAnimeParams } = useTMDBParam()
   const [searchParam, setSearch] = useState<any>({
     ...initialSearchParam,
+    timezone: 'Asia/Bangkok',
     page: initialSearchParam?.page || defaultPage,
   })
 
@@ -254,7 +256,9 @@ export const useDiscoverMedia = (mediaType: MediaType, initialSearchParam?: any)
       return tvAnimeParams
     }
 
-    return {}
+    return {
+      with_type: '2|4',
+    }
   }, [mediaType])
 
   const handleDiscover = () => {

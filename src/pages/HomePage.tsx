@@ -22,6 +22,7 @@ const HomePage = () => {
     'air_date.gte': dayjs().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'),
     'air_date.lte': dayjs().add(3, 'week').startOf('week').format('YYYY-MM-DD'),
     'sort_by': 'popularity.desc',
+    'with_type': '2|4',
     'with_watch_providers': config.watchProviders.map(val => val.provider_id).join('|'),
     'watch_region': 'TH',
     'page': 1,
