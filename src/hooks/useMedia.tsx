@@ -35,18 +35,18 @@ export const useAccountStateAll = () => {
   return { data, fetch: fetchAccountStates, clear: clearAccountStates }
 }
 
-export const useMediaAccountStates = ({ mediaType, status, is_anime }: { mediaType: MediaType, status: string, is_anime?: boolean }) => {
+export const useMediaAccountStates = ({ mediaType, status, is_anime, sort }: { mediaType: MediaType, status: string, is_anime?: boolean, sort?: string }) => {
   const [page, setPage] = useState<number>(1)
 
   const fetch = () => {
     return lastValueFrom(
-      from(todoService.getAccountStatePaginate({ media_type: mediaType, status, page, is_anime })).pipe(
+      from(todoService.getAccountStatePaginate({ media_type: mediaType, status, page, is_anime, sort })).pipe(
         map(resp => resp.data),
       ),
     )
   }
 
-  const dataQuery = useQuery([page, mediaType, status, is_anime], fetch)
+  const dataQuery = useQuery([page, mediaType, status, is_anime, sort], fetch)
   return { ...dataQuery, page, setPage }
 }
 

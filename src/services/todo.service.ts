@@ -42,9 +42,9 @@ class TodoService {
     return todoApi.post(`/v2/${media_type}`, { id: media_id, status })
   }
 
-  getAccountStatePaginate(payload: { media_type: string, status: string, page: number, is_anime?: boolean }) {
+  getAccountStatePaginate(payload: { media_type: string, status: string, page: number, is_anime?: boolean, sort?: string }) {
     return todoApi.get(`/v2/${payload.media_type}/paginate/${payload.status}`, {
-      params: { page: payload.page, is_anime: payload?.is_anime, with_imdb_rating: true },
+      params: { page: payload.page, is_anime: payload?.is_anime, with_imdb_rating: true, sort: payload.sort },
     })
   }
 

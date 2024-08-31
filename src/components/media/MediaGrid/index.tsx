@@ -6,10 +6,11 @@ import MediaCard from '@/components/media/MediaCard'
 import PersonCard from '@/components/media/PersonCard'
 import { Media, MediaType } from '@/types/media.type'
 import { cn } from '@/utils/tailwind.helper'
+import { useAuth0 } from '@auth0/auth0-react'
 import { Group, Pagination } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
 import { Person } from 'moviedb-promise'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 
 interface IMediaGridProps {
   items: (Media | Person | any)[]
@@ -25,11 +26,12 @@ interface IMediaGridProps {
   size?: 'LARGE' | 'MEDIUM' | 'SMALL'
   className?: string
   mediaElement?: ReactNode
+  setSort?: (_sort: string) => void
 }
 
 const MediaGrid = (props: IMediaGridProps) => {
   const items = props.items || []
-  const [sort] = useState('')
+  const [sort, setSorting] = useState('')
   const page = props.page || 1
   const size = props.size || 'LARGE'
   const mediaType = props.mediaType
@@ -44,14 +46,63 @@ const MediaGrid = (props: IMediaGridProps) => {
     }
   }
 
+  const auth = useAuth0()
+  useEffect(() => {
+    if (props.setSort) {
+      props.setSort(sort)
+    }
+  }, [sort])
+
   const isMobile = useMediaQuery('only screen and (max-width : 640px)')
 
-  const sortOptions = [
-    {
-      label: 'Popularity',
-      value: 'popularity.desc',
-    },
-  ]
+  const sortOptions = useMemo(() => {
+    const opts = [{
+      group: 'Vote Average',
+      items: [
+        {
+          label: 'Descending',
+          value: 'vote_average.desc',
+        },
+        {
+          label: 'Ascending',
+          value: 'vote_average.asc',
+        },
+      ],
+    }]
+    if (mediaType === 'tv') {
+      opts.push({
+        group: 'Number of episodes',
+        items: [
+          {
+            label: 'Descending',
+            value: 'number_of_episodes.desc',
+          },
+          {
+            label: 'Ascending',
+            value: 'number_of_episodes.asc',
+          },
+        ],
+      })
+
+      if (auth.isAuthenticated) {
+        opts.push({
+          group: 'Latest State',
+          items: [
+            {
+              label: 'Descending',
+              value: 'latest_state.desc',
+            },
+            {
+              label: 'Ascending',
+              value: 'latest_state.asc',
+            },
+          ],
+        })
+      }
+    }
+
+    return opts
+  }, [mediaType])
 
   return (
     <>
@@ -66,6 +117,7 @@ const MediaGrid = (props: IMediaGridProps) => {
               placeholder="Select Sort"
               options={sortOptions}
               value={sort}
+              onChange={sorts => setSorting(sorts || '')}
             />
           </div>
         </div>

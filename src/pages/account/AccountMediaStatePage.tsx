@@ -60,8 +60,8 @@ const AccountMediaStatePage = ({ mediaType, is_anime }: { mediaType: MediaType, 
 const TabData = (props: { mediaType: MediaType, status: string, is_anime?: boolean }) => {
   const mediaType = props.mediaType
   const status = props.status
-
-  const dataQuery = useMediaAccountStates({ mediaType, status, is_anime: props?.is_anime })
+  const [sort, setSort] = useState('')
+  const dataQuery = useMediaAccountStates({ mediaType, status, is_anime: props?.is_anime, sort })
 
   useEffect(() => {
     dataQuery.setPage(1)
@@ -84,6 +84,7 @@ const TabData = (props: { mediaType: MediaType, status: string, is_anime?: boole
         setPage={dataQuery.setPage}
         totalPages={dataQuery.data?.total_pages}
         totalResults={dataQuery.data?.total_results}
+        setSort={setSort}
       />
     </div>
   )
