@@ -56,19 +56,34 @@ const MediaGrid = (props: IMediaGridProps) => {
   const isMobile = useMediaQuery('only screen and (max-width : 640px)')
 
   const sortOptions = useMemo(() => {
-    const opts = [{
-      group: 'Vote Average',
-      items: [
-        {
-          label: 'Descending',
-          value: 'vote_average.desc',
-        },
-        {
-          label: 'Ascending',
-          value: 'vote_average.asc',
-        },
-      ],
-    }]
+    const opts = [
+      {
+        group: 'Vote Average',
+        items: [
+          {
+            label: 'Vote Average : Descending',
+            value: 'vote_average.desc',
+          },
+          {
+            label: 'Vote Average : Ascending',
+            value: 'vote_average.asc',
+          },
+        ],
+      },
+      {
+        group: 'Vote Count',
+        items: [
+          {
+            label: 'Vote Count : Descending',
+            value: 'vote_count.desc',
+          },
+          {
+            label: 'Vote Count : Ascending',
+            value: 'vote_count.asc',
+          },
+        ],
+      },
+    ]
     if (mediaType === 'tv') {
       opts.push({
         group: 'Number of episodes',
