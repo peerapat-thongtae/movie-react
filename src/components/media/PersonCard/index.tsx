@@ -18,7 +18,7 @@ const PersonCard = (props: PersonProps) => {
     navigate(`/person/${person.id}`)
   }
   return (
-    <div className="w-full h-full relative aspect-[1_/_1.54] cursor-pointer group">
+    <div className="w-full h-full relative cursor-pointer group">
       <div className="relative text-center w-full aspect-[1_/_1.54] shadow-[0px_4px_5px_0px_hsla(0,0%,0%,0.14),0px_1px_10px_0px_hsla(0,0%,0%,0.12),0px_2px_4px_-1px_hsla(0,0%,0%,0.2)] overflow-hidden rounded-xl">
         <Image
           src={`https://image.tmdb.org/t/p/w780${person.profile_path}`}
