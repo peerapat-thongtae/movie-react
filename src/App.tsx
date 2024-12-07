@@ -14,6 +14,7 @@ import { Affix, Button, Transition } from '@mantine/core'
 import { FaArrowUp } from 'react-icons/fa'
 import Loading from '@/components/common/Loading'
 import AxiosInterceptor from '@/services/client/axios-interceptor'
+import todoService from '@/services/todo.service'
 
 function AffixComponent() {
   const [scroll, scrollTo] = useWindowScroll()
@@ -53,6 +54,10 @@ function App() {
   const dehydrateState = dehydrate(queryClient, { shouldDehydrateQuery: () => true })
   const { fetch: fetchAccountStates, clear: clearAccountStates } = useAccountStateAll()
   const { getConfiguration } = useConfigTMDB()
+
+  useEffect(() => {
+    todoService.wakeUp()
+  }, [])
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

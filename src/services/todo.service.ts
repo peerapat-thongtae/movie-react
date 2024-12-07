@@ -2,6 +2,10 @@ import todoApi from '@/services/client/todo-client'
 import { MediaType } from '@/types/media.type'
 
 class TodoService {
+  wakeUp() {
+    return todoApi.get('/')
+  }
+
   getMediaInfo(payload: { media_type: MediaType, id: number }) {
     return todoApi.get(`/v2/${payload.media_type}/${payload.id}`)
   }
