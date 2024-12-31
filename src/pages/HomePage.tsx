@@ -31,7 +31,8 @@ const HomePage = () => {
   const [autoPlay] = useState<boolean>(true)
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
-  const { data: continueWatchingTV } = useMediaAccountStates({ mediaType: 'tv', status: 'watching' })
+  const { data: continueWatchingTV, isLoading: isLoadingContinueWatching } = useMediaAccountStates({ mediaType: 'tv', status: 'watching' })
+  const { data: waitingTV, isLoading: isLoadingWaitingTV } = useMediaAccountStates({ mediaType: 'tv', status: 'waiting_next_ep' })
   const { isAuthenticated } = useAuth0()
 
   const popularMerges = useMemo(() => {
@@ -86,10 +87,36 @@ const HomePage = () => {
                   <span className="cursor-pointer hover:text-yellow-500">See All...</span>
                 </div>
               )}
-              isLoading={!!(isLoadingPopularMovies && isLoadingPopularTV)}
+              isLoading={isLoadingContinueWatching}
               children={(
                 <div className="flex gap-8">
                   {continueWatchingTV?.results.map((item: any) => {
+                    return (
+                      <div key={item.id} className="w-[40vw] h-[50vh] md:w-[300px] md:h-[550px] overflow-hidden">
+                        <MediaCard item={item} mediaType="tv" />
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            />
+          </div>
+          <hr />
+          <div>
+            <Slider
+              header={(
+                <div className="flex justify-between text-sm md:text-base">
+                  <span>
+                    Waiting Next Episode
+                    {waitingTV?.total_results && ` (${waitingTV?.total_results})`}
+                  </span>
+                  <span className="cursor-pointer hover:text-yellow-500">See All...</span>
+                </div>
+              )}
+              isLoading={isLoadingWaitingTV}
+              children={(
+                <div className="flex gap-8">
+                  {waitingTV?.results.map((item: any) => {
                     return (
                       <div key={item.id} className="w-[40vw] h-[50vh] md:w-[300px] md:h-[550px] overflow-hidden">
                         <MediaCard item={item} mediaType="tv" />

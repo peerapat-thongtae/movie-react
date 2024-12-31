@@ -12,6 +12,7 @@ import { FaCheck } from 'react-icons/fa6'
 import { TbProgressCheck } from 'react-icons/tb'
 import { useAuth0 } from '@auth0/auth0-react'
 import GenreChip from '@/components/media/GenreChip'
+import { DateHelper } from '@/utils/date.helper'
 
 // Local interface
 interface IProps {
@@ -122,9 +123,9 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                     {mediaType === 'tv'
                     && (
                       <div className="flex flex-col gap-2 items-center">
-                        <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
+                        <TbProgressCheck size="24" className={cn((accountState?.account_status === 'watching' || accountState?.account_status === 'waiting_next_ep') && 'text-yellow-500')} />
                         <span className="text-xs">
-                          Watching
+                          {accountState?.account_status === 'watching' ? 'Watching' : 'Waiting'}
                         </span>
                       </div>
                     )}
@@ -143,11 +144,20 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
                 )}
               </div>
 
-              {accountState?.account_status === 'watching'
+              {(accountState?.account_status === 'watching' || accountState?.account_status === 'waiting_next_ep')
               && (
                 <div className="justify-center flex gap-2 text-sm items-center">
-                  <TbProgressCheck size="24" className={cn(accountState?.account_status === 'watching' && 'text-yellow-500')} />
+                  <TbProgressCheck size="24" className={cn((accountState?.account_status === 'watching' || accountState?.account_status === 'waiting_next_ep') && 'text-yellow-500')} />
                   <span>{`Watching ${accountState.episode_watched.length} EP. of ${accountState.number_of_episodes} EP.`}</span>
+                </div>
+              )}
+
+              {(accountState?.account_status === 'waiting_next_ep')
+              && (
+                <div className="justify-center flex gap-2 text-sm items-center mt-2">
+                  {media?.next_episode_to_air
+                    ? <span>{`Season ${media?.next_episode_to_air?.season_number} EP. ${media?.next_episode_to_air?.episode_number} : ${DateHelper.formatDate(media?.next_episode_to_air?.air_date, 'DD/MM/YYYY')}`}</span>
+                    : <span>Unknown Next Episode Coming</span>}
                 </div>
               )}
             </div>
@@ -169,41 +179,54 @@ const MediaHeroDetail = ({ media, mediaType }: IProps) => {
               </div>
               <hr className="" />
               <div className="py-4">
-                <div className="text-2xl">Details</div>
-                <div className="text-sm py-4">
-                  <div className="flex gap-2 py-1">
-                    <span>Original Name:</span>
-                    <span className="text-gray-400 ">{originalName}</span>
-                  </div>
-                  <div className="flex gap-2 py-1">
-                    <span>Director:</span>
-                    <span className="text-gray-400 hover:text-yellow-500 link">{director}</span>
-                  </div>
-                  <div className="flex gap-2 py-1">
-                    <span>Writers:</span>
-                    <span className="text-gray-400 hover:text-yellow-500 link">{writer}</span>
-                  </div>
-                  <div className="flex gap-2 py-1">
-                    <span>Language:</span>
-                    <span className="text-gray-400 hover:text-yellow-500 link">{media.original_language?.toUpperCase()}</span>
-                  </div>
-                  <div className="flex gap-2 py-1">
-                    <span>Status:</span>
-                    <span className="text-gray-400 ">{media.status}</span>
-                  </div>
-                  <div className="flex gap-2 py-1">
-                    <span>Release Date:</span>
-                    <span className="text-gray-400 ">{releaseDate}</span>
-                    <span className="text-gray-200 hover:text-yellow-500 cursor-pointer">See more..</span>
-                  </div>
-                  {mediaType === 'tv'
-                  && (
+                <div className="text-2xl ">Details</div>
+                <div className="text-sm py-4 flex justify-between">
+                  <div className="flex flex-col">
                     <div className="flex gap-2 py-1">
-                      <span>Seasons:</span>
-                      <span className="text-gray-400 ">{`${media.number_of_seasons} Seasons ; ${media.number_of_episodes} Episodes`}</span>
+                      <span>Original Name:</span>
+                      <span className="text-gray-400 ">{originalName}</span>
                     </div>
-                  )}
-
+                    <div className="flex gap-2 py-1">
+                      <span>Director:</span>
+                      <span className="text-gray-400 hover:text-yellow-500 link">{director}</span>
+                    </div>
+                    <div className="flex gap-2 py-1">
+                      <span>Writers:</span>
+                      <span className="text-gray-400 hover:text-yellow-500 link">{writer}</span>
+                    </div>
+                    <div className="flex gap-2 py-1">
+                      <span>Language:</span>
+                      <span className="text-gray-400 hover:text-yellow-500 link">{media.original_language?.toUpperCase()}</span>
+                    </div>
+                    <div className="flex gap-2 py-1">
+                      <span>Status:</span>
+                      <span className="text-gray-400 ">{media.status}</span>
+                    </div>
+                    <div className="flex gap-2 py-1">
+                      <span>Release Date:</span>
+                      <span className="text-gray-400 ">{releaseDate}</span>
+                      <span className="text-gray-200 hover:text-yellow-500 cursor-pointer">See more..</span>
+                    </div>
+                    {mediaType === 'tv'
+                    && (
+                      <div className="flex gap-2 py-1">
+                        <span>Seasons:</span>
+                        <span className="text-gray-400 ">{`${media.number_of_seasons} Seasons ; ${media.number_of_episodes} Episodes`}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex gap-2 py-1">
+                      <span>Ratings:</span>
+                      <span className="text-gray-400 ">
+                        {media.vote_average}
+                        {' '}
+                        |
+                        {' '}
+                        {media?.vote_count?.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <hr className="" />

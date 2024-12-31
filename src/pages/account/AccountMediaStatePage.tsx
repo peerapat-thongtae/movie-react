@@ -33,12 +33,19 @@ const AccountMediaStatePage = ({ mediaType, is_anime }: { mediaType: MediaType, 
 
         {(mediaType === 'tv' || mediaType === 'anime')
         && (
-          <Tabs.Tab value="watching">
-            <div className="flex justify-between px-4">
-              <div>Watching</div>
-              {/* <span className="">{ !dataQueryTV.isLoading ? dataQueryTV?.medias?.total_results?.toLocaleString() : <ImSpinner className="animate-spin" color="yellow" size={20} />}</span> */}
-            </div>
-          </Tabs.Tab>
+          <>
+            <Tabs.Tab value="watching">
+              <div className="flex justify-between px-4">
+                <div>Watching</div>
+              </div>
+            </Tabs.Tab>
+            <Tabs.Tab value="waiting_next_ep">
+              <div className="flex justify-between px-4">
+                <div>Waiting Next Ep</div>
+              </div>
+            </Tabs.Tab>
+          </>
+
         )}
       </Tabs.List>
 
@@ -51,6 +58,10 @@ const AccountMediaStatePage = ({ mediaType, is_anime }: { mediaType: MediaType, 
       </Tabs.Panel>
 
       <Tabs.Panel value="watching">
+        <TabData mediaType={mediaType} is_anime={is_anime} status={statusTab} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="waiting_next_ep">
         <TabData mediaType={mediaType} is_anime={is_anime} status={statusTab} />
       </Tabs.Panel>
     </Tabs>

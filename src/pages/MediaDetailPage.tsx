@@ -3,7 +3,7 @@ import Loading from '@/components/common/Loading'
 import TabLists, { TabProp } from '@/components/common/TabLists'
 import MediaHeroDetail from '@/components/media/MediaHeroDetail'
 import EpisodeCard from '@/components/media/EpisodeCard'
-import { useCredits, useMediaDetail, useRecommendationMedias, useSimilarMedias, useTVSeasonDetail } from '@/hooks/useMedia'
+import { useCredits, useMediaAccountStateById, useMediaDetail, useRecommendationMedias, useSimilarMedias, useTVSeasonDetail } from '@/hooks/useMedia'
 import { CreditType, Media, MediaType } from '@/types/media.type'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -12,7 +12,7 @@ import MediaGrid from '@/components/media/MediaGrid'
 import { Person } from 'moviedb-promise'
 import PersonCard from '@/components/media/PersonCard'
 import CompanyCard from '@/components/media/CompanyCard'
-import { take } from 'lodash'
+import { first, take } from 'lodash'
 import { Button, Checkbox } from '@mantine/core'
 
 interface MediaDetailPageProps {
@@ -176,12 +176,26 @@ const PersonTab = ({ media, mediaType, creditType }: { media: Media, mediaType: 
 const EpisodeTab = ({ media, mediaType }: { media: Media, mediaType: MediaType }) => {
   const mediaId = media.id || ''
   const [onlyUnwatched, setOnlyUnwatched] = useState(false)
-  const seasonOptions = media?.seasons?.map(val => ({
-    label: `${val.season_number} : ${val.name}`,
-    value: val.season_number?.toString() || '',
-  })).filter(val => val.value !== '0') || []
+  const { data: accState } = useMediaAccountStateById(mediaType, mediaId)
+  const seasonOptions = useMemo(() => {
+    return media?.seasons?.map(val => ({
+      label: `${val.season_number} : ${val.name}`,
+      value: val.season_number?.toString() || '',
+    })).filter((val) => {
+      if (onlyUnwatched) {
+        console.log('ol', accState?.watched_seasons)
+        return val.value !== '0' && !accState?.watched_seasons?.includes(+val.value)
+      }
+      return val.value !== '0'
+    }) || []
+  }, [media, onlyUnwatched, accState])
   const [seasonNumber, setSeasonNumber] = useState<string>('1')
-  // const [filterEpisode, setFilterEpisode] = useState<string>('')
+
+  useEffect(() => {
+    if (!seasonOptions.find(val => val.value === seasonNumber)) {
+      setSeasonNumber(first(seasonOptions)?.value || '')
+    }
+  }, [seasonOptions])
   const { data: seasonDetail, isLoading } = useTVSeasonDetail(mediaType, mediaId, seasonNumber)
   const episodes = useMemo(() => {
     const eps = seasonDetail?.episodes || []

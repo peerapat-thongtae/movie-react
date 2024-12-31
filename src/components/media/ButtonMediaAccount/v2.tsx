@@ -60,6 +60,10 @@ const ButtonMediaAccount = (props: any) => {
       return <TbProgressCheck size={20} className={`${isLoading && 'animate-spin'} `} color={color} />
     }
 
+    if (mediaStatus === 'waiting_next_ep') {
+      return <TbProgressCheck size={20} className={`${isLoading && 'animate-spin'} `} color={color} />
+    }
+
     if (mediaStatus !== 'watched') {
       return <FaStar size={20} className={`${isLoading && 'animate-spin'} stroke-black stroke-[20px]`} color={color} />
     }

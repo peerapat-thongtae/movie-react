@@ -45,6 +45,7 @@ export type AccountState = {
   updated_at: string
   episode_watched: any[]
   account_status?: string
+  watched_seasons?: any[]
 }
 
 export type DiscoverMediaRequest = Omit<DiscoverMovieRequest & DiscoverTvRequest, 'sort_by'> & {
