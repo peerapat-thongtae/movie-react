@@ -32,7 +32,7 @@ const HomePage = () => {
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useDiscoverMedia('movie', upcomingMovieRequest)
   const { data: popularTV, isLoading: isLoadingPopularTV } = useDiscoverMedia('tv', upcomingTVRequest)
   const { data: continueWatchingTV, isLoading: isLoadingContinueWatching } = useMediaAccountStates({ mediaType: 'tv', status: 'watching' })
-  const { data: waitingTV, isLoading: isLoadingWaitingTV } = useMediaAccountStates({ mediaType: 'tv', status: 'waiting_next_ep' })
+  const { data: waitingTV, isLoading: isLoadingWaitingTV } = useMediaAccountStates({ mediaType: 'tv', status: 'waiting_next_ep', sort: 'next_episode_to_air.asc' })
   const { isAuthenticated } = useAuth0()
 
   const popularMerges = useMemo(() => {
